@@ -1,0 +1,72 @@
+name: Task
+description: Task CLAU-AI-CONTENT (format sama dengan tasks/templates/task-template.md)
+title: "TASK-XXX: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Gunakan ID yang sama dengan board Markdown di repo arsip d34faiza-commits/CLAU-AI-CONTENT (`tasks/`). Setelah issue dibuat, tambahkan URL issue ke field `Related` task tersebut.
+        **Jangan** masukkan data client, nama tamu, harga kontrak, atau credential (lihat AI-BOUNDARY.md di clau-ai-core).
+  - type: input
+    id: task_id
+    attributes:
+      label: ID
+      placeholder: TASK-015
+    validations:
+      required: true
+  - type: dropdown
+    id: status
+    attributes:
+      label: Status
+      options:
+        - Backlog
+        - In Progress
+        - Review
+        - Done
+      default: 0
+    validations:
+      required: true
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - Low
+        - Normal
+        - High
+        - Urgent
+      default: 1
+    validations:
+      required: true
+  - type: input
+    id: assignee
+    attributes:
+      label: Assignee
+      placeholder: Dea Karisna
+    validations:
+      required: true
+  - type: input
+    id: due
+    attributes:
+      label: Due
+      description: YYYY-MM-DD, atau — bila belum ditentukan
+      placeholder: "—"
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Apa yang dikerjakan dan kenapa
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: Kriteria selesai yang bisa dicek ya/tidak
+    validations:
+      required: true
+  - type: textarea
+    id: related
+    attributes:
+      label: Related
+      description: Link ke file repo, issue, atau commit

@@ -1,0 +1,27 @@
+# Secrets & credentials — never commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Client data stays in the client workspace (see AI-BOUNDARY.md di clau-ai-core)
+clients/
+client-workspace/
+exports/
+media/
+*.mp4
+*.mov
+*.psd
+*.raw
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Build & OS
+.build/
+.DS_Store
+Thumbs.db

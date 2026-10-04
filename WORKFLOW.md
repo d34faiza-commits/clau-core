@@ -2,7 +2,9 @@
 document_title: "CLAU AI Work Pipeline"
 document_owner: "Dea Karisna / AI Marketing"
 version: "1.0.0"
-status: "Draft"
+status: "Approved"
+effective_date: "2026-10-04"
+approval_reference: "Approval tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-04 (\"Approve AI-CONSTITUTION v2.0.0\"; \"untuk saat ini semua approve dulu\"); perubahan ada di main"
 classification: "Internal"
 ---
 
@@ -41,3 +43,4 @@ Pilot dan contoh memakai data fiktif dan **tidak pernah** sampai langkah 7. Atur
 | Version | Date | Status | Summary |
 |---|---|---|---|
 | 1.0.0 | 2026-10-04 | Draft | Pipeline umum lintas pilar; workflow konten 9 langkah dipindah ke clau-ai-marketing/CONTENT-WORKFLOW.md |
+| 1.0.0 | 2026-10-04 | Approved | Approved oleh owner (Dea Karisna / d34faiza) |

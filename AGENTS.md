@@ -2,7 +2,9 @@
 document_title: "AGENTS.md — Instruksi Umum AI Agent CLAU"
 document_owner: "Dea Karisna / AI Marketing"
 version: "1.0.0"
-status: "Draft"
+status: "Approved"
+effective_date: "2026-10-04"
+approval_reference: "Approval tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-04 (\"Approve AI-CONSTITUTION v2.0.0\"; \"untuk saat ini semua approve dulu\"); perubahan ada di main"
 classification: "Internal"
 ---
 
@@ -42,9 +44,11 @@ Sebelum mengerjakan, tentukan pilar lewat [orchestrator/decision-tree.md](./orch
 - Jalankan validator repo sebelum push (`python scripts/validate_core.py` di core).
 - Perubahan aturan bersama dilakukan di clau-ai-core, lalu repo konsumen meng-update submodule `core/`.
 - Jangan mengedit file di dalam folder `core/` milik repo lain; folder itu hanya submodule.
+- Perubahan atas dokumen berstatus Approved hanya dilakukan atas perintah **Pak Indra** atau **Dea Karisna (d34faiza)**. AI agent tidak mengubah aturan Approved atas inisiatif sendiri; usulan perbaikan boleh ditulis sebagai catatan/issue, lalu menunggu perintah.
 
 ## Revision History
 
 | Version | Date | Status | Summary |
 |---|---|---|---|
 | 1.0.0 | 2026-10-04 | Draft | Instruksi agent lintas repo untuk split CLAU AI; instruksi konten dipindah ke clau-ai-marketing/AGENTS.md |
+| 1.0.0 | 2026-10-04 | Approved | Approved oleh owner (Dea Karisna / d34faiza); ditambah aturan otoritas perubahan untuk agent |

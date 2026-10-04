@@ -2,15 +2,18 @@
 document_title: "CLAU AI Constitution"
 document_owner: "Dea Karisna / AI Marketing"
 version: "2.0.0"
-status: "For Review"
-effective_date: "Berlaku setelah owner approval; sampai saat itu CLAU AI Content Constitution v1.0.0 tetap berlaku untuk Pilar 1"
+status: "Approved"
+effective_date: "2026-10-04"
+approval_reference: "Approval tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-04 (\"Approve AI-CONSTITUTION v2.0.0\"; \"untuk saat ini semua approve dulu\"); perubahan ada di main"
 review_cycle: "Quarterly"
 classification: "Internal"
 ---
 
 # CLAU AI Constitution
 
-> **Status For Review.** Dokumen ini adalah generalisasi dari *CLAU AI Content Constitution v1.0.0* (Approved, 2026-10-03, arsip di repo `CLAU-AI-CONTENT`) supaya berlaku untuk semua pilar. Karena scope dan otoritas berubah, ini perubahan **MAJOR** dan butuh approval owner. Selama belum disetujui, v1.0.0 tetap berlaku untuk Pilar 1 (Marketing & Content), dan pilar lain belum boleh dipakai untuk client.
+> **Status Approved (2026-10-04).** Dokumen ini adalah generalisasi dari *CLAU AI Content Constitution v1.0.0* (arsip di repo `CLAU-AI-CONTENT`, sekarang **Superseded**) dan berlaku untuk semua pilar. Pilar 2–5 tetap belum boleh dipakai untuk client sampai workflow pilarnya ada dan di-approve.
+>
+> **Otoritas perubahan:** Perubahan atas dokumen berstatus Approved hanya dilakukan atas perintah **Pak Indra** atau **Dea Karisna (d34faiza)**. AI agent tidak mengubah aturan Approved atas inisiatif sendiri; usulan perbaikan boleh ditulis sebagai catatan/issue, lalu menunggu perintah.
 
 ## 1. Purpose
 
@@ -114,6 +117,7 @@ AI dilarang: mengarang review/testimoni/rating/award; membuat akun atau review p
 - SemVer: MAJOR (prinsip/otoritas/scope), MINOR (aturan baru), PATCH (wording).
 - Status: `Draft`, `For Review`, `Approved`, `Superseded`, `Archived`. `Approved` hanya setelah approval tertulis owner dan perubahan ada di `main`.
 - AI dan automation tidak boleh self-approve.
+- Perubahan atas dokumen berstatus Approved hanya dilakukan atas perintah **Pak Indra** atau **Dea Karisna (d34faiza)**. AI agent tidak mengubah aturan Approved atas inisiatif sendiri; usulan perbaikan boleh ditulis sebagai catatan/issue, lalu menunggu perintah.
 - Review quarterly.
 
 ### Revision History
@@ -121,6 +125,7 @@ AI dilarang: mengarang review/testimoni/rating/award; membuat akun atau review p
 | Version | Date | Status | Summary |
 |---|---|---|---|
 | 2.0.0 | 2026-10-04 | For Review | Generalisasi CLAU AI Content Constitution v1.0.0 menjadi konstitusi semua pilar untuk split repo (core/marketing/agents). NEXT ACTION: approval owner; pindahkan standard data classification 4-axis ke core |
+| 2.0.0 | 2026-10-04 | Approved | Approved oleh owner (Dea Karisna / d34faiza); berlaku efektif 2026-10-04. Otoritas perubahan: Pak Indra atau Dea Karisna (d34faiza) |
 
 ## 15. Prinsip Akhir
 

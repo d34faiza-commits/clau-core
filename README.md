@@ -3,7 +3,7 @@
 **Fondasi CLAU AI** untuk bisnis hospitality & tourism Indonesia: konstitusi AI, boundary data, pipeline kerja, orchestrator (routing antar pilar), dan kontrak data bersama. Dipakai oleh semua repo pilar dan platform lewat **git submodule** di path `core/`.
 
 > **Status:** Private — v0.1.0 (split dari `CLAU-AI-CONTENT`, 2026-10-04)
-> **Dokumen induk:** [AI-CONSTITUTION.md](./AI-CONSTITUTION.md) (v2.0.0, **For Review**)
+> **Dokumen induk:** [AI-CONSTITUTION.md](./AI-CONSTITUTION.md) (v2.0.0, **Approved**)
 > **Boundary:** [AI-BOUNDARY.md](./AI-BOUNDARY.md)
 > **Credit:** [ACKNOWLEDGMENT.md](./ACKNOWLEDGMENT.md)
 
@@ -45,7 +45,7 @@
 ```text
 clau-ai-core/
 ├── README.md
-├── AI-CONSTITUTION.md        # Aturan induk semua pilar (v2.0.0, For Review)
+├── AI-CONSTITUTION.md        # Aturan induk semua pilar (v2.0.0, Approved)
 ├── AI-BOUNDARY.md            # Boundary data & repo
 ├── AGENTS.md                 # Instruksi umum AI agent lintas repo
 ├── WORKFLOW.md               # Pipeline kerja umum (intake → monitor)
@@ -63,10 +63,12 @@ clau-ai-core/
 
 | Dokumen | Versi | Status |
 |---|---|---|
-| [AI-CONSTITUTION.md](./AI-CONSTITUTION.md) | 2.0.0 | For Review |
-| [AI-BOUNDARY.md](./AI-BOUNDARY.md) | 1.0.0 | Draft |
-| [WORKFLOW.md](./WORKFLOW.md) | 1.0.0 | Draft |
-| [AGENTS.md](./AGENTS.md) | 1.0.0 | Draft |
+| [AI-CONSTITUTION.md](./AI-CONSTITUTION.md) | 2.0.0 | Approved |
+| [AI-BOUNDARY.md](./AI-BOUNDARY.md) | 1.0.0 | Approved |
+| [WORKFLOW.md](./WORKFLOW.md) | 1.0.0 | Approved |
+| [AGENTS.md](./AGENTS.md) | 1.0.0 | Approved |
+
+> **Otoritas perubahan:** Perubahan atas dokumen berstatus Approved hanya dilakukan atas perintah **Pak Indra** atau **Dea Karisna (d34faiza)**. AI agent tidak mengubah aturan Approved atas inisiatif sendiri; usulan perbaikan boleh ditulis sebagai catatan/issue, lalu menunggu perintah.
 
 Validator mengecek tabel ini cocok dengan frontmatter dan Revision History tiap dokumen.
 

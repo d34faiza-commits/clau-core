@@ -2,7 +2,9 @@
 document_title: "CLAU AI Boundary"
 document_owner: "Dea Karisna / AI Marketing"
 version: "1.0.0"
-status: "Draft"
+status: "Approved"
+effective_date: "2026-10-04"
+approval_reference: "Approval tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-04 (\"Approve AI-CONSTITUTION v2.0.0\"; \"untuk saat ini semua approve dulu\"); perubahan ada di main"
 classification: "Internal"
 ---
 
@@ -15,6 +17,8 @@ Menetapkan apa yang boleh dan tidak boleh disimpan di repo-repo CLAU AI (core, p
 ## Authority
 
 Tunduk pada [AI-CONSTITUTION.md](./AI-CONSTITUTION.md).
+
+Perubahan atas dokumen berstatus Approved hanya dilakukan atas perintah **Pak Indra** atau **Dea Karisna (d34faiza)**. AI agent tidak mengubah aturan Approved atas inisiatif sendiri; usulan perbaikan boleh ditulis sebagai catatan/issue, lalu menunggu perintah.
 
 ## Peran Tiap Repo
 
@@ -82,3 +86,4 @@ GitHub Free tidak menyediakan branch protection untuk repo private. Mitigasi:
 | Version | Date | Status | Summary |
 |---|---|---|---|
 | 1.0.0 | 2026-10-04 | Draft | Diturunkan dari CLAU Content Repository Boundary v0.1.4; ditambah peran per repo, platform database, dan aturan submodule |
+| 1.0.0 | 2026-10-04 | Approved | Approved oleh owner (Dea Karisna / d34faiza); ditambah otoritas perubahan |

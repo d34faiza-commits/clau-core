@@ -11,7 +11,7 @@ git clone --recurse-submodules https://github.com/d34faiza-commits/clau-ai-agent
 
 # Kalau sudah ter-clone tanpa submodule
 cd clau-ai-marketing
-git submodule update --init --recursive
+git submodule update --init --recursive   # marketing: core/, agents/, agents/core/
 ```
 
 Semua repo private: akun yang meng-clone harus punya akses ke **clau-ai-core** juga, karena submodule ikut di-clone.
@@ -22,13 +22,12 @@ Perubahan aturan bersama dilakukan di **clau-ai-core**. Setelah di-push, repo ko
 
 ```bash
 cd clau-ai-marketing
-git submodule update --remote core          # ambil commit terbaru core (branch main)
-git add core
-git commit -m "chore(core): bump core to $(git -C core rev-parse --short HEAD)"
-git push
+scripts/sync-submodules.sh                  # cara utama: semua submodule + validasi + commit + push
+# manual: git submodule update --remote core && git add core \
+#   && git commit -m "chore(core): bump core to $(git -C core rev-parse --short HEAD)" && git push
 ```
 
-Submodule terkunci ke satu commit. Repo konsumen tidak otomatis memakai perubahan core sampai langkah di atas dijalankan. Ini disengaja, supaya perubahan aturan bisa direview per repo.
+Submodule terkunci ke satu commit. Setelah push ke core, workflow `notify-downstream` memicu `sync-submodules` di agents & marketing: pin dimajukan **hanya bila validator & test lulus**. Bila gagal, pin lama tetap dipakai dan workflow merah, sehingga perubahan aturan yang merusak repo konsumen tidak ikut masuk diam-diam.
 
 ## 3. Mengedit Aturan
 
@@ -45,10 +44,18 @@ Jangan mengedit file di dalam folder `core/` milik repo lain. Perubahan di sana 
 | Repo | Perintah |
 |---|---|
 | clau-ai-core | `python scripts/validate_core.py` |
-| clau-ai-marketing | `python scripts/validate.py` (cek link ke `core/` bila submodule ter-init) |
+| clau-ai-marketing | `python scripts/validate.py --require-submodules` (cek link ke `core/` & `agents/`) |
 | clau-ai-agents | `cd backend && pip install -r requirements.txt && pytest` |
 
-CI di GitHub Actions tidak meng-clone submodule private (butuh token tambahan), jadi link ke `core/` hanya dicek saat validasi lokal dengan submodule ter-init.
+Ada dua lapis CI:
+
+| Workflow | Butuh token? | Cek |
+|---|---|---|
+| `validate.yml` / `ci.yml` | Tidak | Validasi repo sendiri; link ke submodule dilewati |
+| `cross-repo-validate.yml` (marketing, agents) | `SUBMODULE_TOKEN` | Checkout semua submodule, validator core, validator marketing dengan `--require-submodules`, test backend agents terhadap router core, cek pin core |
+| `sync-submodules.yml` (harian + dipicu `notify-downstream`) | `SUBMODULE_TOKEN` | Majukan pin submodule, validasi, commit `chore(<path>): bump …` |
+
+Panduan lengkap (update, sync, troubleshooting, setup token): `SUBMODULE.md` di clau-ai-marketing dan clau-ai-agents.
 
 ## 5. Alur Kerja Harian
 

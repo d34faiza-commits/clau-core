@@ -12,7 +12,7 @@
 | Repo | Peran | Isi utama | Submodule |
 |---|---|---|---|
 | **clau-ai-core** (repo ini) | Foundation | Constitution, boundary, pipeline, orchestrator, kontrak data | — |
-| [clau-ai-marketing](https://github.com/d34faiza-commits/clau-ai-marketing) | Pilar 1: Marketing & Content | Rules, prompts, skills, knowledge, templates, QA, contoh | `core/` → repo ini |
+| [clau-ai-marketing](https://github.com/d34faiza-commits/clau-ai-marketing) | Pilar 1: Marketing & Content | Rules, prompts, skills, knowledge, templates, QA, contoh | `core/` → repo ini, `agents/` → clau-ai-agents |
 | [clau-ai-agents](https://github.com/d34faiza-commits/clau-ai-agents) | Platform | Frontend (Next.js), backend (FastAPI), registry agent | `core/` → repo ini |
 | [CLAU-AI-CONTENT](https://github.com/d34faiza-commits/CLAU-AI-CONTENT) | Arsip / backup | Repo awal sebelum split; task board & riwayat pilot | — |
 
@@ -26,6 +26,8 @@
 │ clau-ai-marketing│       │  clau-ai-agents  │
 │  (Pilar 1)       │◄──────│  (platform)      │  agents memanggil skill pilar lewat registry
 └──────────────────┘ refs  └──────────────────┘
+   marketing juga memuat agents sebagai submodule agents/ (pin core harus sama)
+   sync otomatis: core/agents push → notify-downstream → sync-submodules + cross-repo-validate
 ```
 
 ## 5 Pilar CLAU AI
@@ -64,7 +66,7 @@ clau-ai-core/
 | Dokumen | Versi | Status |
 |---|---|---|
 | [AI-CONSTITUTION.md](./AI-CONSTITUTION.md) | 2.0.0 | Approved |
-| [AI-BOUNDARY.md](./AI-BOUNDARY.md) | 1.0.0 | Approved |
+| [AI-BOUNDARY.md](./AI-BOUNDARY.md) | 1.1.0 | Approved |
 | [WORKFLOW.md](./WORKFLOW.md) | 1.0.0 | Approved |
 | [AGENTS.md](./AGENTS.md) | 1.0.0 | Approved |
 

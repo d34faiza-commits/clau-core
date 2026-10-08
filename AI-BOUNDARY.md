@@ -1,10 +1,10 @@
 ---
 document_title: "CLAU AI Boundary"
 document_owner: "Dea Karisna / AI Marketing"
-version: "1.1.0"
+version: "1.1.1"
 status: "Approved"
-effective_date: "2026-10-06"
-approval_reference: "Instruksi tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-06 (\"tolong semua repo di cek … jika belum fix 100% tolong di fix\"); v1.0.0 approved 2026-10-04; perubahan ada di main"
+effective_date: "2026-10-08"
+approval_reference: "v1.1.1: instruksi owner via sesi Claude Code, 2026-10-08 (\"gass\", izin token + sync via PR); v1.1.0: instruksi tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-06 (\"tolong semua repo di cek … jika belum fix 100% tolong di fix\"); v1.0.0 approved 2026-10-04; perubahan ada di main"
 classification: "Internal"
 ---
 
@@ -62,7 +62,7 @@ Semua repo **private**. Repo private tidak membuat data `Confidential`/`Restrict
 
 - Repo pilar dan agents memuat core sebagai submodule di path `core/`, dikunci ke commit tertentu.
 - clau-ai-marketing juga memuat **clau-ai-agents** sebagai submodule di path `agents/` (referensi registry & validasi silang). `agents/core/` mengikuti pin milik clau-ai-agents dan harus sama dengan pin `core/` di marketing (dicek `scripts/check-core-pins.sh`).
-- Sinkronisasi submodule otomatis lewat GitHub Actions (`sync-submodules`, `cross-repo-validate`, `notify-downstream`) dengan secret `SUBMODULE_TOKEN` (fine-grained PAT, scope hanya 3 repo CLAU, permission Contents). Token tidak pernah disimpan di file. Panduan: `SUBMODULE.md` di repo konsumen.
+- Sinkronisasi submodule otomatis lewat GitHub Actions (`sync-submodules`, `cross-repo-validate`, `notify-downstream`) dengan secret `SUBMODULE_TOKEN` (fine-grained PAT, scope hanya 3 repo CLAU, permission Contents + Pull requests, read and write, dengan tanggal kedaluwarsa). Bot sync tidak push langsung ke `main`: bump di-push ke branch `bot/sync-submodules` lalu dibuka sebagai PR dan di-merge setelah validasi. Token tidak pernah disimpan di file. Panduan: `SUBMODULE.md` di repo konsumen.
 - Bump submodule oleh bot hanya dilakukan setelah validator & test lulus; gagal = tidak ada commit.
 - Perubahan aturan dilakukan **di clau-ai-core**, bukan di folder `core/` dalam repo lain.
 - Update submodule = commit tersendiri di repo konsumen dengan message `chore(core): bump core to <hash>`.
@@ -91,3 +91,4 @@ GitHub Free tidak menyediakan branch protection untuk repo private. Mitigasi:
 | 1.0.0 | 2026-10-04 | Draft | Diturunkan dari CLAU Content Repository Boundary v0.1.4; ditambah peran per repo, platform database, dan aturan submodule |
 | 1.0.0 | 2026-10-04 | Approved | Approved oleh owner (Dea Karisna / d34faiza); ditambah otoritas perubahan |
 | 1.1.0 | 2026-10-06 | Approved | Mencatat submodule `agents/` di clau-ai-marketing, aturan pin core, dan sinkronisasi otomatis via GitHub Actions + `SUBMODULE_TOKEN` (atas instruksi owner) |
+| 1.1.1 | 2026-10-08 | Approved | Izin `SUBMODULE_TOKEN` jadi Contents + Pull requests (dengan kedaluwarsa); bot sync membuka PR dari `bot/sync-submodules`, bukan push langsung ke `main` (atas instruksi owner) |

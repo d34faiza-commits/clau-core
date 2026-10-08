@@ -27,18 +27,28 @@ Kontrak HTTP antara frontend dan backend clau-ai-agents, dan antara platform den
 {
   "Agent": {
     "id": "caption-writer",
+    "display_name": "Tara",
     "pillar": 1,
     "status": "active",
     "intents": ["caption"],
     "skill": "draft-caption",
     "skill_repo": "clau-ai-marketing",
     "approval_min": "L1",
+    "persona": "agents/personas/caption-writer.md",
+    "evals": "agents/evals/cases/caption-writer.json",
+    "avatar": {
+      "crop": "frontend/public/agents/caption-writer.webp",
+      "master": "agents/avatars/caption-writer.webp",
+      "figure": "female"
+    },
     "forbidden_actions": ["publish", "send_external", "self_approve"]
   }
 }
 ```
 
 Field `intent`, `pillar`, `skill`, dan `approval_min` mengikuti [orchestrator/router.md](../orchestrator/router.md). Bila router berubah, `agents/registry.json` di clau-ai-agents wajib ikut diperbarui.
+
+`display_name` dan `avatar` (registry 0.3.0) adalah sumber tunggal nama dan avatar agent untuk UI; `figure` mendeskripsikan figur ilustrasi (`female`/`male`), bukan data orang. Isi `forbidden_actions` = `default_forbidden_actions` registry.
 
 ## Versioning
 

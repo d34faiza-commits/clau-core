@@ -1,6 +1,6 @@
 # Blueprint — 🟢 AI Admin
 
-> **Status: Draft (ASSUMPTION).** Perluasan Pilar 4 Operations saat ini (SOP) menjadi pekerjaan administrasi bisnis.
+> **Status: pilar Approved (v3.0.0, Pilar 3); isi blueprint Draft (ASSUMPTION).** Perluasan pilar v1 "Operations" (SOP) menjadi pekerjaan administrasi bisnis.
 
 ## Scope — Yang Dijual
 

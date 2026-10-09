@@ -1,6 +1,6 @@
 # Blueprint — 🔵 AI Sales
 
-> **Status: Draft (ASSUMPTION).** Menggabungkan Pilar 2 Sales & Reservations dan Pilar 3 Guest Experience & Reputation saat ini. Butuh amandemen [autonomy-levels](../proposals/autonomy-levels.md) karena AI-CONSTITUTION §4.7 sekarang melarang AI mengirim ke pihak luar.
+> **Status: pilar Approved (v3.0.0, Pilar 2); isi blueprint Draft (ASSUMPTION).** Menggabungkan pilar v1 "Sales & Reservations" dan "Guest Experience & Reputation". Otonomi bertingkat sudah berlaku (AI-CONSTITUTION §4a); semua intent tetap Level B sampai Level A diaktifkan per intent & per client.
 
 ## Scope — Yang Dijual
 

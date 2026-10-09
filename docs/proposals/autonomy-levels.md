@@ -1,6 +1,6 @@
 # Usulan Amandemen — Otonomi Bertingkat & Perluasan Scope
 
-> **Status: Draft — BELUM BERLAKU.** Usulan perubahan AI-CONSTITUTION v2.0.0 (Approved) untuk konsep v2 ([blueprints](../blueprints/README.md)). Hanya berlaku setelah ada perintah tertulis **Pak Indra** atau **Dea Karisna (d34faiza)**, lalu diterapkan ke [AI-CONSTITUTION.md](../../AI-CONSTITUTION.md) sebagai v2.1.0 (atau v3.0.0) dengan Revision History. Keputusan dicatat di TASK-040.
+> **Status: Usulan 1 diterapkan — AI-CONSTITUTION v3.0.0 (2026-10-09), approved Dea Karisna (d34faiza).** Teks yang berlaku ada di [AI-CONSTITUTION.md](../../AI-CONSTITUTION.md) §4.7 + §4a. **Usulan 2 (perluasan scope di luar hospitality) tetap Draft** — v3.0.0 hanya menetapkan vertical fokus villa, restoran/cafe, wedding, travel. Dokumen ini disimpan sebagai jejak keputusan.
 
 ## Kenapa
 

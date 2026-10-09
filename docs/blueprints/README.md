@@ -1,10 +1,10 @@
 # Blueprint 5 Pilar — Konsep v2
 
-> **Status: Draft (ASSUMPTION).** Cetak biru untuk masa depan, disiapkan 2026-10-09 atas arahan owner: *fokus sekarang hospitality, tetapi semua pilar dan jenis usaha disiapkan supaya saat modal siap tinggal diaktifkan*. Tidak ada yang berlaku untuk client sebelum keputusan di TASK-034 dan amandemen di [proposals/autonomy-levels.md](../proposals/autonomy-levels.md) di-approve **Pak Indra** atau **Dea Karisna (d34faiza)**.
+> **Status: struktur Approved (AI-CONSTITUTION v3.0.0, 2026-10-09).** Owner (Dea Karisna / d34faiza) menyetujui 5 pilar v2 dan otonomi bertingkat. Isi tiap blueprint (intent usulan, paket jual, integrasi) tetap **Draft/ASSUMPTION** sampai pilarnya diaktifkan. Fokus sekarang: vertical villa, restoran/cafe, wedding, travel.
 
 ## Konsep v2 vs Pilar Sekarang
 
-| v2 | Menjual | Pilar sekarang (README core) | Blueprint |
+| v2 (berlaku sejak v3.0.0) | Menjual | Asal dari pilar v1 | Blueprint |
 |---|---|---|---|
 | 🟣 1 AI Marketing | Website, landing page, copywriting, social media, caption, content calendar, video, foto produk, branding, iklan | 1 Marketing & Content (**Aktif**) — diperluas | [marketing.md](./marketing.md) |
 | 🔵 2 AI Sales | WhatsApp assistant, customer service, FAQ, sales assistant, lead management, follow-up, booking, CRM | 2 Sales & Reservations + 3 Guest Experience & Reputation (digabung) | [sales.md](./sales.md) |
@@ -14,13 +14,15 @@
 
 Jenis usaha (vertical) dan urutan perluasannya: [../verticals.md](../verticals.md).
 
-## Yang Sengaja Belum Diubah
+## Status Penerapan
 
-| Item | Alasan | Diubah saat |
-|---|---|---|
-| Tabel pilar di [README](../../README.md), `router.md`, `registry.json` | Sumber yang dites; mengubahnya = mengaktifkan konsep v2 | TASK-034 diputuskan |
-| AI-CONSTITUTION §2 (scope hospitality) & §4.7 (AI tidak mengirim ke pihak luar) | Dokumen Approved | Amandemen [autonomy-levels](../proposals/autonomy-levels.md) di-approve |
-| Agent baru di registry | Butuh nama (approval owner), avatar, persona, eval — dicek test | Pilar terkait mulai diaktifkan |
+| Item | Status |
+|---|---|
+| AI-CONSTITUTION §2 (5 pilar v2, vertical fokus) & §4a (otonomi bertingkat) | ✅ v3.0.0 Approved |
+| Tabel pilar [README](../../README.md), [router](../../orchestrator/router.md) (kolom Otonomi), `registry.json` (`pillars`, `autonomy_max`) | ✅ Diterapkan bersama v3.0.0 |
+| Perluasan scope ke jenis usaha di luar hospitality (§2 Usulan 2) | ⬜ Masih usulan ([proposals/autonomy-levels.md](../proposals/autonomy-levels.md)) |
+| Intent baru per pilar & agent baru di registry | ⬜ Saat pilar diaktifkan (butuh nama disetujui owner, avatar, persona, eval) |
+| Level A untuk intent mana pun | ⬜ Semua intent masih Level B |
 
 ## Urutan Aktivasi (usulan)
 

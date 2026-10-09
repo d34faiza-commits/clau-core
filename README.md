@@ -12,7 +12,7 @@
 | Repo | Peran | Isi utama | Submodule |
 |---|---|---|---|
 | **clau-ai-core** (repo ini) | Foundation | Constitution, boundary, pipeline, orchestrator, kontrak data | — |
-| [clau-ai-marketing](https://github.com/d34faiza-commits/clau-ai-marketing) | Pilar 1: Marketing & Content | Rules, prompts, skills, knowledge, templates, QA, contoh | `core/` → repo ini, `agents/` → clau-ai-agents |
+| [clau-ai-marketing](https://github.com/d34faiza-commits/clau-ai-marketing) | Pilar 1: AI Marketing | Rules, prompts, skills, knowledge, templates, QA, contoh | `core/` → repo ini, `agents/` → clau-ai-agents |
 | [clau-ai-agents](https://github.com/d34faiza-commits/clau-ai-agents) | Platform | Frontend (Next.js), backend (FastAPI), registry agent | `core/` → repo ini |
 | [CLAU-AI-CONTENT](https://github.com/d34faiza-commits/CLAU-AI-CONTENT) | Arsip / backup | Repo awal sebelum split; task board & riwayat pilot | — |
 
@@ -34,17 +34,15 @@
 
 | # | Pilar | Fungsi | Repo | Status |
 |---|---|---|---|---|
-| 1 | **Marketing & Content** | Caption, reel, story, listing OTA, balasan review, campaign, kalender konten | clau-ai-marketing | **Aktif** |
-| 2 | Sales & Reservations | Inquiry WhatsApp/DM, direct booking, paket & penawaran | — | Planned |
-| 3 | Guest Experience & Reputation | Pre-arrival, in-stay comms, eskalasi komplain, reputasi | — | Planned |
-| 4 | Operations | SOP, checklist operasional, knowledge staf | — | Planned |
-| 5 | Analytics & Insights | KPI lintas pilar, report bulanan, insight performa | — | Planned |
+| 1 | **AI Marketing** | Caption, reel, story, listing OTA, balasan review, campaign, kalender konten; berikutnya landing page, iklan, branding | clau-ai-marketing | **Aktif** |
+| 2 | AI Sales | WhatsApp assistant, customer service, FAQ, lead, follow-up, booking, CRM | — | Planned |
+| 3 | AI Admin | Invoice, quotation, data entry, laporan, financial summary, inventory, SOP | — | Planned |
+| 4 | AI Business Intelligence | Insight penjualan, pelanggan, biaya iklan, stok; laporan bulanan & KPI | — | Planned |
+| 5 | AI Automation | Alur end-to-end antar pilar (WA/IG → AI → CRM → Sheets → invoice → email → follow-up) | — | Planned |
 
-> **ASSUMPTION:** pembagian pilar 2–5 adalah usulan kerja berdasarkan kebutuhan umum hospitality. Nama, urutan, dan scope pilar 2–5 menunggu keputusan owner (**CLIENT CONFIRMATION**). Detail: [docs/5-pillar-architecture.md](./docs/5-pillar-architecture.md).
+> **Approved (AI-CONSTITUTION v3.0.0, 2026-10-09):** struktur 5 pilar v2 dan otonomi bertingkat A/B/C (default Level B). Vertical fokus: villa, restoran/cafe, wedding, travel ([docs/verticals.md](./docs/verticals.md)). Cetak biru tiap pilar: [docs/blueprints/](./docs/blueprints/README.md). Detail: [docs/5-pillar-architecture.md](./docs/5-pillar-architecture.md).
 
-> **Masa depan (Draft):** konsep v2 — AI Marketing, Sales, Admin, Business Intelligence, Automation untuk banyak jenis usaha — sudah disiapkan sebagai cetak biru di [docs/blueprints/](./docs/blueprints/README.md), [docs/verticals.md](./docs/verticals.md), dan [docs/proposals/autonomy-levels.md](./docs/proposals/autonomy-levels.md). Tidak berlaku sebelum di-approve.
-
-> **Sinkron:** tabel ini adalah sumber nama, repo, dan status pilar. `clau-ai-agents/agents/registry.json` → `pillars` dites sama dengan tabel ini (`backend/tests/test_registry.py`); ubah keduanya bersamaan. Keputusan owner: TASK-034 di board CLAU-AI-CONTENT.
+> **Sinkron:** tabel ini adalah sumber nama, repo, dan status pilar. `clau-ai-agents/agents/registry.json` → `pillars` dites sama dengan tabel ini (`backend/tests/test_registry.py`); ubah keduanya bersamaan. Keputusan owner: TASK-034 (selesai, v3.0.0).
 
 ## Struktur
 

@@ -42,6 +42,8 @@
 
 > **ASSUMPTION:** pembagian pilar 2–5 adalah usulan kerja berdasarkan kebutuhan umum hospitality. Nama, urutan, dan scope pilar 2–5 menunggu keputusan owner (**CLIENT CONFIRMATION**). Detail: [docs/5-pillar-architecture.md](./docs/5-pillar-architecture.md).
 
+> **Sinkron:** tabel ini adalah sumber nama, repo, dan status pilar. `clau-ai-agents/agents/registry.json` → `pillars` dites sama dengan tabel ini (`backend/tests/test_registry.py`); ubah keduanya bersamaan. Keputusan owner: TASK-034 di board CLAU-AI-CONTENT.
+
 ## Struktur
 
 ```text

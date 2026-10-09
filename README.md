@@ -3,7 +3,7 @@
 **Fondasi CLAU AI** untuk bisnis hospitality & tourism Indonesia: konstitusi AI, boundary data, pipeline kerja, orchestrator (routing antar pilar), dan kontrak data bersama. Dipakai oleh semua repo pilar dan platform lewat **git submodule** di path `core/`.
 
 > **Status:** Private — v0.1.0 (split dari `CLAU-AI-CONTENT`, 2026-10-04)
-> **Dokumen induk:** [AI-CONSTITUTION.md](./AI-CONSTITUTION.md) (v2.0.0, **Approved**)
+> **Dokumen induk:** [AI-CONSTITUTION.md](./AI-CONSTITUTION.md) (v3.0.0, **Approved**)
 > **Boundary:** [AI-BOUNDARY.md](./AI-BOUNDARY.md)
 > **Credit:** [ACKNOWLEDGMENT.md](./ACKNOWLEDGMENT.md)
 
@@ -51,7 +51,7 @@
 ```text
 clau-ai-core/
 ├── README.md
-├── AI-CONSTITUTION.md        # Aturan induk semua pilar (v2.0.0, Approved)
+├── AI-CONSTITUTION.md        # Aturan induk semua pilar (v3.0.0, Approved)
 ├── AI-BOUNDARY.md            # Boundary data & repo
 ├── AGENTS.md                 # Instruksi umum AI agent lintas repo
 ├── WORKFLOW.md               # Pipeline kerja umum (intake → monitor)

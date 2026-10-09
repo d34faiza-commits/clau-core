@@ -1,0 +1,11 @@
+# Update GitHub Actions mingguan (repo ini tidak punya dependency npm/pip). Dependabot membuka PR;
+# owner yang memutuskan merge. Versi mayor tidak dibuka otomatis (keputusan owner 2026-10-09).
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]

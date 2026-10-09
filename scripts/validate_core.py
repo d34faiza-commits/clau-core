@@ -42,10 +42,15 @@ LINK_RE = re.compile(r"(?<!!)\[[^\]]*\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
 FENCE_RE = re.compile(r"```.*?```", re.DOTALL)
 INLINE_CODE_RE = re.compile(r"`[^`\n]*`")
 SKIP_DIRS = {".git", "node_modules", ".venv", "venv", "__pycache__"}
+# File teks yang dipindai secret. Biner (gambar, PDF) dilewati.
+TEXT_SUFFIXES = {".md", ".json", ".yml", ".yaml", ".py", ".txt", ".sh", ".toml", ".cfg", ".ini", ".conf",
+                 ".js", ".mjs", ".cjs", ".ts", ".tsx", ".html", ".css", ".env", ".csv", ".xml", ".sql", ""}
 SECRET_PATTERNS = [
     (re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"), "private key"),
     (re.compile(r"\bAKIA[0-9A-Z]{16}\b"), "AWS access key"),
     (re.compile(r"\bgh[pousr]_[A-Za-z0-9]{30,}\b"), "GitHub token"),
+    (re.compile(r"\bgithub_pat_[A-Za-z0-9_]{50,}\b"), "GitHub fine-grained token"),
+    (re.compile(r"\bxox[abprs]-[A-Za-z0-9-]{10,}\b"), "Slack token"),
     (re.compile(r"\bsk-[A-Za-z0-9_-]{20,}\b"), "API secret key"),
     (re.compile(r"\bAIza[0-9A-Za-z_-]{35}\b"), "Google API key"),
     (re.compile(r"\bEAA[A-Za-z0-9]{40,}\b"), "Meta access token"),
@@ -68,6 +73,8 @@ def frontmatter(text: str) -> dict[str, str]:
     if not text.startswith("---\n"):
         return {}
     end = text.find("\n---", 4)
+    if end == -1:
+        return {}
     data = {}
     for line in text[4:end].splitlines():
         if ":" in line:
@@ -140,10 +147,13 @@ def check_json() -> None:
 def check_secrets() -> None:
     me = Path(__file__).resolve()
     for path in files("*"):
-        if path.resolve() == me or path.suffix not in {".md", ".json", ".yml", ".yaml", ".py", ".txt", ""}:
+        if path.resolve() == me:
             continue
+        # Dicek sebelum filter ekstensi: .env.production / .env.local juga dilarang.
         if path.name.startswith(".env") and path.name != ".env.example":
             fail(path, ".env files must not be committed")
+            continue
+        if path.suffix.lower() not in TEXT_SUFFIXES:
             continue
         try:
             text = path.read_text(encoding="utf-8")

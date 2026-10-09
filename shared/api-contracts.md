@@ -15,6 +15,7 @@ Kontrak HTTP antara frontend dan backend clau-ai-agents, dan antara platform den
 |---|---|---|---|
 | `GET /health` | **Implemented** | — | `{"status": "ok", "service": "clau-ai-agents-backend", "version": "<semver>"}` |
 | `GET /agents` | **Implemented** | — | `{"agents": [Agent]}` dari `agents/registry.json` |
+| `GET /pillars` | **Implemented** | — | `{"pillars": [Pillar]}` dari `agents/registry.json` → `pillars`, plus `agents` (id agent per pilar) |
 | `POST /route` | **Implemented** (statis) | `{"intent": "<intent>"}` | `{"intent", "agent", "pillar", "skill", "repo", "approval_min", "status": "active"\|"planned", "next_step": "produce_draft"\|"escalate_to_owner"}`. Intent tidak dikenal → 404 `unknown_intent`; body tidak valid → 422 `validation_error` |
 | `POST /requests` | Planned | `{client_code, intent, text, deadline}` | `Request` dengan `priority` dari priority engine |
 | `POST /drafts` | Planned | `{request_id, brief_id}` | `Draft` + `claims[]`, `mode` |
@@ -42,11 +43,18 @@ Kontrak HTTP antara frontend dan backend clau-ai-agents, dan antara platform den
       "figure": "female"
     },
     "forbidden_actions": ["publish", "send_external", "self_approve"]
+  },
+  "Pillar": {
+    "id": 1,
+    "name": {"en": "Marketing & Content", "id": "Marketing & Konten"},
+    "status": "active",
+    "repo": "clau-ai-marketing",
+    "agents": ["caption-writer", "reel-scripter"]
   }
 }
 ```
 
-Field `intent`, `pillar`, `skill`, dan `approval_min` mengikuti [orchestrator/router.md](../orchestrator/router.md). Bila router berubah, `agents/registry.json` di clau-ai-agents wajib ikut diperbarui.
+Field `intent`, `pillar`, `skill`, dan `approval_min` mengikuti [orchestrator/router.md](../orchestrator/router.md). Bila router berubah, `agents/registry.json` di clau-ai-agents wajib ikut diperbarui. Field `Pillar.name`, `status`, dan `repo` mengikuti tabel **5 Pilar CLAU AI** di [README](../README.md) (dicek `backend/tests/test_registry.py` di clau-ai-agents).
 
 `display_name` dan `avatar` (registry 0.3.0) adalah sumber tunggal nama dan avatar agent untuk UI; `figure` mendeskripsikan figur ilustrasi (`female`/`male`), bukan data orang. Isi `forbidden_actions` = `default_forbidden_actions` registry.
 

@@ -1,6 +1,6 @@
 # Blueprint — 🔴 AI Automation
 
-> **Status: Draft (ASSUMPTION).** Pilar baru dalam konsep v2. Secara teknis adalah **lapisan penghubung** antar pilar (bukan aturan domain baru); secara bisnis dijual sebagai **paket langganan bulanan** (recurring).
+> **Status: pilar Approved (v3.0.0, Pilar 5); isi blueprint Draft (ASSUMPTION).** Secara teknis adalah **lapisan penghubung** antar pilar (bukan aturan domain baru); secara bisnis dijual sebagai **paket langganan bulanan** (recurring).
 
 ## Scope — Yang Dijual
 

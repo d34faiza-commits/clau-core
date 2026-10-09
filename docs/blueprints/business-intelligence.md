@@ -1,6 +1,6 @@
 # Blueprint — 🟠 AI Business Intelligence
 
-> **Status: Draft (ASSUMPTION).** Pendalaman Pilar 5 Analytics & Insights saat ini. Agent Intan (`report`) sudah aktif dengan template `monthly-report` Pilar 1; blueprint ini memperluasnya.
+> **Status: pilar Approved (v3.0.0, Pilar 4); isi blueprint Draft (ASSUMPTION).** Pendalaman pilar v1 "Analytics & Insights". Agent Intan (`report`) sudah aktif dengan template `monthly-report` Pilar 1; blueprint ini memperluasnya.
 
 ## Scope — Yang Dijual
 

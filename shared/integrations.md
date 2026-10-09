@@ -12,7 +12,7 @@ Daftar integrasi eksternal, statusnya, dan batasnya. Level otomasi mengikuti `cl
 | TikTok | Insight, post | — | Tidak diintegrasikan | Sama seperti di atas |
 | Google Business Profile | Post, review | — | Tidak diintegrasikan | Balasan review dipublish manusia |
 | OTA (Traveloka, tiket.com, Booking.com, Agoda, Airbnb) | Listing | — | Tidak diintegrasikan | Listing diupdate manusia di extranet |
-| WhatsApp Business | Inquiry, broadcast | — | Tidak diintegrasikan (Pilar 2/3 planned) | Broadcast hanya ke kontak opt-in |
+| WhatsApp Business | Inquiry, broadcast | — | Tidak diintegrasikan (Pilar 2 AI Sales planned; Level A hanya via template disetujui client, AI-CONSTITUTION §4a) | Broadcast hanya ke kontak opt-in |
 | PMS / booking engine | Ketersediaan, harga | — | Tidak diintegrasikan | AI tidak mengubah harga/ketersediaan |
 
 ## Aturan Menambah Integrasi

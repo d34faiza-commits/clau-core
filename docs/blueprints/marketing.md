@@ -1,6 +1,6 @@
 # Blueprint — 🟣 AI Marketing (v2)
 
-> **Status: Draft (ASSUMPTION).** Perluasan Pilar 1 Marketing & Content yang sudah **Aktif** di clau-ai-marketing. Bagian yang sudah ada tetap berlaku; tabel di bawah menandai yang baru.
+> **Status: pilar Approved (v3.0.0); isi blueprint Draft (ASSUMPTION).** Perluasan Pilar 1 AI Marketing (dulu "Marketing & Content") yang sudah **Aktif** di clau-ai-marketing. Bagian yang sudah ada tetap berlaku; tabel di bawah menandai yang baru.
 
 ## Scope — Yang Dijual
 

@@ -25,6 +25,7 @@
 | `docs/` | `getting-started.md`, `5-pillar-architecture.md` |
 | `scripts/validate_core.py` | Validator (file wajib, versi governance, link, JSON, secret) |
 | `.github/workflows/` | `validate.yml`, `notify-downstream.yml` (memicu sync di agents & marketing) |
+| `.github/dependabot.yml` | Update GitHub Actions mingguan (tanpa versi mayor); Actions dipin ke commit SHA |
 
 ## 3. Command
 

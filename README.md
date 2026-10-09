@@ -72,7 +72,7 @@ clau-ai-core/
 
 | Dokumen | Versi | Status |
 |---|---|---|
-| [AI-CONSTITUTION.md](./AI-CONSTITUTION.md) | 2.0.0 | Approved |
+| [AI-CONSTITUTION.md](./AI-CONSTITUTION.md) | 3.0.0 | Approved |
 | [AI-BOUNDARY.md](./AI-BOUNDARY.md) | 1.1.1 | Approved |
 | [WORKFLOW.md](./WORKFLOW.md) | 1.0.0 | Approved |
 | [AGENTS.md](./AGENTS.md) | 1.0.0 | Approved |

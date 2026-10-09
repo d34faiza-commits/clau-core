@@ -2,6 +2,10 @@
 
 > **Status: Draft.** Pilar 1 aktif. Pilar 2–5 adalah usulan kerja (**ASSUMPTION**) yang menunggu keputusan owner (**CLIENT CONFIRMATION**) soal nama, urutan, dan scope.
 
+## Konsep v2 (usulan untuk masa depan)
+
+Owner menyiapkan konsep 5 pilar yang lebih luas: **AI Marketing · AI Sales · AI Admin · AI Business Intelligence · AI Automation**, untuk banyak jenis usaha. Fokus sekarang tetap hospitality; tabel di bawah tetap yang berlaku sampai TASK-034 diputuskan. Cetak biru siap aktif: [blueprints/](./blueprints/README.md) · jenis usaha: [verticals.md](./verticals.md) · amandemen yang dibutuhkan: [proposals/autonomy-levels.md](./proposals/autonomy-levels.md).
+
 ## Lapisan
 
 | Lapisan | Repo | Isi |

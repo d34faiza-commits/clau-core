@@ -42,6 +42,8 @@
 
 > **ASSUMPTION:** pembagian pilar 2–5 adalah usulan kerja berdasarkan kebutuhan umum hospitality. Nama, urutan, dan scope pilar 2–5 menunggu keputusan owner (**CLIENT CONFIRMATION**). Detail: [docs/5-pillar-architecture.md](./docs/5-pillar-architecture.md).
 
+> **Masa depan (Draft):** konsep v2 — AI Marketing, Sales, Admin, Business Intelligence, Automation untuk banyak jenis usaha — sudah disiapkan sebagai cetak biru di [docs/blueprints/](./docs/blueprints/README.md), [docs/verticals.md](./docs/verticals.md), dan [docs/proposals/autonomy-levels.md](./docs/proposals/autonomy-levels.md). Tidak berlaku sebelum di-approve.
+
 > **Sinkron:** tabel ini adalah sumber nama, repo, dan status pilar. `clau-ai-agents/agents/registry.json` → `pillars` dites sama dengan tabel ini (`backend/tests/test_registry.py`); ubah keduanya bersamaan. Keputusan owner: TASK-034 di board CLAU-AI-CONTENT.
 
 ## Struktur
@@ -60,6 +62,9 @@ clau-ai-core/
 │   ├── database-schema.md · api-contracts.md · data-flow.md · integrations.md
 ├── docs/
 │   ├── getting-started.md · 5-pillar-architecture.md
+│   ├── verticals.md          # Jenis usaha: aktif & planned (Draft)
+│   ├── blueprints/           # Cetak biru konsep v2: marketing, sales, admin, BI, automation (Draft)
+│   └── proposals/            # Usulan amandemen (otonomi bertingkat), belum berlaku
 └── scripts/validate_core.py  # Validator (dipakai CI)
 ```
 

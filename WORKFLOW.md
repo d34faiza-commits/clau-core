@@ -1,10 +1,10 @@
 ---
 document_title: "CLAU AI Work Pipeline"
 document_owner: "Dea Karisna / AI Marketing"
-version: "1.0.0"
+version: "1.0.1"
 status: "Approved"
-effective_date: "2026-10-04"
-approval_reference: "Approval tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-04 (\"Approve AI-CONSTITUTION v2.0.0\"; \"untuk saat ini semua approve dulu\"); perubahan ada di main"
+effective_date: "2026-10-09"
+approval_reference: "Perintah owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-09, atas rekomendasi agent untuk issue #47 (\"gas kak.. kasih aku yg terbaik. aku percaya kaka\"). v1.0.0: approval Dea Karisna / d34faiza, 2026-10-04"
 classification: "Internal"
 ---
 
@@ -31,8 +31,8 @@ Pipeline umum untuk semua pilar. Setiap pilar mendetailkan langkah 4–6 di work
 
 | Pilar | Workflow detail | Status |
 |---|---|---|
-| 1 Marketing & Content | [clau-ai-marketing/CONTENT-WORKFLOW.md](https://github.com/d34faiza-commits/clau-ai-marketing/blob/main/CONTENT-WORKFLOW.md) (9 langkah, termasuk Mode SIMULASI) | Aktif |
-| 2–5 | Dibuat saat pilar diaktifkan (lihat [5-pillar-architecture](./docs/5-pillar-architecture.md)) | Planned |
+| 1 AI Marketing | [clau-ai-marketing/CONTENT-WORKFLOW.md](https://github.com/d34faiza-commits/clau-ai-marketing/blob/main/CONTENT-WORKFLOW.md) (9 langkah, termasuk Mode SIMULASI) | Aktif |
+| 2–5 AI Sales, AI Admin, AI Business Intelligence, AI Automation | Dibuat saat pilar diaktifkan (lihat [5-pillar-architecture](./docs/5-pillar-architecture.md)) | Planned |
 
 ## Mode SIMULASI
 
@@ -44,3 +44,4 @@ Pilot dan contoh memakai data fiktif dan **tidak pernah** sampai langkah 7. Atur
 |---|---|---|---|
 | 1.0.0 | 2026-10-04 | Draft | Pipeline umum lintas pilar; workflow konten 9 langkah dipindah ke clau-ai-marketing/CONTENT-WORKFLOW.md |
 | 1.0.0 | 2026-10-04 | Approved | Approved oleh owner (Dea Karisna / d34faiza) |
+| 1.0.1 | 2026-10-09 | Approved | PATCH (wording): nama pilar di tabel Workflow per Pilar diselaraskan ke 5 pilar v2 (AI-CONSTITUTION v3.0.0). Perintah owner Dea Karisna / d34faiza, issue #47 / TASK-044 |

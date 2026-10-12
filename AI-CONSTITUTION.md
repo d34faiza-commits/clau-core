@@ -1,17 +1,17 @@
 ---
 document_title: "CLAU AI Constitution"
 document_owner: "Dea Karisna / AI Marketing"
-version: "3.0.0"
+version: "3.1.0"
 status: "Approved"
-effective_date: "2026-10-09"
-approval_reference: "Approval tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-09: \"Saya Dea Karisna (d34faiza), owner CLAU. Saya approve AI-CONSTITUTION v3.0.0: 5 pilar v2 (AI Marketing, AI Sales, AI Admin, AI Business Intelligence, AI Automation), otonomi bertingkat A/B/C dengan default Level B, dan fokus vertical villa, restoran/cafe, wedding, travel.\" Diterapkan ke main oleh owner. (v2.0.0: approval Dea Karisna / d34faiza, 2026-10-04)"
+effective_date: "2026-10-12"
+approval_reference: "v3.1.0: approval tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-12: \"Saya Dea Karisna (d34faiza), owner CLAU. Saya approve: semua push ke main di clau-ai-core, clau-ai-marketing, clau-ai-agents wajib lewat PR dengan CI hijau; push langsung tidak lagi diizinkan. Penegakan lewat main-guard karena GitHub Free.\" v3.0.0: approval tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-09: \"Saya Dea Karisna (d34faiza), owner CLAU. Saya approve AI-CONSTITUTION v3.0.0: 5 pilar v2 (AI Marketing, AI Sales, AI Admin, AI Business Intelligence, AI Automation), otonomi bertingkat A/B/C dengan default Level B, dan fokus vertical villa, restoran/cafe, wedding, travel.\" Diterapkan ke main oleh owner. (v2.0.0: approval Dea Karisna / d34faiza, 2026-10-04)"
 review_cycle: "Quarterly"
 classification: "Internal"
 ---
 
 # CLAU AI Constitution
 
-> **Status Approved (v3.0.0, 2026-10-09).** v3.0.0 menetapkan **5 pilar v2** dan **otonomi bertingkat** (§4a). Dokumen ini adalah generalisasi dari *CLAU AI Content Constitution v1.0.0* (arsip di repo `CLAU-AI-CONTENT`, sekarang **Superseded**) dan berlaku untuk semua pilar. Pilar 2–5 tetap belum boleh dipakai untuk client sampai workflow pilarnya ada dan di-approve.
+> **Status Approved (v3.1.0, 2026-10-12).** v3.0.0 menetapkan **5 pilar v2** dan **otonomi bertingkat** (§4a); v3.1.0 mewajibkan **PR + CI hijau** untuk semua perubahan ke `main` (§10). Dokumen ini adalah generalisasi dari *CLAU AI Content Constitution v1.0.0* (arsip di repo `CLAU-AI-CONTENT`, sekarang **Superseded**) dan berlaku untuk semua pilar. Pilar 2–5 tetap belum boleh dipakai untuk client sampai workflow pilarnya ada dan di-approve.
 >
 > **Otoritas perubahan:** Perubahan atas dokumen berstatus Approved hanya dilakukan atas perintah **Pak Indra** atau **Dea Karisna (d34faiza)**. AI agent tidak mengubah aturan Approved atas inisiatif sendiri; usulan perbaikan boleh ditulis sebagai catatan/issue, lalu menunggu perintah.
 
@@ -113,7 +113,7 @@ Klaim penting harus bisa ditelusuri ke dokumen client (versi/tanggal), konfirmas
 
 ## 10. Change Management
 
-- Solo dev di GitHub Free: direct push ke `main` diizinkan dengan disiplin di [AI-BOUNDARY.md](./AI-BOUNDARY.md). Tim 2+ orang: branch + pull request + review.
+- Semua perubahan ke `main` di clau-ai-core, clau-ai-marketing, dan clau-ai-agents wajib lewat **pull request dengan CI hijau**; push langsung ke `main` tidak diizinkan (keputusan owner 2026-10-12). GitHub Free tidak memaksa branch protection di repo private, jadi penegakannya lewat workflow `main-guard` dan disiplin di [AI-BOUNDARY.md](./AI-BOUNDARY.md). Tim 2+ orang: tambah review manusia sebelum merge.
 - Perubahan di core yang memengaruhi repo lain wajib diikuti update submodule di repo tersebut (lihat [docs/getting-started.md](./docs/getting-started.md)).
 - Dokumen controlled memakai SemVer dan Revision History.
 
@@ -145,6 +145,7 @@ AI dilarang: mengarang review/testimoni/rating/award; membuat akun atau review p
 | 2.0.0 | 2026-10-04 | For Review | Generalisasi CLAU AI Content Constitution v1.0.0 menjadi konstitusi semua pilar untuk split repo (core/marketing/agents). NEXT ACTION: approval owner; pindahkan standard data classification 4-axis ke core |
 | 2.0.0 | 2026-10-04 | Approved | Approved oleh owner (Dea Karisna / d34faiza); berlaku efektif 2026-10-04. Otoritas perubahan: Pak Indra atau Dea Karisna (d34faiza) |
 | 3.0.0 | 2026-10-09 | Approved | Approved oleh owner Dea Karisna (d34faiza), diterapkan ke main oleh owner (TASK-034, TASK-040). §1–2: **5 pilar v2** (AI Marketing, AI Sales, AI Admin, AI Business Intelligence, AI Automation) + vertical fokus villa, restoran/cafe, wedding, travel; §4.7 + §4a baru: **otonomi bertingkat** A/B/C, default Level B; §13 disesuaikan. Perluasan ke jenis usaha di luar hospitality tetap usulan ([proposals/autonomy-levels.md](./docs/proposals/autonomy-levels.md) Usulan 2) |
+| 3.1.0 | 2026-10-12 | Approved | Approved oleh owner Dea Karisna (d34faiza). §10: semua perubahan ke `main` di core, marketing, agents wajib lewat PR dengan CI hijau; push langsung tidak lagi diizinkan. Penegakan lewat `main-guard` (GitHub Free tidak memaksa branch protection) |
 
 ## 15. Prinsip Akhir
 

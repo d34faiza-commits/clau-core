@@ -1,10 +1,10 @@
 ---
 document_title: "CLAU AI Boundary"
 document_owner: "Dea Karisna / AI Marketing"
-version: "1.1.1"
+version: "1.2.0"
 status: "Approved"
-effective_date: "2026-10-08"
-approval_reference: "v1.1.1: instruksi owner via sesi Claude Code, 2026-10-08 (\"gass\", izin token + sync via PR); v1.1.0: instruksi tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-06 (\"tolong semua repo di cek … jika belum fix 100% tolong di fix\"); v1.0.0 approved 2026-10-04; perubahan ada di main"
+effective_date: "2026-10-12"
+approval_reference: "v1.2.0: approval tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-12: \"Saya Dea Karisna (d34faiza), owner CLAU. Saya approve: semua push ke main di clau-ai-core, clau-ai-marketing, clau-ai-agents wajib lewat PR dengan CI hijau; push langsung tidak lagi diizinkan. Penegakan lewat main-guard karena GitHub Free.\" v1.1.1: instruksi owner via sesi Claude Code, 2026-10-08 (\"gass\", izin token + sync via PR); v1.1.0: instruksi tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-06 (\"tolong semua repo di cek … jika belum fix 100% tolong di fix\"); v1.0.0 approved 2026-10-04; perubahan ada di main"
 classification: "Internal"
 ---
 
@@ -62,25 +62,35 @@ Semua repo **private**. Repo private tidak membuat data `Confidential`/`Restrict
 
 - Repo pilar dan agents memuat core sebagai submodule di path `core/`, dikunci ke commit tertentu.
 - clau-ai-marketing juga memuat **clau-ai-agents** sebagai submodule di path `agents/` (referensi registry & validasi silang). `agents/core/` mengikuti pin milik clau-ai-agents dan harus sama dengan pin `core/` di marketing (dicek `scripts/check-core-pins.sh`).
-- Sinkronisasi submodule otomatis lewat GitHub Actions (`sync-submodules`, `cross-repo-validate`, `notify-downstream`) dengan secret `SUBMODULE_TOKEN` (fine-grained PAT, scope hanya 3 repo CLAU, permission Contents + Pull requests, read and write, dengan tanggal kedaluwarsa). Bot sync tidak push langsung ke `main`: bump di-push ke branch `bot/sync-submodules` lalu dibuka sebagai PR dan di-merge setelah validasi. Token tidak pernah disimpan di file. Panduan: `SUBMODULE.md` di repo konsumen.
+- Sinkronisasi submodule otomatis lewat GitHub Actions (`sync-submodules`, `cross-repo-validate`, `notify-downstream`) dengan secret `SUBMODULE_TOKEN` (fine-grained PAT, scope hanya 3 repo CLAU, permission Contents + Pull requests, read and write, dengan tanggal kedaluwarsa). Bot sync tidak push langsung ke `main`: bump di-push ke branch `bot/sync-submodules` lalu dibuka sebagai PR dan di-merge hanya setelah semua check PR hijau (merah = PR dibiarkan terbuka, job gagal). Token tidak pernah disimpan di file. Panduan: `SUBMODULE.md` di repo konsumen.
 - Bump submodule oleh bot hanya dilakukan setelah validator & test lulus; gagal = tidak ada commit.
 - Perubahan aturan dilakukan **di clau-ai-core**, bukan di folder `core/` dalam repo lain.
 - Update submodule = commit tersendiri di repo konsumen dengan message `chore(core): bump core to <hash>`.
 
-## Disiplin Push (GitHub Free, solo dev)
+## Disiplin Push (GitHub Free)
 
-GitHub Free tidak menyediakan branch protection untuk repo private. Mitigasi:
+Berlaku untuk clau-ai-core, clau-ai-marketing, dan clau-ai-agents (keputusan owner 2026-10-12):
 
-1. Commit message format `feat:`, `fix:`, `docs:`, `refactor:`, `chore:`, `test:`.
-2. Branch + PR untuk perubahan besar; wajib bila tim 2+ orang.
-3. Validator lokal lulus sebelum push.
-4. Backup rutin (push setelah tiap unit kerja).
+1. **Semua perubahan ke `main` lewat pull request dengan CI hijau.** Push langsung dan force push ke `main` tidak diizinkan, termasuk untuk owner dan bot.
+2. Merge PR hanya setelah semua check wajib hijau (approval 0 selama owner tunggal; tim 2+ orang: tambah review manusia).
+3. Commit message format `feat:`, `fix:`, `docs:`, `refactor:`, `chore:`, `test:`.
+4. Validator lokal lulus sebelum push ke feature branch.
+5. Backup rutin (push feature branch setelah tiap unit kerja).
 
-**Status:** **ASSUMPTION**: sesuai realita solo dev & GitHub Free. Direview bila tim bertambah, upgrade plan, atau repo dibuka.
+Check wajib per repo:
+
+| Repo | Check wajib |
+|---|---|
+| clau-ai-core | `validate` |
+| clau-ai-marketing | `validate`, `cross-validate` |
+| clau-ai-agents | `backend`, `frontend`, `audit`, `cross-validate` |
+
+**RISK:** GitHub Free tidak memaksa branch protection/ruleset di repo private, jadi push langsung **secara teknis tetap bisa**. Penegakan = deteksi: workflow `main-guard.yml` di tiap repo membuat check merah + email bila commit masuk `main` tanpa PR yang di-merge, di-force push, atau PR di-merge sebelum check wajib hijau. Pelanggaran: laporkan ke owner, perbaiki lewat PR baru (jangan force push). Direview bila plan di-upgrade (proteksi server bisa dipaksa) atau tim bertambah.
 
 ## Enforcement
 
 - CI tiap repo menjalankan validator (termasuk pola secret sederhana).
+- `main-guard` di tiap repo memeriksa setiap push ke `main` (lihat Disiplin Push).
 - Validator tidak menangkap semua pelanggaran; self-review diff tetap wajib.
 - Data terlarang terlanjur ter-commit: hapus dari konten aktif, nilai pembersihan history (otorisasi owner), rotasi credential, catat insiden.
 
@@ -92,3 +102,4 @@ GitHub Free tidak menyediakan branch protection untuk repo private. Mitigasi:
 | 1.0.0 | 2026-10-04 | Approved | Approved oleh owner (Dea Karisna / d34faiza); ditambah otoritas perubahan |
 | 1.1.0 | 2026-10-06 | Approved | Mencatat submodule `agents/` di clau-ai-marketing, aturan pin core, dan sinkronisasi otomatis via GitHub Actions + `SUBMODULE_TOKEN` (atas instruksi owner) |
 | 1.1.1 | 2026-10-08 | Approved | Izin `SUBMODULE_TOKEN` jadi Contents + Pull requests (dengan kedaluwarsa); bot sync membuka PR dari `bot/sync-submodules`, bukan push langsung ke `main` (atas instruksi owner) |
+| 1.2.0 | 2026-10-12 | Approved | Disiplin Push: semua perubahan ke `main` di core, marketing, agents wajib lewat PR dengan CI hijau; daftar check wajib per repo; penegakan lewat `main-guard` (GitHub Free). Bot sync merge hanya setelah check PR hijau (approval tertulis owner) |

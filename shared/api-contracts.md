@@ -1,6 +1,6 @@
 # API Contracts
 
-Kontrak HTTP antara frontend dan backend clau-ai-agents, dan antara platform dengan konsumen lain. Endpoint bertanda **Implemented** sudah ada di scaffold backend; sisanya **Planned**.
+Kontrak HTTP antara frontend dan backend clau-ai-agents, dan antara platform dengan konsumen lain. Endpoint bertanda **Implemented** sudah ada di backend; sisanya **Planned**.
 
 ## Prinsip
 
@@ -9,7 +9,7 @@ Kontrak HTTP antara frontend dan backend clau-ai-agents, dan antara platform den
 - Tidak ada endpoint yang menerima credential platform client.
 - Error: `{"error": {"code": "<snake_case>", "message": "<teks>"}}` untuk semua error, termasuk validasi request (422 `validation_error`).
 - **Autentikasi** (0.5.0): sesi cookie dari `POST /auth/login`. Setiap request yang mengubah data (POST/PUT/PATCH/DELETE) wajib header `X-CSRF-Token` (dari `Me.csrf_token`) dan Origin aplikasi. Selama `Me.next` ≠ `ready` (ganti password sementara / aktifkan 2FA wajib owner), hanya endpoint `/auth/*` yang bisa dipakai (403 `password_change_required` / `mfa_setup_required`). Tidak ada pendaftaran publik: owner pertama dibuat lewat CLI server. Browser tidak memanggil backend langsung; frontend meneruskan `/api/*` ke backend (keputusan VPS #1).
-- Pelanggaran aturan database (Constraint Wajib) = 409 dengan kode aturan, mis. `approval_needs_independent_review`, tanpa detail SQL.
+- Pelanggaran aturan database (Constraint Wajib) = 409 dengan kode aturan, mis. `approval_needs_independent_review`, tanpa detail SQL. Daftar lengkap: § Kode Aturan Approval (sumber tunggal; UI & desain merujuk ke sini).
 
 ## Endpoint
 
@@ -32,6 +32,21 @@ Kontrak HTTP antara frontend dan backend clau-ai-agents, dan antara platform den
 | `POST /drafts` | Planned | `{request_id, brief_id}` | `Draft` + `claims[]`, `mode` |
 | `POST /qa-records` | Planned | `{draft_id, gate, result, reviewer_role, independent}` | `QARecord` |
 | `POST /approvals` | Planned | `{draft_id, level, decision, approver_role}` | `Approval` (ditolak bila mode SIMULASI + Approved) |
+
+## Kode Aturan Approval
+
+Semua 409 dengan bentuk error kontrak. **Implemented** = ditegakkan trigger database (migrasi 0001, backend 0.4.0+) dan diteruskan backend apa adanya; **Planned** = dibuat bersama endpoint workflow (Tahap 1 PR 3).
+
+| Aturan | Kode | Status |
+|---|---|---|
+| Reviewer independen ≠ pembuat draft | `qa_reviewer_is_author` | Implemented |
+| Approval L2/L3 butuh claim verification independen yang lulus | `approval_needs_independent_review` | Implemented |
+| Mode approval = mode draft | `approval_mode_mismatch` | Implemented |
+| Isi draft versi lama tidak bisa diubah (simpan versi baru) | `draft_version_immutable` | Implemented |
+| Tandai tayang butuh approval Approved | `publication_without_approval` | Implemented |
+| `audit_log` tidak bisa diubah/dihapus | `audit_log_append_only` | Implemented |
+| *Setujui* butuh semua fakta di draft dikonfirmasi (`claims.fact_key`) | `facts_unconfirmed` | Planned (PR 3) |
+| Approval untuk versi draft yang bukan versi terbaru | `approval_version_mismatch` | Planned (PR 3) |
 
 ## Bentuk Objek
 
@@ -80,5 +95,7 @@ Field `intent`, `pillar`, `skill`, `approval_min`, dan `autonomy_max` (kolom Oto
 |---|---|---|
 | 0.1.0 | 2026-10-04 | Scaffold: `/health`, `/agents`, `/route` |
 | 0.2.0 | 2026-10-06 | Error memakai bentuk kontrak (sebelumnya terbungkus `detail`); `/route` menambah `agent` dan `next_step` (planned → `escalate_to_owner`) |
+| 0.3.0 | 2026-10-09 | `GET /pillars` (pilar jadi sumber tunggal di registry) |
+| 0.4.0 | 2026-10-09 | 5 pilar v2 dan `autonomy_max` per agent (AI-CONSTITUTION v3.0.0) |
 | 0.5.0 | 2026-10-12 | Login & hak akses: `/auth/*` (sesi cookie, CSRF, 2FA TOTP wajib owner) dan `/users` (owner); error 409 untuk aturan database |
 | 0.6.0 | 2026-10-13 | QR 2FA, kode cadangan, keluar semua perangkat, `Me.active_sessions` / `recovery_codes_left`; penguatan hasil audit (timing, race 2FA & owner terakhir, brute force ganti password) |

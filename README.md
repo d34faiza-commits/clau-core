@@ -2,7 +2,7 @@
 
 **Fondasi CLAU AI** untuk bisnis hospitality & tourism Indonesia: konstitusi AI, boundary data, pipeline kerja, orchestrator (routing antar pilar), dan kontrak data bersama. Dipakai oleh semua repo pilar dan platform lewat **git submodule** di path `core/`.
 
-> **Status:** Private — v0.1.0 (split dari `CLAU-AI-CONTENT`, 2026-10-04)
+> **Status:** Private (split dari `CLAU-AI-CONTENT`, 2026-10-04). Status kerja terkini: [status & handoff](https://github.com/d34faiza-commits/CLAU-AI-CONTENT/blob/main/docs/status.md)
 > **Dokumen induk:** [AI-CONSTITUTION.md](./AI-CONSTITUTION.md) (v3.1.0, **Approved**)
 > **Boundary:** [AI-BOUNDARY.md](./AI-BOUNDARY.md)
 > **Credit:** [ACKNOWLEDGMENT.md](./ACKNOWLEDGMENT.md)
@@ -14,7 +14,7 @@
 | **clau-ai-core** (repo ini) | Foundation | Constitution, boundary, pipeline, orchestrator, kontrak data | — |
 | [clau-ai-marketing](https://github.com/d34faiza-commits/clau-ai-marketing) | Pilar 1: AI Marketing | Rules, prompts, skills, knowledge, templates, QA, contoh | `core/` → repo ini, `agents/` → clau-ai-agents |
 | [clau-ai-agents](https://github.com/d34faiza-commits/clau-ai-agents) | Platform | Frontend (Next.js), backend (FastAPI), registry agent | `core/` → repo ini |
-| [CLAU-AI-CONTENT](https://github.com/d34faiza-commits/CLAU-AI-CONTENT) | Arsip / backup | Repo awal sebelum split; task board & riwayat pilot | — |
+| [CLAU-AI-CONTENT](https://github.com/d34faiza-commits/CLAU-AI-CONTENT) | Arsip + markas kerja | Snapshot sebelum split (jangan diedit); yang aktif: task board, status & handoff, desain UI | — |
 
 ```text
             ┌────────────────────┐
@@ -27,7 +27,7 @@
 │  (Pilar 1)       │◄──────│  (platform)      │  agents memanggil skill pilar lewat registry
 └──────────────────┘ refs  └──────────────────┘
    marketing juga memuat agents sebagai submodule agents/ (pin core harus sama)
-   sync otomatis: core/agents push → notify-downstream → sync-submodules + cross-repo-validate
+   sync otomatis: core → agents → marketing (notify-downstream → sync-submodules PR → CI hijau → merge)
 ```
 
 ## 5 Pilar CLAU AI
@@ -60,9 +60,9 @@ clau-ai-core/
 │   ├── database-schema.md · api-contracts.md · data-flow.md · integrations.md
 ├── docs/
 │   ├── getting-started.md · 5-pillar-architecture.md
-│   ├── verticals.md          # Jenis usaha: aktif & planned (Draft)
-│   ├── blueprints/           # Cetak biru konsep v2: marketing, sales, admin, BI, automation (Draft)
-│   └── proposals/            # Usulan amandemen (otonomi bertingkat), belum berlaku
+│   ├── verticals.md          # Jenis usaha: 4 vertical fokus Approved (v3.0.0), sisanya Planned
+│   ├── blueprints/           # Cetak biru 5 pilar: struktur Approved (v3.0.0), isi Draft/ASSUMPTION
+│   └── proposals/            # Jejak usulan: Usulan 1 diterapkan v3.0.0, Usulan 2 masih Draft
 └── scripts/validate_core.py  # Validator (dipakai CI)
 ```
 

@@ -1,7 +1,9 @@
 name: Notify Downstream
 
-# Setelah push ke main, minta repo konsumen men-sync submodule sekarang
-# (tidak menunggu jadwal harian). Butuh secret SUBMODULE_TOKEN dengan akses
+# Setelah push ke main, minta clau-ai-agents men-sync core sekarang (tidak menunggu jadwal harian).
+# clau-ai-marketing tidak dipicu dari sini: core di marketing selalu mengikuti pin agents/core, jadi
+# marketing di-sync setelah agents lulus test terhadap core baru (notify-downstream di agents).
+# Butuh secret SUBMODULE_TOKEN dengan akses
 # Contents: write ke repo tujuan; tanpa secret, job dilewati (notice).
 on:
   push:
@@ -13,12 +15,12 @@ permissions:
 
 jobs:
   dispatch:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     env:
       HAS_TOKEN: ${{ secrets.SUBMODULE_TOKEN != '' }}
       GH_TOKEN: ${{ secrets.SUBMODULE_TOKEN }}
-      TARGETS: d34faiza-commits/clau-ai-agents d34faiza-commits/clau-ai-marketing
+      TARGETS: d34faiza-commits/clau-ai-agents
     steps:
       - name: Token check
         if: env.HAS_TOKEN != 'true'
@@ -27,9 +29,16 @@ jobs:
       - name: Send repository_dispatch
         if: env.HAS_TOKEN == 'true'
         run: |
+          # Satu target gagal tidak menghentikan target lain; job tetap merah di akhir.
+          failed=""
           for repo in $TARGETS; do
-            gh api "repos/$repo/dispatches" -f event_type=submodule-updated \
-              -f "client_payload[source]=${{ github.repository }}" \
-              -f "client_payload[sha]=${{ github.sha }}"
-            echo "dispatched submodule-updated -> $repo"
+            if gh api "repos/$repo/dispatches" -f event_type=submodule-updated \
+                -f "client_payload[source]=${{ github.repository }}" \
+                -f "client_payload[sha]=${{ github.sha }}"; then
+              echo "dispatched submodule-updated -> $repo"
+            else
+              echo "::error::dispatch ke $repo gagal (token kedaluwarsa / tanpa akses?)"
+              failed="$failed $repo"
+            fi
           done
+          [ -z "$failed" ]

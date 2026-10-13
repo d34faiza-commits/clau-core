@@ -21,4 +21,4 @@ Orchestrator menentukan **ke mana** sebuah request dikirim (pilar & skill) dan *
 | Komponen | Status |
 |---|---|
 | Spesifikasi routing (dokumen ini) | Draft |
-| Implementasi di clau-ai-agents | Scaffold: endpoint `POST /route` memakai tabel di [router.md](./router.md) secara statis |
+| Implementasi di clau-ai-agents | Implemented (statis): endpoint `POST /route` memakai tabel di [router.md](./router.md) |

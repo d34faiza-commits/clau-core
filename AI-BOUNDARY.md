@@ -1,10 +1,10 @@
 ---
 document_title: "CLAU AI Boundary"
 document_owner: "Dea Karisna / AI Marketing"
-version: "1.2.0"
+version: "1.3.0"
 status: "Approved"
-effective_date: "2026-10-12"
-approval_reference: "v1.2.0: approval tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-12: \"Saya Dea Karisna (d34faiza), owner CLAU. Saya approve: semua push ke main di clau-ai-core, clau-ai-marketing, clau-ai-agents wajib lewat PR dengan CI hijau; push langsung tidak lagi diizinkan. Penegakan lewat main-guard karena GitHub Free.\" v1.1.1: instruksi owner via sesi Claude Code, 2026-10-08 (\"gass\", izin token + sync via PR); v1.1.0: instruksi tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-06 (\"tolong semua repo di cek … jika belum fix 100% tolong di fix\"); v1.0.0 approved 2026-10-04; perubahan ada di main"
+effective_date: "2026-10-13"
+approval_reference: "v1.3.0: persetujuan owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-13, atas 3 usulan (1) CLAU-AI-CONTENT = arsip + markas kerja, (2) job `docker` jadi check wajib clau-ai-agents, (3) gerbang deploy VPS 1 `release/vps1`: \"ok gas 1 2 dan 3 kak\". v1.2.0: approval tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-12: \"Saya Dea Karisna (d34faiza), owner CLAU. Saya approve: semua push ke main di clau-ai-core, clau-ai-marketing, clau-ai-agents wajib lewat PR dengan CI hijau; push langsung tidak lagi diizinkan. Penegakan lewat main-guard karena GitHub Free.\" v1.1.1: instruksi owner via sesi Claude Code, 2026-10-08 (\"gass\", izin token + sync via PR); v1.1.0: instruksi tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-06 (\"tolong semua repo di cek … jika belum fix 100% tolong di fix\"); v1.0.0 approved 2026-10-04; perubahan ada di main"
 classification: "Internal"
 ---
 
@@ -27,7 +27,7 @@ Perubahan atas dokumen berstatus Approved hanya dilakukan atas perintah **Pak In
 | clau-ai-core | Constitution, boundary, pipeline, orchestrator, kontrak data (dokumen & schema), validator | Data client, brief/konten client |
 | Repo pilar (mis. clau-ai-marketing) | Rules, prompt, skill, knowledge reusable, template, QA, contoh **fiktif** | Brief/konten/aset client nyata, data tamu |
 | clau-ai-agents | Kode platform, registry agent, konfigurasi **contoh** (`.env.example`) | `.env` asli, credential, dump database, log berisi data tamu |
-| CLAU-AI-CONTENT | Arsip read-mostly sebelum split | Data baru |
+| CLAU-AI-CONTENT | Arsip + markas kerja: snapshot sebelum split (read-only), board task (`tasks/`), status & handoff + peta (`docs/`), spesifikasi UI (`design/`) | Aturan/skill/prompt/knowledge baru (edit di repo sumber), data client nyata, credential |
 
 Semua repo **private**. Repo private tidak membuat data `Confidential`/`Restricted` boleh di-commit.
 
@@ -83,7 +83,9 @@ Check wajib per repo:
 |---|---|
 | clau-ai-core | `validate` |
 | clau-ai-marketing | `validate`, `cross-validate` |
-| clau-ai-agents | `backend`, `frontend`, `audit`, `cross-validate` |
+| clau-ai-agents | `backend`, `frontend`, `audit`, `docker`, `cross-validate` |
+
+**Deploy VPS 1 (clau-ai-agents):** server hanya menayangkan branch `release/vps1`, yang dimajukan otomatis oleh CI ke commit `main` yang semua job CI-nya (`backend`, `frontend`, `audit`, `docker`) hijau. Commit merah tidak pernah tayang. Branch ini hanya ditulis job CI `release-vps1`; jangan di-push manual.
 
 **RISK:** GitHub Free tidak memaksa branch protection/ruleset di repo private, jadi push langsung **secara teknis tetap bisa**. Penegakan = deteksi: workflow `main-guard.yml` di tiap repo membuat check merah + email bila commit masuk `main` tanpa PR yang di-merge, di-force push, atau PR di-merge sebelum check wajib hijau. Pelanggaran: laporkan ke owner, perbaiki lewat PR baru (jangan force push). Direview bila plan di-upgrade (proteksi server bisa dipaksa) atau tim bertambah.
 
@@ -103,3 +105,4 @@ Check wajib per repo:
 | 1.1.0 | 2026-10-06 | Approved | Mencatat submodule `agents/` di clau-ai-marketing, aturan pin core, dan sinkronisasi otomatis via GitHub Actions + `SUBMODULE_TOKEN` (atas instruksi owner) |
 | 1.1.1 | 2026-10-08 | Approved | Izin `SUBMODULE_TOKEN` jadi Contents + Pull requests (dengan kedaluwarsa); bot sync membuka PR dari `bot/sync-submodules`, bukan push langsung ke `main` (atas instruksi owner) |
 | 1.2.0 | 2026-10-12 | Approved | Disiplin Push: semua perubahan ke `main` di core, marketing, agents wajib lewat PR dengan CI hijau; daftar check wajib per repo; penegakan lewat `main-guard` (GitHub Free). Bot sync merge hanya setelah check PR hijau (approval tertulis owner) |
+| 1.3.0 | 2026-10-13 | Approved | CLAU-AI-CONTENT = arsip + markas kerja; job `docker` (uji container + backup/restore) jadi check wajib clau-ai-agents; VPS 1 hanya menayangkan `release/vps1` (commit `main` yang CI-nya hijau). Persetujuan owner 2026-10-13 |

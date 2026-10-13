@@ -19,11 +19,13 @@ Kontrak HTTP antara frontend dan backend clau-ai-agents, dan antara platform den
 | `GET /agents` | **Implemented** | — | `{"agents": [Agent]}` dari `agents/registry.json` |
 | `GET /pillars` | **Implemented** | — | `{"pillars": [Pillar]}` dari `agents/registry.json` → `pillars`, plus `agents` (id agent per pilar) |
 | `POST /route` | **Implemented** (statis) | `{"intent": "<intent>"}` | `{"intent", "agent", "pillar", "skill", "repo", "approval_min", "autonomy_max": "A"\|"B"\|"C", "status": "active"\|"planned", "next_step": "produce_draft"\|"escalate_to_owner"}`. Intent tidak dikenal → 404 `unknown_intent`; body tidak valid → 422 `validation_error` |
-| `POST /auth/login` | **Implemented** (0.5.0) | `{email, password, totp_code?}` | `Me` + cookie sesi `__Host-clau_session` (`HttpOnly; Secure; SameSite=Lax`). 401 `invalid_credentials` (sama untuk email tidak terdaftar), 401 `mfa_required` / `invalid_mfa_code`, 429 `too_many_attempts` (5 gagal = kunci 15 menit), 403 `origin_not_allowed` |
+| `POST /auth/login` | **Implemented** (0.5.0) | `{email, password, totp_code? \| recovery_code?}` | `Me` + cookie sesi `__Host-clau_session` (`HttpOnly; Secure; SameSite=Lax`). 401 `invalid_credentials` (sama untuk email tidak terdaftar), 401 `mfa_required` / `invalid_mfa_code`, 429 `too_many_attempts` (5 gagal = kunci 15 menit), 403 `origin_not_allowed` |
 | `GET /auth/me` | **Implemented** (0.5.0) | — (cookie) | `Me` |
 | `POST /auth/logout` | **Implemented** (0.5.0) | — | 204, sesi dicabut |
+| `POST /auth/logout-all` | **Implemented** (0.6.0) | — | 204, semua sesi user dicabut (termasuk sesi ini) |
 | `POST /auth/password` | **Implemented** (0.5.0) | `{current_password, new_password}` | `Me` + cookie baru; sesi lain dicabut. 422 `weak_password` (min. 12 karakter, NIST SP 800-63B) |
-| `POST /auth/mfa/setup` · `POST /auth/mfa/confirm` | **Implemented** (0.5.0) | — · `{code}` | `{secret, otpauth_uri}` · `Me` + cookie baru (TOTP RFC 6238, kode tidak bisa dipakai ulang) |
+| `POST /auth/mfa/setup` · `POST /auth/mfa/confirm` | **Implemented** (0.5.0; QR & kode cadangan 0.6.0) | — · `{code}` | `{secret, otpauth_uri, qr_svg}` · `Me` + `recovery_codes` (10, ditampilkan sekali) + cookie baru (TOTP RFC 6238, kode tidak bisa dipakai ulang) |
+| `POST /auth/mfa/recovery-codes` | **Implemented** (0.6.0) | `{password}` | `{recovery_codes}`: 10 kode baru, yang lama batal. Password salah dihitung gagal login |
 | `GET /users` · `POST /users` | **Implemented** (0.5.0), owner | — · `{display_name, email, temporary_password, locale?, timezone?, memberships[]}` | `{users: [User]}` · `User` (wajib ganti password saat login pertama) |
 | `PUT /users/{id}/memberships` · `POST /users/{id}/disable` · `POST /users/{id}/enable` | **Implemented** (0.5.0), owner | `[{scope, role, max_level}]` · — · — | `User`; sesi user target dicabut. 409 `last_owner` / `cannot_disable_self` |
 | `POST /requests` | Planned | `{client_code, intent, text, deadline}` | `Request` dengan `priority` dari priority engine |
@@ -68,7 +70,7 @@ Field `intent`, `pillar`, `skill`, `approval_min`, dan `autonomy_max` (kolom Oto
 
 `display_name` dan `avatar` (registry 0.3.0) adalah sumber tunggal nama dan avatar agent untuk UI; `figure` mendeskripsikan figur ilustrasi (`female`/`male`), bukan data orang. Isi `forbidden_actions` = `default_forbidden_actions` registry.
 
-`Me` = `{user: User, mfa_required, must_change_password, next: "ready"|"password_change"|"mfa_setup", csrf_token}`. `User` = `{id, display_name, email, locale, timezone, salutation, memberships: [{scope, role, max_level}], mfa_enabled, disabled}` (tanpa hash atau secret).
+`Me` = `{user: User, mfa_required, must_change_password, next: "ready"|"password_change"|"mfa_setup", active_sessions, recovery_codes_left, csrf_token}`. `User` = `{id, display_name, email, locale, timezone, salutation, memberships: [{scope, role, max_level}], mfa_enabled, disabled, last_login_at}` (tanpa hash atau secret). `GET /users` juga mengembalikan `clients` (daftar `client_code`) untuk form peran.
 
 ## Versioning
 
@@ -79,3 +81,4 @@ Field `intent`, `pillar`, `skill`, `approval_min`, dan `autonomy_max` (kolom Oto
 | 0.1.0 | 2026-10-04 | Scaffold: `/health`, `/agents`, `/route` |
 | 0.2.0 | 2026-10-06 | Error memakai bentuk kontrak (sebelumnya terbungkus `detail`); `/route` menambah `agent` dan `next_step` (planned → `escalate_to_owner`) |
 | 0.5.0 | 2026-10-12 | Login & hak akses: `/auth/*` (sesi cookie, CSRF, 2FA TOTP wajib owner) dan `/users` (owner); error 409 untuk aturan database |
+| 0.6.0 | 2026-10-13 | QR 2FA, kode cadangan, keluar semua perangkat, `Me.active_sessions` / `recovery_codes_left`; penguatan hasil audit (timing, race 2FA & owner terakhir, brute force ganti password) |

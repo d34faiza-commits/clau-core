@@ -1,6 +1,6 @@
 # Database Schema (Design)
 
-> **Status: Draft (kontrak hidup), diimplementasikan.** PostgreSQL 16 di clau-ai-agents: migrasi `0001` (skema + Constraint Wajib) dan `0002` (login). Kontrak ini tetap sumber kebenaran: tabel di database dites sama dengan daftar di bawah (`backend/tests/test_db.py`), jadi perubahan skema dimulai dari dokumen ini. Detail implementasi: `clau-ai-agents/backend/README.md` § Database.
+> **Status: Draft (kontrak hidup), diimplementasikan.** PostgreSQL 16 di clau-ai-agents: migrasi `0001` (skema + Constraint Wajib), `0002` (login), dan `0003` (kode cadangan 2FA). Kontrak ini tetap sumber kebenaran: tabel di database dites sama dengan daftar di bawah (`backend/tests/test_db.py`), jadi perubahan skema dimulai dari dokumen ini. Detail implementasi: `clau-ai-agents/backend/README.md` § Database.
 
 ## Prinsip
 
@@ -24,6 +24,7 @@
 | `publications` | `id`, `draft_id` (FK), `channel`, `published_at`, `url_ref`, `published_by_role` | Diisi manusia setelah publish |
 | `consent_refs` | `id`, `client_code`, `consent_ref` (opaque), `scope`, `valid_until` | **Tidak** menyimpan nama/foto; hanya referensi ke consent register client |
 | `users` | `id`, `display_name`, `email`, `locale` (`id`/`en`), `timezone` (`Asia/Jakarta`/`Asia/Makassar`/`Asia/Jayapura`), `salutation`, `created_at`; login: `password_hash` (Argon2id), `must_change_password`, `totp_secret_enc`, `totp_enabled`, `totp_last_counter`, `failed_logins`, `locked_until`, `disabled_at`, `last_login_at` | Akun Portal/Studio (staf agency & approver client), bukan tamu. Email unik tanpa beda huruf besar/kecil |
+| `mfa_recovery_codes` | `id`, `user_id` (FK), `code_hash` (HMAC-SHA256), `created_at`, `used_at` | 10 kode cadangan 2FA sekali pakai (HP hilang); kode asli hanya ditampilkan sekali saat dibuat |
 | `sessions` | `token_hash` (PK, SHA-256 token cookie), `user_id` (FK), `mfa_ok`, `created_at`, `last_seen_at`, `expires_at`, `revoked_at` | Sesi login di server; token asli hanya di cookie `HttpOnly; Secure`. `mfa_ok=false` = 2FA wajib belum aktif |
 | `memberships` | `user_id` (FK), `scope` (`agency` / `client_code`), `role` (`owner`/`content_lead`/`content_staff`/`viewer`/`client_approver`), `max_level` (`L1`–`L3`) | Izin per klien; klien hanya melihat `client_code` miliknya |
 | `fact_confirmations` | `id`, `fact_sheet_id` (FK), `fact_key`, `value_before`, `value_after`, `decision` (`confirmed`/`corrected`), `confirmed_by` (FK users), `confirmed_at` | Hasil fitur **Konfirmasi Fakta** di Portal; `confirmed` = bukti tertulis owner → klaim boleh `DATA FINAL` |
@@ -39,7 +40,7 @@ clients 1─n requests 1─n drafts 1─n qa_records
 drafts 1─n approvals ; drafts 1─n publications
 clients 1─n consent_refs
 users 1─n memberships n─1 clients ; fact_sheets 1─n fact_confirmations
-users 1─n notifications ; users 1─n sessions ; audit_log → semua objek
+users 1─n notifications ; users 1─n sessions ; users 1─n mfa_recovery_codes ; audit_log → semua objek
 ```
 
 ## Constraint Wajib (saat implementasi)
@@ -71,6 +72,6 @@ Detail yang belum diatur kontrak dan ditetapkan saat implementasi (clau-ai-agent
 ## Open Items
 
 - **CLIENT CONFIRMATION:** pilihan database (PostgreSQL disarankan untuk JSON + constraint) dan lokasi hosting (data residency Indonesia?).
-- ~~NEXT ACTION: buat migration awal saat backend butuh persistence.~~ Selesai 2026-10-12 (migrasi `0001`, `0002`).
+- ~~NEXT ACTION: buat migration awal saat backend butuh persistence.~~ Selesai 2026-10-12 (migrasi `0001`–`0003`).
 - **NEXT ACTION:** Constraint Wajib "approval L2/L3 ditolak bila fakta terpakai belum `confirmed`" belum bisa ditegakkan: kontrak belum menghubungkan draft/klaim ke `fact_key`. Usulan: `claims.fact_key` + `drafts.fact_sheet_id`, lalu trigger (Tahap 1 PR 3 di clau-ai-agents).
 - Tabel `users`, `memberships`, `fact_confirmations`, `notifications`, `audit_log` ditambahkan 2026-10-06 agar sesuai spesifikasi UI (repo `CLAU-AI-CONTENT/design/`).

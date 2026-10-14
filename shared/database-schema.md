@@ -63,6 +63,10 @@ users 1─n notifications ; users 1─n sessions ; users 1─n mfa_recovery_code
 | Klaim kategori faktual (`facility`, `location`, `price`, `rating`, `certification`, `halal-dietary`, `food-beverage`, `treatment`, `capacity`, `safety`, `license`, `itinerary`) wajib `fact_key` berawalan kategorinya (`facility.pool-private`) | Setiap fakta bisa ditelusuri ke fact sheet; konfirmasi fakta kategori lain tidak bisa dipinjam |
 | `drafts.brief_id` / `drafts.fact_sheet_id` milik klien yang sama dengan request → `draft_client_mismatch`; `drafts.mode` = mode klien → `draft_mode_mismatch` | Tidak ada data lintas klien di satu draft |
 | `claims` tidak bisa diubah/dihapus, dan tidak bisa ditambah setelah draft punya QA/approval; `qa_records`, `approvals`, `fact_confirmations` append-only; `fact_sheets` yang sudah `approved_at` dibekukan → `draft_version_immutable` / `decision_record_append_only` | Jejak keputusan tidak bisa ditulis ulang |
+| `fact_sheets` baru tanpa `approved_*` dan versi = max + 1 per klien → `fact_sheet_approval_flow` / `fact_sheet_version_sequence`; perubahan hanya persetujuan sekali (kolom lain tetap), tidak pernah dihapus | Fact sheet hanya disetujui lewat alur jawaban klien |
+| Persetujuan fact sheet: punya ≥ 1 fakta (`fact_sheet_empty`), semua fakta punya jawaban (`facts_unconfirmed`), penyetuju `client_approver` klien itu atau `owner`/`content_lead` agency dengan `approval_ref` (`approval_role_mismatch` / `approval_needs_written_evidence`), bukan `created_by` (`approval_by_author`) | Rule 08: fakta disetujui klien |
+| `facts` hanya ditambah selama fact sheet belum disetujui (`fact_sheet_frozen`); tidak bisa diubah/dihapus | Koreksi = jawaban klien, bukan edit |
+| `fact_confirmations` baru: fact sheet belum disetujui (`fact_sheet_frozen`), `fact_key` ada di `facts` versi itu (`fact_not_in_sheet`), `confirmed_by_role` sesuai membership (`approval_role_mismatch`), agency wajib `channel_ref`, bukan pembuat fact sheet, `corrected` wajib `value_after` (`fact_value_required`); `value_before` diisi database | Jawaban fakta dari klien dan dapat ditelusuri |
 | `audit_log` tidak bisa di-update/delete dari aplikasi | Jejak keputusan |
 | Query Portal selalu difilter `memberships.scope = client_code` | Isolasi data antar klien |
 
@@ -87,5 +91,5 @@ Detail yang belum diatur kontrak dan ditetapkan saat implementasi (clau-ai-agent
 - **CLIENT CONFIRMATION:** pilihan database (PostgreSQL disarankan untuk JSON + constraint) dan lokasi hosting (data residency Indonesia?).
 - ~~NEXT ACTION: buat migration awal saat backend butuh persistence.~~ Selesai 2026-10-12 (migrasi `0001`–`0003`).
 - ~~NEXT ACTION: hubungkan klaim ke fakta (`claims.fact_key` + `drafts.fact_sheet_id`).~~ Selesai 2026-10-14 (migrasi `0004`, berlaku untuk semua level, bukan hanya L2/L3).
-- **NEXT ACTION:** endpoint kelola klien, fact sheet, dan Konfirmasi Fakta (`fact_confirmations`) belum ada; sampai ada, approval untuk draft dengan klaim faktual tetap terkunci (fail closed).
+- ~~NEXT ACTION: endpoint kelola klien, fact sheet, dan Konfirmasi Fakta.~~ Selesai 2026-10-14 (migrasi `0005`, API 0.8.0).
 - Tabel `users`, `memberships`, `fact_confirmations`, `notifications`, `audit_log` ditambahkan 2026-10-06 agar sesuai spesifikasi UI (repo `CLAU-AI-CONTENT/design/`).

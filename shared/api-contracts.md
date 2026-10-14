@@ -36,6 +36,11 @@ Kontrak HTTP antara frontend dan backend clau-ai-agents, dan antara platform den
 | `GET /qa-records` · `GET /qa-records/{id}` | **Implemented** (0.7.0) | query `draft_id?`, `limit?`, `offset?` | `Page<QARecord>` · `QARecord` |
 | `POST /approvals` | **Implemented** (0.7.0) | `{draft_id, level, decision, channel_ref?}` | 201 `Approval`; `approver_id`/`approver_role`/`mode` diisi server, status request diperbarui. 403 `level_not_allowed`, 409 kode § Kode Aturan Approval |
 | `GET /approvals` · `GET /approvals/{id}` | **Implemented** (0.7.0) | query `draft_id?`, `limit?`, `offset?` | `Page<Approval>` · `Approval` |
+| `GET /clients` · `POST /clients` | **Implemented** (0.8.0); POST owner | — · `{client_code, vertical, business_type, location_area?, approver_role, simulation?}` | `{items: [Client]}` (hanya klien yang boleh dilihat) · 201 `Client`. 409 `client_exists` |
+| `POST /fact-sheets` | **Implemented** (0.8.0) | `{client_code, document_ref, facts: [FactIn]}` (1–100 fakta) | 201 `FactSheetDetail`; `version`, `created_by` diisi server, belum disetujui. 403 `forbidden` (bukan staf agency), 404 `client_not_found` |
+| `GET /fact-sheets` · `GET /fact-sheets/{id}` | **Implemented** (0.8.0) | query `client_code?`, `approved?`, `limit?`, `offset?` | `Page<FactSheet>` (urut klien, versi terbaru dulu) · `FactSheetDetail` |
+| `POST /fact-sheets/{id}/confirmations` | **Implemented** (0.8.0) | `{fact_key, decision: "confirmed"\|"corrected", value_after?, channel_ref?}` | 201 `FactAnswer`; `value_before`, `confirmed_by`, `confirmed_by_role` diisi server. 409 `fact_not_in_sheet`, `fact_sheet_frozen`, `approval_by_author`, `approval_needs_written_evidence` |
+| `POST /fact-sheets/{id}/approve` | **Implemented** (0.8.0) | `{approval_ref?}` | 200 `FactSheetDetail`. 409 `facts_unconfirmed`, `fact_sheet_empty`, `fact_sheet_frozen`, `approval_by_author`, `approval_needs_written_evidence` |
 
 Semua endpoint workflow butuh login siap (`Me.next = ready`); `POST` juga CSRF + Origin. Body maks. 64 KB (413 `payload_too_large`); teks di-trim, teks kosong atau berisi karakter NUL = 422 `validation_error`; nilai di luar batas database = 422 `invalid_input`. Body menolak field lain (`extra = forbid`): peran, id user, mode, versi, pilar, dan prioritas **tidak pernah** diterima dari pengirim. Setiap `POST` menulis `audit_log` di transaksi yang sama (tanpa isi konten). Tidak ada endpoint publish/kirim ke platform atau tamu.
 
@@ -55,6 +60,17 @@ Data klien lain: detail → 404 `not_found` (keberadaan objek tidak dibocorkan);
 Aturan keputusan (semua ditegakkan database, berlaku untuk Approved, Revise, dan Rejected): pembuat draft tidak memutuskan drafnya sendiri; level ≥ level minimum draft; request yang sudah selesai (`approved`/`rejected`/`closed`) tidak menerima draft atau keputusan baru (`request_closed`, revisi = request baru). Level minimum draft = `approval_min` request, naik ke `L2` bila draft memuat klaim ber-`fact_key` (rule 08: klaim fasilitas/harga = L2). Yang dihitung untuk L2/L3 = claim verification independen **terakhir** (Fail setelah Pass membatalkan).
 
 `channel_ref` (bukti tertulis) hanya menerima skema `https://`, `mailto:`, atau `workspace://` (tanpa spasi/karakter kontrol, maks. 500); skema lain (mis. `javascript:`) = 422.
+
+### Konfirmasi Fakta (0.8.0)
+
+Alur `design/user-flow/client-portal-flow.md` § Konfirmasi Fakta, ditegakkan database (migrasi `0005`):
+
+1. Staf agency (`owner`/`content_lead`/`content_staff`) menyusun versi fact sheet + daftar fakta. Versi = max + 1 per klien; belum disetujui.
+2. Setiap fakta dijawab **klien**: `confirmed` (nilai benar) atau `corrected` + `value_after` (nilai yang benar). Yang menjawab: `client_approver` klien itu (berapa pun `max_level`-nya), atau `owner`/`content_lead` yang mencatat jawaban tertulis klien dengan `channel_ref`. Pembuat fact sheet tidak menjawab faktanya sendiri. Jawaban append-only; yang berlaku = jawaban terakhir per fakta. `value_before` = nilai fakta saat dijawab (diisi database).
+3. Fact sheet disetujui (sekali) setelah **semua** fakta dijawab, oleh peran yang sama (agency wajib `approval_ref`; bukan pembuatnya). Sesudah disetujui fact sheet, faktanya, dan jawabannya beku: perubahan = versi baru.
+4. Draft yang klaimnya ber-`fact_key` bisa di-approve hanya bila `drafts.fact_sheet_id` = fact sheet yang disetujui lewat alur ini (ada penyetujunya), setiap kunci klaim ada di daftar faktanya, dan versi itu adalah versi disetujui **terbaru** klien (`fact_sheet_superseded`: versi lama yang sudah dikoreksi tidak bisa dipakai lagi; simpan draft versi baru). Reviewer & approver melihat nilai yang dijawab klien (termasuk koreksi) di samping setiap klaim.
+
+Koreksi wajib mengubah nilai (`fact_value_unchanged`; nilai sama = pilih `confirmed`). `fact_key` fakta = `<kategori>.<nama>`. Teks yang hanya berisi spasi/karakter tak terlihat = kosong; referensi bukti/dokumen menolak karakter kontrol dan karakter format tak terlihat (zero-width, bidi override). `staff`/`viewer` tidak menjawab atau menyetujui (403); klien lain 404. Nilai fakta adalah data klien: tidak ditulis ke `audit_log`.
 
 Paginasi: `limit` 1–100 (default 50), `offset` 0–10000 (default 0); urutan terbaru dulu. `Page<T>` = `{items: [T], total, limit, offset}`.
 
@@ -80,6 +96,13 @@ Semua 409 dengan bentuk error kontrak. **Implemented** = ditegakkan trigger data
 | Approved oleh agency (semua level) wajib bukti tertulis klien (`channel_ref`) | `approval_needs_written_evidence` | Implemented (0.7.0) |
 | Brief/fact sheet draft milik klien request; mode draft = mode klien | `draft_client_mismatch` / `draft_mode_mismatch` | Implemented (0.7.0) |
 | Klaim, QA, approval, dan konfirmasi fakta tidak bisa diubah/dihapus; fact sheet yang sudah approved dibekukan | `draft_version_immutable` / `decision_record_append_only` | Implemented (0.7.0) |
+| Fakta hanya ditambah dan dijawab selama fact sheet belum disetujui | `fact_sheet_frozen` | Implemented (0.8.0) |
+| Jawaban hanya untuk fakta yang ada di versi fact sheet itu | `fact_not_in_sheet` | Implemented (0.8.0) |
+| Koreksi fakta wajib berisi nilai yang benar, dan berbeda dari nilai awal | `fact_value_required` (API 422 `validation_error`) / `fact_value_unchanged` | Implemented (0.8.0) |
+| Approved untuk draft berklaim fakta: fact sheet disetujui klien lewat alur 0.8.0, kunci ada di daftar fakta, versi disetujui terbaru | `facts_unconfirmed` / `fact_sheet_superseded` | Implemented (0.8.0) |
+| Fact sheet tanpa fakta tidak bisa disetujui; semua fakta wajib dijawab | `fact_sheet_empty` / `facts_unconfirmed` | Implemented (0.8.0) |
+| Fact sheet baru belum disetujui; perubahan fact sheet hanya persetujuan; versi berurutan | `fact_sheet_approval_flow` / `fact_sheet_version_sequence` | Implemented (0.8.0) |
+| Penjawab/penyetuju fakta: approver klien, atau agency dengan bukti tertulis; bukan pembuat fact sheet | `approval_role_mismatch` / `approval_needs_written_evidence` / `approval_by_author` | Implemented (0.8.0) |
 | Tandai tayang: keputusan terakhir draft = Approved dan draft = versi terbaru | `publication_without_approval` | Implemented (0.7.0, diperketat) |
 
 ## Bentuk Objek
@@ -127,6 +150,14 @@ Workflow (0.7.0):
 - `QARecord` = `{id, draft_id, gate, result, reviewer_id, reviewer_role, independent, created_at}`.
 - `Approval` = `{id, draft_id, level, decision, approver_id, approver_role, channel_ref, mode, decided_at}`.
 
+Klien & fakta (0.8.0):
+
+- `Client` = `{client_code, vertical, business_type, location_area, approver_role, simulation, created_at}`. `approver_role` = jabatan approver di bisnis klien (mis. owner, GM), bukan nama orang.
+- `FactIn` = `{fact_key, category, label, value}`: `category` kategori faktual; `fact_key` = `<kategori>.<nama>`, unik per fact sheet; `label` ≤ 200, `value` ≤ 1000.
+- `FactSheet` = `{id, client_code, version, document_ref, created_by, created_at, approved_at, approved_by, approved_by_role, approval_ref, status: "pending"|"ready"|"approved", facts_total, facts_answered}`. `ready` = semua fakta sudah dijawab, menunggu disetujui.
+- `FactSheetDetail` = `FactSheet` + `facts: [{fact_key, category, label, value, status: "pending"|"confirmed"|"corrected", current_value, answers: [FactAnswer]}]`. `current_value` = koreksi terakhir, atau `value`.
+- `FactAnswer` = `{id, fact_sheet_id, fact_key, decision, value_before, value_after, confirmed_by, confirmed_by_role, channel_ref, confirmed_at}`.
+
 `Me` = `{user: User, mfa_required, must_change_password, next: "ready"|"password_change"|"mfa_setup", active_sessions, recovery_codes_left, csrf_token}`. `User` = `{id, display_name, email, locale, timezone, salutation, memberships: [{scope, role, max_level}], mfa_enabled, disabled, last_login_at}` (tanpa hash atau secret). `GET /users` juga mengembalikan `clients` (daftar `client_code`) untuk form peran.
 
 ## Versioning
@@ -142,3 +173,4 @@ Workflow (0.7.0):
 | 0.5.0 | 2026-10-12 | Login & hak akses: `/auth/*` (sesi cookie, CSRF, 2FA TOTP wajib owner) dan `/users` (owner); error 409 untuk aturan database |
 | 0.6.0 | 2026-10-13 | QR 2FA, kode cadangan, keluar semua perangkat, `Me.active_sessions` / `recovery_codes_left`; penguatan hasil audit (timing, race 2FA & owner terakhir, brute force ganti password) |
 | 0.7.0 | 2026-10-14 | Workflow request → draft → QA → approval (`/requests`, `/drafts`, `/qa-records`, `/approvals`), matriks izin Rule 08, kode aturan baru (`facts_unconfirmed`, `approval_version_mismatch`, `approval_level_too_low`, `approval_by_author`, `approval_needs_written_evidence`, `draft_client_mismatch`, `draft_mode_mismatch`, `decision_record_append_only`, `request_closed`, `approval_role_mismatch`, `qa_role_mismatch`; 422 `invalid_input`), body maks. 64 KB |
+| 0.8.0 | 2026-10-14 | Klien (`/clients`), fact sheet & Konfirmasi Fakta (`/fact-sheets`, jawaban klien, persetujuan fact sheet); kode aturan `fact_sheet_frozen`, `fact_not_in_sheet`, `fact_value_required`, `fact_value_unchanged`, `fact_sheet_superseded`, `fact_sheet_empty`, `fact_sheet_approval_flow`, `fact_sheet_version_sequence`, `client_exists` |

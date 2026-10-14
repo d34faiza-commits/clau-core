@@ -20,7 +20,7 @@
 | `drafts` | `id`, `request_id` (FK), `brief_id` (FK), `fact_sheet_id` (FK, nullable), `skill`, `version`, `content` (text), `mode` (`NYATA`/`SIMULASI`), `created_by` (FK users, nullable bila dibuat agent), `agent_id` | Satu baris per versi (versi = max + 1 per request, dihitung server); tanpa data pribadi tamu. `mode` = dari `clients.simulation` |
 | `claims` | `id`, `draft_id` (FK), `text`, `category`, `evidence_label`, `source`, `source_date`, `implied` (bool), `fact_key` (nullable) | Termasuk klaim tersirat. `fact_key` = kunci fakta di fact sheet klien (format `^[a-z0-9]+([._-][a-z0-9]+)*$`, ≤ 64), wajib untuk kategori faktual |
 | `qa_records` | `id`, `draft_id` (FK), `gate`, `result` (`Pass`/`Conditional`/`Fail`/`N/A`), `reviewer_id` (FK users, null = agent), `reviewer_role`, `independent` (bool), `created_at` | `independent=false` untuk self-review AI/creator |
-| `approvals` | `id`, `draft_id` (FK, versi yang disetujui), `level` (`L1`–`L3`), `decision`, `approver_id` (FK users), `approver_role`, `channel_ref`, `decided_at`, `mode` | Mode SIMULASI tidak bisa `Approved`; approval terikat ke **versi** draft. `channel_ref` = referensi bukti tertulis (email/pesan arsip), wajib bila agency mencatat approval L2/L3 klien |
+| `approvals` | `id`, `draft_id` (FK, versi yang disetujui), `level` (`L1`–`L3`), `decision`, `approver_id` (FK users), `approver_role`, `channel_ref`, `decided_at`, `mode` | Mode SIMULASI tidak bisa `Approved`; approval terikat ke **versi** draft. `channel_ref` = referensi bukti tertulis (email/pesan arsip; skema `https://`, `mailto:`, `workspace://`), wajib bila agency mencatat Approved (semua level) |
 | `publications` | `id`, `draft_id` (FK), `channel`, `published_at`, `url_ref`, `published_by_role` | Diisi manusia setelah publish |
 | `consent_refs` | `id`, `client_code`, `consent_ref` (opaque), `scope`, `valid_until` | **Tidak** menyimpan nama/foto; hanya referensi ke consent register client |
 | `users` | `id`, `display_name`, `email`, `locale` (`id`/`en`), `timezone` (`Asia/Jakarta`/`Asia/Makassar`/`Asia/Jayapura`), `salutation`, `created_at`; login: `password_hash` (Argon2id), `must_change_password`, `totp_secret_enc`, `totp_enabled`, `totp_last_counter`, `failed_logins`, `locked_until`, `disabled_at`, `last_login_at` | Akun Portal/Studio (staf agency & approver client), bukan tamu. Email unik tanpa beda huruf besar/kecil |
@@ -48,18 +48,20 @@ users 1─n notifications ; users 1─n sessions ; users 1─n mfa_recovery_code
 | Constraint | Alasan |
 |---|---|
 | `approvals.decision = 'Approved'` hanya bila `mode = 'NYATA'` | Mode SIMULASI tidak pernah approved |
-| `publications` hanya bila ada `approvals` Approved untuk draft yang sama | Tidak ada publish tanpa approval |
-| Approval L2/L3 butuh minimal satu `qa_records.independent = true` untuk gate claim verification | Review independen |
+| `publications` hanya bila keputusan **terakhir** draft itu Approved dan draft = versi terbaru request | Tidak ada publish tanpa approval yang masih berlaku |
+| Approval L2/L3 butuh claim verification independen **terakhir** yang lulus (`Pass`/`Conditional`); Fail yang lebih baru membatalkan | Review independen |
 | `claims.evidence_label = 'DATA FINAL'` wajib `source` dan `source_date` | Traceability (selaras schema brief v1.2+) |
 | Reviewer `independent = true` ≠ `drafts.created_by` (dan bukan agent) | Pembuat tidak boleh me-review drafnya sendiri (rule 08) |
 | `approvals` Approved (semua level) ditolak bila draft punya klaim ber-`fact_key` yang belum dikonfirmasi: `drafts.fact_sheet_id` kosong, fact sheet belum `approved_at`, atau tidak ada `fact_confirmations` (`confirmed`/`corrected`) untuk `fact_key` itu di fact sheet tersebut → `facts_unconfirmed` | Tombol *Setujui* terkunci di UI juga ditegakkan di server |
 | `approvals` Approved hanya untuk versi draft tertinggi di request yang sama (request dikunci saat cek) → `approval_version_mismatch` | Approval terikat versi terbaru; tidak ada race dengan draft baru |
-| `approvals.level` ≥ `requests.approval_min` → `approval_level_too_low` | Konten L2 tidak bisa disetujui sebagai L1 untuk melewati review independen |
-| `approvals` Approved oleh pembuat draft (`drafts.created_by`) ditolak → `approval_by_author` | Tidak ada self-approve (AI-CONSTITUTION §4, rule 08) |
-| Approval L2/L3 Approved oleh peran agency (`owner`/`content_lead`) wajib `channel_ref` → `approval_needs_written_evidence` | Rule 08: L2/L3 = approver klien; agency hanya mencatat persetujuan tertulis klien |
-| Klaim kategori faktual (`facility`, `location`, `price`, `rating`, `certification`, `halal-dietary`, `food-beverage`, `treatment`, `capacity`, `safety`, `license`, `itinerary`) wajib `fact_key` | Setiap fakta bisa ditelusuri ke fact sheet |
+| `approvals.level` (semua keputusan) ≥ level minimum draft: `requests.approval_min` (`risk = 3` → L3 saat request dibuat), naik ke L2 bila draft punya klaim ber-`fact_key` → `approval_level_too_low` | Konten L2 tidak bisa diputuskan sebagai L1 untuk melewati review independen |
+| `approvals` (semua keputusan) oleh pembuat draft (`drafts.created_by`) ditolak → `approval_by_author` | Tidak ada self-approve (AI-CONSTITUTION §4, rule 08) |
+| Approved oleh peran agency (`owner`/`content_lead`), semua level, wajib `channel_ref` → `approval_needs_written_evidence` | Rule 08: persetujuan dari klien; agency hanya mencatat persetujuan tertulis klien |
+| `approvals.approver_role` / `qa_records.reviewer_role` harus ada di `memberships` user itu (klien request atau agency) → `approval_role_mismatch` / `qa_role_mismatch`; `qa_records.independent` hanya owner/content_lead → `independent_review_not_allowed` | Database tidak percaya peran yang dikirim aplikasi |
+| Draft/approval baru untuk request berstatus `approved`/`rejected`/`closed` ditolak → `request_closed` | Revisi setelah selesai = request baru |
+| Klaim kategori faktual (`facility`, `location`, `price`, `rating`, `certification`, `halal-dietary`, `food-beverage`, `treatment`, `capacity`, `safety`, `license`, `itinerary`) wajib `fact_key` berawalan kategorinya (`facility.pool-private`) | Setiap fakta bisa ditelusuri ke fact sheet; konfirmasi fakta kategori lain tidak bisa dipinjam |
 | `drafts.brief_id` / `drafts.fact_sheet_id` milik klien yang sama dengan request → `draft_client_mismatch`; `drafts.mode` = mode klien → `draft_mode_mismatch` | Tidak ada data lintas klien di satu draft |
-| `claims` tidak bisa diubah/dihapus, dan tidak bisa ditambah setelah draft punya QA/approval; `qa_records` & `approvals` append-only → `draft_version_immutable` / `decision_record_append_only` | Jejak keputusan tidak bisa ditulis ulang |
+| `claims` tidak bisa diubah/dihapus, dan tidak bisa ditambah setelah draft punya QA/approval; `qa_records`, `approvals`, `fact_confirmations` append-only; `fact_sheets` yang sudah `approved_at` dibekukan → `draft_version_immutable` / `decision_record_append_only` | Jejak keputusan tidak bisa ditulis ulang |
 | `audit_log` tidak bisa di-update/delete dari aplikasi | Jejak keputusan |
 | Query Portal selalu difilter `memberships.scope = client_code` | Isolasi data antar klien |
 
@@ -74,6 +76,7 @@ Detail yang belum diatur kontrak dan ditetapkan saat implementasi (clau-ai-agent
 | Review independen yang dihitung untuk L2/L3 | gate `claim-verification`, `independent = true`, hasil `Pass` atau `Conditional` (pengecualian terkontrol dengan approval tertulis) |
 | Mode approval | Harus sama dengan mode draft yang disetujui |
 | Mode draft (2026-10-14, migrasi `0004`) | `SIMULASI` bila `clients.simulation`, selain itu `NYATA`; ditentukan server, tidak bisa dipilih pengirim |
+| Klien SIMULASI saat upgrade (migrasi `0004`) | Hanya daftar eksplisit klien fiktif seed (`CTHVILLA`, `CTHCAFE`, `CTHWED`, `CTHTRIP`) ditandai `simulation = true`; tidak ada tebakan dari awalan kode. Klaim faktual lama tanpa kunci diberi `fact_key = <kategori>.legacy-<id>` (tidak pernah cocok dengan fact sheet, jadi tetap fail closed) |
 | Status request (0004) | `open` → `in_progress` (draft dibuat / Revise) → `approved` / `rejected` (approval versi terbaru); `closed` disiapkan untuk penutupan manual |
 | Isi draft | Baris versi yang tersimpan tidak bisa diubah; revisi = versi baru (approval terikat versi) |
 | Enum lain | `clients.vertical` & `claims.category` = `content-brief.schema.json`; `requests.priority` = priority engine (`Low`/`Normal`/`High`/`Urgent`) |

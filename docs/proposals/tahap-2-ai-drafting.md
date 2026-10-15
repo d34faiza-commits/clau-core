@@ -18,6 +18,23 @@
 
 **Di luar Tahap 2:** Level A (kirim otomatis), pilar 2–5, visual AI, integrasi platform sosial.
 
+### 1a. Arahan owner (2026-10-15)
+
+- **Tidak ada AI → langsung publish.** Alur wajib: AI menghasilkan → **AI fact-check terhadap data klien** → owner/tim review → approval (+ persetujuan tertulis klien, Rule 08) → final, dipublish manusia. Owner menjadi operator/pemilik sistem, bukan pekerja manual.
+- **Mulai dari satu agent yang menghasilkan uang: AI Content Agent** — produk pertama "Paket Konten Bulanan" (strategi 30 hari → 30 ide → 30 caption + hashtag → 12 konsep visual → 8 naskah video pendek → CTA → paket), dengan checkpoint owner setelah strategi dan di akhir paket. Aset gambar/video menyusul (Rule 07: properti/menu/lokasi tidak digenerate seolah foto asli).
+- **Urutan agent berikutnya** (dipetakan ke 5 pilar AI-CONSTITUTION v3.1.0, tanpa membangun ulang):
+
+| Urutan | Agent | Pilar / task |
+|---|---|---|
+| 1 | AI Content Agent | Pilar 1 AI Marketing (aktif) — Tahap 2 ini |
+| 2 | AI Sales Agent | Pilar 2 AI Sales (TASK-035) |
+| 3 | AI Customer Service | Pilar 2 AI Sales: pesan tamu, keluhan, balasan review (TASK-036) |
+| 4 | AI SEO Agent | Pilar 1: keyword/hashtag, OTA & Google Business (TASK-042) |
+| 5 | AI Advertising Agent | Pilar 1 v2: iklan berbayar (TASK-042) |
+| 6 | AI Business Agent | Pilar 3 Admin, Pilar 4 Business Intelligence, Pilar 5 Automation (TASK-037–039) |
+
+Semua agent memakai antrean, worker, pencatatan biaya, aturan data, dan alur approval yang sama dari Tahap 2.
+
 ## 2. Arsitektur
 
 ```text
@@ -31,7 +48,8 @@ Worker (container terpisah, image backend yang sama)
    1. rakit prompt: [aturan + skill + persona] (cache) → [fakta klien DATA FINAL + brief] → [request]
    2. saring data: penyamaran pola data pribadi; tolak bila ada data Restricted
    3. panggil Claude API (output terstruktur: draft + klaim)
-   4. validasi hasil (schema, fact_key ada di fact sheet, panjang, kata terlarang Rule 02/06)
+   4. AI fact-check: setiap klaim dicocokkan ke fakta klien yang dikonfirmasi (fact_key wajib ada & nilainya sesuai);
+      klaim tanpa dasar → ditandai untuk reviewer, draft tidak bisa di-approve (facts_unconfirmed); plus schema, panjang, kata terlarang Rule 02/06
    5. simpan drafts (created_by NULL, agent_id) + claims lewat aturan database Tahap 1
    6. catat ai_calls (token, biaya, stop_reason; tanpa isi prompt/jawaban)
    ▼

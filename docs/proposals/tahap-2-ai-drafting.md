@@ -52,13 +52,14 @@ qa_records gate otomatis (independent = false) → review manusia → approval k
 | `ai_calls` | `id`, `job_id` (FK), `provider`, `model`, `prompt_version`, `input_tokens`, `output_tokens`, `cache_read_tokens`, `cache_write_tokens`, `cost_micro_usd`, `stop_reason`, `provider_request_id`, `latency_ms`, `created_at` | **Append-only**; tanpa isi prompt/jawaban (isi ada di `drafts`); dasar dashboard biaya (TASK-058) |
 | `ai_budgets` | `scope` (`global` / `client_code`), `month`, `limit_micro_usd`, `alert_at_pct` | Job baru ditolak `ai_budget_exceeded` bila biaya bulan berjalan + perkiraan job > batas |
 
-### 3.2 Model & pengaturan (keputusan owner di § 6)
+### 3.2 Model & pengaturan (arahan owner 2026-10-15: model sesuai tingkat kesulitan)
 
-| Tugas | Model awal | Pengaturan |
-|---|---|---|
-| Draft konten (caption, reel script, OTA listing, review reply, kalender, kampanye) | `claude-opus-5-5` | `output_config.effort` per intent (mulai `medium`, naik ke `high` hanya bila eval membuktikan perlu); thinking adaptif (bawaan model ini) |
-| QA otomatis awal (cek klaim vs fakta, kata terlarang, panjang) | Kode deterministik dulu (`check_caption.py` dan sejenisnya); model hanya untuk penilaian yang tidak bisa dicek kode | Hasil `qa_records` dengan `independent = false` |
-| Tugas mekanis (format ulang, ringkasan internal) | Kandidat `claude-haiku-5-5` | **Hanya** setelah eval membuktikan kualitas setara, dan atas keputusan owner (menurunkan model demi biaya adalah keputusan owner, bukan AI) |
+| Tingkat | Contoh tugas | Model | Pengaturan |
+|---|---|---|---|
+| Sulit | Strategi konten 30 hari, riset pasar/kompetitor, konsep kampanye | `claude-fable-5-1` | Model paling mampu; dipakai hemat (sekali per klien per periode). Catatan data: model ini mensyaratkan retensi data di provider minimal 30 hari (tidak bisa zero data retention), catat di `integrations.md` |
+| Utama | Caption, reel script, OTA listing, balasan review, kalender, konsep visual, naskah video | `claude-opus-5-5` | `output_config.effort` per intent (mulai `medium`, naik ke `high` bila eval membuktikan perlu); thinking adaptif (bawaan) |
+| Ringan | Hashtag/keyword, format ulang, ringkasan internal, varian repurposing | Kandidat `claude-haiku-5-5` | Hanya setelah eval membuktikan kualitas setara, per intent, atas keputusan owner |
+| QA otomatis awal | Klaim vs fakta, kata terlarang, panjang | Kode deterministik dulu (`check_caption.py` dsb.); model hanya untuk yang tidak bisa dicek kode | `qa_records` dengan `independent = false` |
 
 - **Output terstruktur** (`output_config.format` dengan JSON schema / `client.messages.parse`): `{content, claims: [{text, category, evidence_label, fact_key, implied}], notes_for_reviewer}`. Jawaban yang tidak lolos schema = job gagal, tidak ada draft setengah jadi.
 - **Penolakan (refusal):** cek `stop_reason` sebelum membaca isi; fallback server-side bawaan (`fallbacks: "default"`) diaktifkan supaya penolakan keliru tidak menghentikan job; penolakan final = job `failed` dengan `error_code = refused`, request kembali ke manusia.
@@ -112,9 +113,9 @@ Setiap PR: test + audit adversarial independen + CI hijau, sama seperti Tahap 1.
 | # | Keputusan | Usulan AI |
 |---|---|---|
 | 1 | Provider AI | Claude API (Anthropic), sesuai `integrations.md` |
-| 2 | Model default & rute murah | Draft: `claude-opus-5-5`. Rute `claude-haiku-5-5` hanya untuk tugas mekanis yang lolos eval, diputuskan per intent oleh owner |
+| 2 | Model per tingkat kesulitan | **Arahan owner 2026-10-15:** sulit `claude-fable-5-1`, utama `claude-opus-5-5`, ringan `claude-haiku-5-5` setelah lolos eval (§ 3.2) |
 | 3 | Teks § 4 masuk AI-BOUNDARY | Setuju/ubah |
-| 4 | Batas biaya bulanan (global & per klien) | Owner menentukan angka; pagar kedua di konsol provider |
+| 4 | Batas biaya bulanan (global & per klien) | Owner menentukan angka saat akun provider dibuka (owner belum siap biaya 2026-10-15: PR 4a, 4b, 4d dan test 4c memakai provider tiruan, tanpa biaya) |
 | 5 | Akun & billing provider | Atas nama siapa, siapa pemegang key (key dibuat owner, dimasukkan langsung ke server) |
 | 6 | Masa simpan data di provider | Cek kebijakan provider yang berlaku saat akun dibuat; catat di `integrations.md` |
 | 7 | Agent pertama yang diaktifkan | Usulan: Pilar 1 intent `caption` (paling sering, eval paling lengkap), lalu bertahap |

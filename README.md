@@ -62,7 +62,7 @@ clau-ai-core/
 │   ├── getting-started.md · 5-pillar-architecture.md
 │   ├── verticals.md          # Jenis usaha: 4 vertical fokus Approved (v3.0.0), sisanya Planned
 │   ├── blueprints/           # Cetak biru 5 pilar: struktur Approved (v3.0.0), isi Draft/ASSUMPTION
-│   └── proposals/            # Jejak usulan: Usulan 1 diterapkan v3.0.0, Usulan 2 masih Draft
+│   └── proposals/            # Jejak usulan: otonomi (Usulan 1 diterapkan v3.0.0, Usulan 2 Draft), Tahap 2 AI menulis draft (Draft)
 └── scripts/validate_core.py  # Validator (dipakai CI)
 ```
 

@@ -22,7 +22,7 @@
 | `AGENTS.md` · `WORKFLOW.md` | Instruksi agent lintas repo · pipeline 8 langkah |
 | `orchestrator/` | `router.md` (12 intent), `decision-tree.md`, `priority-engine.md` |
 | `shared/` | `database-schema.md`, `api-contracts.md`, `data-flow.md`, `integrations.md` |
-| `docs/` | `getting-started.md` (alur sync antar repo), `5-pillar-architecture.md`, `verticals.md`, `blueprints/` (5 pilar), `proposals/` (jejak usulan) |
+| `docs/` | `getting-started.md` (alur sync antar repo), `5-pillar-architecture.md`, `verticals.md`, `blueprints/` (5 pilar), `proposals/` (jejak usulan; `tahap-2-ai-drafting.md` = rancangan AI menulis draft, Draft) |
 | `.github/ISSUE_TEMPLATE/` | Issue → board task di CLAU-AI-CONTENT |
 | `scripts/validate_core.py` | Validator (file wajib, versi governance, link, JSON, secret) |
 | `.github/workflows/` | `validate.yml`, `main-guard.yml` (cek push ke `main`), `notify-downstream.yml` (memicu sync di agents; marketing menyusul lewat agents) |

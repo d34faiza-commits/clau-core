@@ -81,19 +81,24 @@ Paginasi: `limit` 1–100 (default 50), `offset` 0–10000 (default 0); urutan t
 
 ### AI Menulis Draft (0.9.0)
 
-Alur (AI-BOUNDARY § Data ke Provider AI; usulan `docs/proposals/tahap-2-ai-drafting.md`, arahan owner 2026-10-15): staf menekan *Buat draft dengan AI* → job masuk antrean → worker (container terpisah, satu-satunya pemegang API key) mengambil job → menyusun prompt dari aturan + persona agent, **fakta fact sheet terbaru yang disetujui klien** (nilai = koreksi terakhir klien), dan teks request yang sudah disamarkan (email, nomor telepon, angka panjang) → model mengembalikan isi + klaim terstruktur → **AI fact-check** → draft versi baru (`created_by` null, `agent_id` agent) + klaim + QA otomatis → manusia review & approve.
+Alur (AI-BOUNDARY § Data ke Provider AI; usulan `docs/proposals/tahap-2-ai-drafting.md`, arahan owner 2026-10-15): staf menekan *Buat draft dengan AI* → job masuk antrean → worker (container terpisah, satu-satunya pemegang API key) mengambil job → menyusun prompt dari aturan + persona agent, **fakta fact sheet terbaru yang disetujui klien** (nilai = koreksi terakhir klien), dan teks request yang sudah disamarkan (email, nomor telepon, kode booking/PNR/voucher, nomor kamar, deret angka panjang; harga, tanggal, jam, dan kode promo tetap utuh) → model mengembalikan isi + klaim terstruktur → **AI fact-check** → draft versi baru (`created_by` null, `agent_id` agent) + klaim + QA otomatis → manusia review & approve.
 
 AI fact-check (deterministik, di worker; model tidak menentukan label bukti):
 
 | Klaim dari model | Disimpan sebagai | Akibat |
 |---|---|---|
-| Kategori faktual, `fact_key` ada di fact sheet yang disetujui | `DATA FINAL`, `source` = `fact-sheet <client> v<versi>`, `source_date` = tanggal jawaban klien | Bisa di-approve (aturan Tahap 1 tetap berlaku) |
-| Kategori faktual, `fact_key` tidak ada / tidak cocok kategori | `RISK`, `fact_key` = kunci itu (atau `<kategori>.tanpa-fakta`) | **Ditandai untuk reviewer**; approval terkunci `facts_unconfirmed` sampai klaim dihapus di versi berikutnya atau fakta dikonfirmasi klien |
+| Kategori faktual, `fact_key` ada di fact sheet yang disetujui dengan kategori sama, **dan** nilai fakta tertulis di teks klaim (fakta ya/tidak dikecualikan) | `DATA FINAL`, `source` = `fact-sheet <client> v<versi>`, `source_date` = tanggal jawaban klien (WITA) | Bisa di-approve (aturan Tahap 1 tetap berlaku) |
+| Kategori faktual, `fact_key` tidak ada / beda kategori | `RISK`, `fact_key` = kunci itu bila formatnya sah, selain itu `<kategori>.tanpa-fakta` | **Ditandai untuk reviewer**; approval terkunci `facts_unconfirmed` sampai klaim dihapus di versi berikutnya atau fakta dikonfirmasi klien |
+| Kategori faktual, `fact_key` ada tetapi isi klaim tidak memuat nilai fakta | `RISK`, `fact_key` = `<kategori>.tanpa-fakta` | Sama: terkunci, reviewer membandingkan dengan fact sheet |
 | Kategori `experience` / `other` | `ASSUMPTION` | Dinilai reviewer |
+| Kategori tak dikenal (huruf besar disamakan dulu): dipakai awalan `fact_key` bila faktual, selain itu | `RISK`, kategori `other`, `fact_key` = `other.tanpa-kategori` | Terkunci `facts_unconfirmed`; model tidak bisa lolos dengan kategori aneh |
+| Lebih dari 30 klaim | Job `failed` `invalid_output`, tanpa draft (biaya tetap dicatat) | Tidak ada klaim yang terbuang diam-diam |
 
 QA otomatis: `qa_records` gate `claim-verification`, `reviewer_role` `agent`, `independent` false, hasil `Pass` bila semua klaim faktual berdasar, selain itu `Fail`. Review independen L2/L3 tetap manusia.
 
-Batas: AI hanya untuk intent di `CLAU_AI_INTENTS` (default `caption`) dari pilar aktif, klien yang punya fact sheet disetujui, dan bila `CLAU_AI_ENABLED=1`. Provider tiruan (`CLAU_AI_PROVIDER=fake`, untuk uji tanpa biaya) hanya untuk klien SIMULASI (`ai_provider_test_only`). Biaya: batas `global` bulan berjalan wajib ada (`ai_budget_missing`); job ditolak bila biaya bulan ini + perkiraan per job melewati batas global atau batas klien (`ai_budget_exceeded`). Tidak ada endpoint publish.
+Aturan manusia atas draft AI (ditegakkan database, audit 2026-10-16): draft agent untuk klien NYATA minimal **L2** walau request L1 (AI fact-check hanya melihat klaim yang dilaporkan model, jadi isi draft wajib dibaca reviewer independen manusia); **peminta job = pembuat draft** sehingga tidak boleh menjadi reviewer independen (`qa_reviewer_is_author`) atau memutuskan approval draft itu (`approval_by_author`).
+
+Batas: AI hanya untuk intent di `CLAU_AI_INTENTS` (default `caption`) dari pilar aktif, klien yang punya fact sheet disetujui, dan bila `CLAU_AI_ENABLED=1`. Provider tiruan (`CLAU_AI_PROVIDER=fake`, untuk uji tanpa biaya) hanya untuk klien SIMULASI (`ai_provider_test_only`). Biaya: batas `global` bulan berjalan wajib ada (`ai_budget_missing`); job ditolak bila biaya bulan ini + perkiraan biaya semua job yang masih antre/berjalan + job baru melewati batas global atau batas klien (`ai_budget_exceeded`; pembuatan job dikunci agar permintaan bersamaan tidak balapan). Worker mengecek ulang batas sebelum memanggil model; hasil panggilan yang sudah dibayar tetap disimpan. Tombol mati (`CLAU_AI_ENABLED` ≠ `1`, berlaku setelah container dibuat ulang): job antre langsung `failed` `ai_disabled`, dan hasil panggilan yang sedang berjalan tidak disimpan (biayanya tetap dicatat). Job yang macet (worker mati) dikembalikan ke antrean; worker lama yang ternyata masih hidup tidak bisa menyimpan hasil (kepemilikan per percobaan). Tidak ada endpoint publish.
 
 ## Kode Aturan Approval
 

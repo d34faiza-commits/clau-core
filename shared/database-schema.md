@@ -59,7 +59,7 @@ requests 1─n ai_jobs 1─n ai_calls ; ai_jobs 0─1 drafts ; ai_jobs n─1 fac
 | Reviewer `independent = true` ≠ `drafts.created_by` (dan bukan agent) | Pembuat tidak boleh me-review drafnya sendiri (rule 08) |
 | `approvals` Approved (semua level) ditolak bila draft punya klaim ber-`fact_key` yang belum dikonfirmasi: `drafts.fact_sheet_id` kosong, fact sheet belum `approved_at`, atau tidak ada `fact_confirmations` (`confirmed`/`corrected`) untuk `fact_key` itu di fact sheet tersebut → `facts_unconfirmed` | Tombol *Setujui* terkunci di UI juga ditegakkan di server |
 | `approvals` Approved hanya untuk versi draft tertinggi di request yang sama (request dikunci saat cek) → `approval_version_mismatch` | Approval terikat versi terbaru; tidak ada race dengan draft baru |
-| `approvals.level` (semua keputusan) ≥ level minimum draft: `requests.approval_min` (`risk = 3` → L3 saat request dibuat), naik ke L2 bila draft punya klaim ber-`fact_key` → `approval_level_too_low` | Konten L2 tidak bisa diputuskan sebagai L1 untuk melewati review independen |
+| `approvals.level` (semua keputusan) ≥ level minimum draft: `requests.approval_min` (`risk = 3` → L3 saat request dibuat), naik ke L2 bila draft punya klaim ber-`fact_key` atau draft agent untuk klien NYATA → `approval_level_too_low` | Konten L2 tidak bisa diputuskan sebagai L1 untuk melewati review independen |
 | `approvals` (semua keputusan) oleh pembuat draft (`drafts.created_by`) ditolak → `approval_by_author` | Tidak ada self-approve (AI-CONSTITUTION §4, rule 08) |
 | Approved oleh peran agency (`owner`/`content_lead`), semua level, wajib `channel_ref` → `approval_needs_written_evidence` | Rule 08: persetujuan dari klien; agency hanya mencatat persetujuan tertulis klien |
 | `approvals.approver_role` / `qa_records.reviewer_role` harus ada di `memberships` user itu (klien request atau agency) → `approval_role_mismatch` / `qa_role_mismatch`; `qa_records.independent` hanya owner/content_lead → `independent_review_not_allowed` | Database tidak percaya peran yang dikirim aplikasi |
@@ -78,6 +78,8 @@ requests 1─n ai_jobs 1─n ai_calls ; ai_jobs 0─1 drafts ; ai_jobs n─1 fac
 | `ai_jobs` `succeeded` wajib `draft_id` dari request yang sama dan dibuat agent job itu (`drafts.created_by` NULL, `agent_id` sama) → `ai_job_draft_mismatch`; `failed` wajib `error_code` | Hasil job bisa ditelusuri ke draft yang benar |
 | `ai_calls` append-only (UPDATE/DELETE/TRUNCATE ditolak, hak ubah dicabut dari role aplikasi) → `ai_record_append_only` | Catatan biaya & pemakaian tidak bisa diubah |
 | Draft agent (`created_by` NULL) untuk klien NYATA hanya dari job AI yang sedang `running` untuk request itu, dengan `agent_id` job itu → `ai_draft_without_job` (draft agent SIMULASI dari seed pilot tetap boleh) | Tidak ada draft "atas nama agent" untuk klien nyata yang dibuat langsung |
+| Draft agent hasil job AI: `ai_jobs.requested_by` dianggap pembuat → tidak boleh QA independen (`qa_reviewer_is_author`) atau memutuskan approval (`approval_by_author`) | Rule 08: peminta draft AI tidak menyetujui hasilnya sendiri |
+| Level minimum draft agent (`created_by` NULL) untuk klien NYATA minimal L2 (`approval_level_too_low`), walau tanpa klaim ber-`fact_key` | Isi draft AI selalu dibaca reviewer independen manusia, bukan hanya klaim yang dilaporkan model |
 | Query Portal selalu difilter `memberships.scope = client_code` | Isolasi data antar klien |
 
 ## Keputusan Implementasi (2026-10-12)

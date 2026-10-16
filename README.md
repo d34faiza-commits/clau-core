@@ -2,7 +2,7 @@
 
 **Fondasi CLAU AI** untuk bisnis hospitality & tourism Indonesia: konstitusi AI, boundary data, pipeline kerja, orchestrator (routing antar pilar), dan kontrak data bersama. Dipakai oleh semua repo pilar dan platform lewat **git submodule** di path `core/`.
 
-> **Status:** Private (split dari `clau-content`, 2026-10-04). Status kerja terkini: [status & handoff](https://github.com/d34faiza-commits/clau-content/blob/main/docs/status.md)
+> **Status:** Public, hanya untuk dilihat ([LICENSE](./LICENSE)), split dari `clau-content` 2026-10-04. Status kerja terkini: [status & handoff](https://github.com/d34faiza-commits/clau-content/blob/main/docs/status.md)
 > **Dokumen induk:** [AI-CONSTITUTION.md](./AI-CONSTITUTION.md) (v3.1.0, **Approved**)
 > **Boundary:** [AI-BOUNDARY.md](./AI-BOUNDARY.md)
 > **Credit:** [ACKNOWLEDGMENT.md](./ACKNOWLEDGMENT.md)
@@ -71,7 +71,7 @@ clau-core/
 | Dokumen | Versi | Status |
 |---|---|---|
 | [AI-CONSTITUTION.md](./AI-CONSTITUTION.md) | 3.1.0 | Approved |
-| [AI-BOUNDARY.md](./AI-BOUNDARY.md) | 1.4.0 | Approved |
+| [AI-BOUNDARY.md](./AI-BOUNDARY.md) | 1.5.0 | Approved |
 | [WORKFLOW.md](./WORKFLOW.md) | 1.0.1 | Approved |
 | [AGENTS.md](./AGENTS.md) | 1.0.0 | Approved |
 
@@ -94,4 +94,4 @@ python scripts/validate_core.py
 
 ## Lisensi
 
-Proprietary, private use. Lihat [LICENSE](./LICENSE).
+Proprietary, source-available (hanya untuk dilihat; tidak boleh disalin, dipakai, atau dipakai melatih AI tanpa izin tertulis). Lihat [LICENSE](./LICENSE).

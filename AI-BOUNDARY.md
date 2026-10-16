@@ -1,10 +1,10 @@
 ---
 document_title: "CLAU AI Boundary"
 document_owner: "Dea Karisna / AI Marketing"
-version: "1.4.0"
+version: "1.5.0"
 status: "Approved"
 effective_date: "2026-10-16"
-approval_reference: "v1.4.0: persetujuan owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-16, atas usulan Tahap 2 § 4 (docs/proposals/tahap-2-ai-drafting.md): \"setuju gas\" sebagai jawaban atas \"Cukup balas setuju § 4\". v1.3.0: persetujuan owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-13, atas 3 usulan (1) clau-content = arsip + markas kerja, (2) job `docker` jadi check wajib clau-agent, (3) gerbang deploy VPS 1 `release/vps1`: \"ok gas 1 2 dan 3 kak\". v1.2.0: approval tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-12: \"Saya Dea Karisna (d34faiza), owner CLAU. Saya approve: semua push ke main di clau-core, clau-market, clau-agent wajib lewat PR dengan CI hijau; push langsung tidak lagi diizinkan. Penegakan lewat main-guard karena GitHub Free.\" v1.1.1: instruksi owner via sesi Claude Code, 2026-10-08 (\"gass\", izin token + sync via PR); v1.1.0: instruksi tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-06 (\"tolong semua repo di cek … jika belum fix 100% tolong di fix\"); v1.0.0 approved 2026-10-04; perubahan ada di main"
+approval_reference: "v1.5.0: perintah owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-16: keempat repo di-rename (clau-core, clau-agent, clau-market, clau-content) dan dijadikan public oleh owner; atas pilihan A (kembali private) atau B (tetap public, LICENSE disesuaikan) owner menjawab \"Gass B kak\". v1.4.0: persetujuan owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-16, atas usulan Tahap 2 § 4 (docs/proposals/tahap-2-ai-drafting.md): \"setuju gas\" sebagai jawaban atas \"Cukup balas setuju § 4\". v1.3.0: persetujuan owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-13, atas 3 usulan (1) clau-content = arsip + markas kerja, (2) job `docker` jadi check wajib clau-agent, (3) gerbang deploy VPS 1 `release/vps1`: \"ok gas 1 2 dan 3 kak\". v1.2.0: approval tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-12: \"Saya Dea Karisna (d34faiza), owner CLAU. Saya approve: semua push ke main di clau-core, clau-market, clau-agent wajib lewat PR dengan CI hijau; push langsung tidak lagi diizinkan. Penegakan lewat main-guard karena GitHub Free.\" v1.1.1: instruksi owner via sesi Claude Code, 2026-10-08 (\"gass\", izin token + sync via PR); v1.1.0: instruksi tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-06 (\"tolong semua repo di cek … jika belum fix 100% tolong di fix\"); v1.0.0 approved 2026-10-04; perubahan ada di main"
 classification: "Internal"
 ---
 
@@ -29,11 +29,15 @@ Perubahan atas dokumen berstatus Approved hanya dilakukan atas perintah **Pak In
 | clau-agent | Kode platform, registry agent, konfigurasi **contoh** (`.env.example`) | `.env` asli, credential, dump database, log berisi data tamu |
 | clau-content | Arsip + markas kerja: snapshot sebelum split (read-only), board task (`tasks/`), status & handoff + peta (`docs/`), spesifikasi UI (`design/`) | Aturan/skill/prompt/knowledge baru (edit di repo sumber), data client nyata, credential |
 
-Semua repo **private**. Repo private tidak membuat data `Confidential`/`Restricted` boleh di-commit.
+Semua repo **public, hanya untuk dilihat** (keputusan owner 2026-10-16; lisensi source-available di `LICENSE` tiap repo: boleh dilihat, tidak boleh disalin, dipakai, atau dipakai melatih AI tanpa izin tertulis). Semua yang di-commit, **termasuk riwayat commit**, dianggap bisa dilihat siapa saja:
+
+- `Confidential`/`Restricted` tetap dilarang (data client, data tamu, credential, `.env`, dump database).
+- Alamat IP server, nama host tailnet, dan detail operasional lain yang membantu penyerang tidak ditulis; contoh memakai alamat dokumentasi (`203.0.113.x`, `198.51.100.x`, `100.64.0.x`).
+- Lisensi melarang penyalinan secara hukum, bukan secara teknis: GitHub tetap menampilkan tombol download/clone/fork untuk repo public, dan tangkapan layar tidak bisa dicegah. Yang tidak boleh dilihat publik tidak boleh masuk repo.
 
 ## Konten yang Diizinkan
 
-1. Scope `Reusable`, sensitivity `Public` atau `Internal`.
+1. Scope `Reusable`, sensitivity `Public`, atau `Internal` yang owner rela terlihat publik (repo public).
 2. Lifecycle `Approved`, atau `Draft`/`For Review` dengan status tertulis jelas.
 3. Contoh memakai properti fiktif (nama mengandung "Contoh").
 4. Lolos validator repo dan self-review diff sebelum push.
@@ -99,7 +103,7 @@ Check wajib per repo:
 
 **Deploy VPS 1 (clau-agent):** server hanya menayangkan branch `release/vps1`, yang dimajukan otomatis oleh CI ke commit `main` yang semua job CI-nya (`backend`, `frontend`, `audit`, `docker`) hijau. Commit merah tidak pernah tayang. Branch ini hanya ditulis job CI `release-vps1`; jangan di-push manual.
 
-**RISK:** GitHub Free tidak memaksa branch protection/ruleset di repo private, jadi push langsung **secara teknis tetap bisa**. Penegakan = deteksi: workflow `main-guard.yml` di tiap repo membuat check merah + email bila commit masuk `main` tanpa PR yang di-merge, di-force push, atau PR di-merge sebelum check wajib hijau. Pelanggaran: laporkan ke owner, perbaiki lewat PR baru (jangan force push). Direview bila plan di-upgrade (proteksi server bisa dipaksa) atau tim bertambah.
+**RISK:** sampai ruleset `main` diaktifkan, push langsung **secara teknis tetap bisa**. Sejak repo public (2026-10-16), GitHub Free memaksa ruleset/branch protection di server. **NEXT ACTION (owner):** aktifkan ruleset `main` (wajib PR + check wajib di atas) di tiap repo, dan di Settings → Actions set *Require approval for all external contributors* agar workflow dari fork pihak luar tidak jalan tanpa persetujuan. Sampai itu, penegakan = deteksi: workflow `main-guard.yml` di tiap repo membuat check merah + email bila commit masuk `main` tanpa PR yang di-merge, di-force push, atau PR di-merge sebelum check wajib hijau. Pelanggaran: laporkan ke owner, perbaiki lewat PR baru (jangan force push). Direview bila plan di-upgrade (proteksi server bisa dipaksa) atau tim bertambah.
 
 ## Enforcement
 
@@ -119,3 +123,4 @@ Check wajib per repo:
 | 1.2.0 | 2026-10-12 | Approved | Disiplin Push: semua perubahan ke `main` di core, marketing, agents wajib lewat PR dengan CI hijau; daftar check wajib per repo; penegakan lewat `main-guard` (GitHub Free). Bot sync merge hanya setelah check PR hijau (approval tertulis owner) |
 | 1.3.0 | 2026-10-13 | Approved | clau-content = arsip + markas kerja; job `docker` (uji container + backup/restore) jadi check wajib clau-agent; VPS 1 hanya menayangkan `release/vps1` (commit `main` yang CI-nya hijau). Persetujuan owner 2026-10-13 |
 | 1.4.0 | 2026-10-16 | Approved | § Data ke Provider AI (keputusan VPS #5): data yang boleh/tidak boleh dikirim ke model AI, pencatatan panggilan tanpa isi, API key hanya di server worker, hasil AI selalu draft; zona penyimpanan Provider AI. Persetujuan owner 2026-10-16 |
+| 1.5.0 | 2026-10-16 | Approved | Repo di-rename (clau-core, clau-agent, clau-market, clau-content) dan public, hanya untuk dilihat: lisensi source-available, semua yang di-commit (termasuk riwayat) dianggap publik, tanpa IP/host server; ruleset `main` kini bisa dipaksa (NEXT ACTION owner). Perintah owner 2026-10-16 |

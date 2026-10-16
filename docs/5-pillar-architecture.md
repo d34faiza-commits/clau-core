@@ -46,7 +46,7 @@ Mengikuti pola `clau-ai-<pilar>`; dibuat saat pilar diaktifkan.
 ## Menambah Pilar
 
 1. Owner menyetujui scope pilar (catat di Revision History [AI-CONSTITUTION](../AI-CONSTITUTION.md)).
-2. Buat repo `clau-ai-<pilar>` (private) dengan struktur seperti clau-market: `rules/`, `prompts/`, `skills/`, `knowledge/`, `templates/`, `qa/`, workflow pilar, dan submodule `core/`.
+2. Buat repo `clau-<pilar>` (public hanya untuk dilihat dengan `LICENSE` yang sama, kecuali owner memutuskan private) dengan struktur seperti clau-market: `rules/`, `prompts/`, `skills/`, `knowledge/`, `templates/`, `qa/`, workflow pilar, dan submodule `core/`.
 3. Tambah intent di [orchestrator/router.md](../orchestrator/router.md) dan agent di `clau-agent/agents/registry.json`; ubah `pillars` (status `active` + `repo`) di registry yang sama.
 4. Jalankan pilot SIMULASI end-to-end sebelum dipakai untuk client.
 5. Update tabel di atas dan README core (status **Aktif** + repo) — test registry di clau-agent gagal bila tidak sama.

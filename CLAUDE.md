@@ -8,7 +8,7 @@
 
 | Item | Nilai |
 |---|---|
-| Repo | `d34faiza-commits/clau-core` (private) |
+| Repo | `d34faiza-commits/clau-core` (public, hanya untuk dilihat; LICENSE) |
 | Peran | Fondasi CLAU AI: constitution, boundary, workflow lintas pilar, orchestrator, kontrak data |
 | Dipakai oleh | `clau-market` (`core/`), `clau-agent` (`core/`), dan `clau-market/agents/core/` |
 | Default branch | `main` (wajib PR + CI hijau, tanpa push langsung; dijaga `main-guard`; lihat AI-BOUNDARY) |

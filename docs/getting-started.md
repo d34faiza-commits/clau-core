@@ -14,7 +14,7 @@ cd clau-market
 git submodule update --init --recursive   # marketing: core/, agents/, agents/core/
 ```
 
-Semua repo private: akun yang meng-clone harus punya akses ke **clau-core** juga, karena submodule ikut di-clone.
+Semua repo public (hanya untuk dilihat, lihat `LICENSE`): clone + submodule tidak butuh token. Push tetap hanya untuk akun yang diberi akses.
 
 ## 2. Update Core di Repo Konsumen
 

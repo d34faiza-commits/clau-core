@@ -1,6 +1,6 @@
 # Database Schema (Design)
 
-> **Status: Draft (kontrak hidup), diimplementasikan.** PostgreSQL 16 di clau-ai-agents: migrasi `0001` (skema + Constraint Wajib), `0002` (login), `0003` (kode cadangan 2FA), `0004` (workflow request → draft → QA → approval), `0005` (fact sheet & Konfirmasi Fakta), dan `0006` (antrean AI Tahap 2: `ai_jobs`, `ai_calls`, `ai_budgets`). Kontrak ini tetap sumber kebenaran: tabel di database dites sama dengan daftar di bawah (`backend/tests/test_db.py`), jadi perubahan skema dimulai dari dokumen ini. Detail implementasi: `clau-ai-agents/backend/README.md` § Database.
+> **Status: Draft (kontrak hidup), diimplementasikan.** PostgreSQL 16 di clau-agent: migrasi `0001` (skema + Constraint Wajib), `0002` (login), `0003` (kode cadangan 2FA), `0004` (workflow request → draft → QA → approval), `0005` (fact sheet & Konfirmasi Fakta), dan `0006` (antrean AI Tahap 2: `ai_jobs`, `ai_calls`, `ai_budgets`). Kontrak ini tetap sumber kebenaran: tabel di database dites sama dengan daftar di bawah (`backend/tests/test_db.py`), jadi perubahan skema dimulai dari dokumen ini. Detail implementasi: `clau-agent/backend/README.md` § Database.
 
 ## Prinsip
 
@@ -16,7 +16,7 @@
 | `clients` | `client_code` (PK), `vertical`, `business_type`, `location_area`, `approver_role`, `simulation` (bool, default false), `created_at` | Tanpa kontak pribadi; kontak approver di workspace client. `simulation = true` = klien fiktif (pilot/SIMULASI): semua draft-nya otomatis mode `SIMULASI` |
 | `fact_sheets` | `id`, `client_code` (FK), `version`, `document_ref`, `created_by` (FK users), `created_at`, `approved_at`, `approved_by` (FK users), `approved_by_role`, `approval_ref` | Isi mengikuti template fact sheet Pilar 1; `document_ref` opaque (`https://`/`mailto:`/`workspace://`). Versi = max + 1 per klien; disetujui sekali setelah semua fakta dijawab klien, lalu beku (perubahan = versi baru) |
 | `facts` | `id`, `fact_sheet_id` (FK), `fact_key`, `category`, `label`, `value`, `created_at` | Daftar fakta satu versi fact sheet (kategori faktual; `fact_key` = `<kategori>.<nama>`, unik per versi). Append-only: koreksi = jawaban klien di `fact_confirmations`, bukan edit |
-| `briefs` | `brief_id` (PK), `client_code` (FK), `schema_version`, `payload` (JSON), `status` | `payload` divalidasi terhadap `clau-ai-marketing/schemas/content-brief.schema.json` |
+| `briefs` | `brief_id` (PK), `client_code` (FK), `schema_version`, `payload` (JSON), `status` | `payload` divalidasi terhadap `clau-market/schemas/content-brief.schema.json` |
 | `requests` | `id`, `client_code`, `intent`, `pillar`, `approval_min` (`L1`–`L3`), `text`, `deadline`, `impact` (0–3), `risk` (0–3), `priority`, `status` (`open`/`in_progress`/`approved`/`rejected`/`closed`), `requested_by` (FK users, null = sistem/seed), `requested_by_role`, `created_at` | Hasil orchestrator: `pillar` & `approval_min` dari router (registry), `priority` dari priority engine. `text` = permintaan kerja, tanpa data pribadi tamu |
 | `drafts` | `id`, `request_id` (FK), `brief_id` (FK), `fact_sheet_id` (FK, nullable), `skill`, `version`, `content` (text), `mode` (`NYATA`/`SIMULASI`), `created_by` (FK users, nullable bila dibuat agent), `agent_id` | Satu baris per versi (versi = max + 1 per request, dihitung server); tanpa data pribadi tamu. `mode` = dari `clients.simulation` |
 | `claims` | `id`, `draft_id` (FK), `text`, `category`, `evidence_label`, `source`, `source_date`, `implied` (bool), `fact_key` (nullable) | Termasuk klaim tersirat. `fact_key` = kunci fakta di fact sheet klien (format `^[a-z0-9]+([._-][a-z0-9]+)*$`, ≤ 64), wajib untuk kategori faktual |
@@ -84,12 +84,12 @@ requests 1─n ai_jobs 1─n ai_calls ; ai_jobs 0─1 drafts ; ai_jobs n─1 fac
 
 ## Keputusan Implementasi (2026-10-12)
 
-Detail yang belum diatur kontrak dan ditetapkan saat implementasi (clau-ai-agents migrasi `0001`):
+Detail yang belum diatur kontrak dan ditetapkan saat implementasi (clau-agent migrasi `0001`):
 
 | Item | Nilai |
 |---|---|
 | `approvals.decision` | `Approved` / `Revise` / `Rejected` |
-| `qa_records.gate` | `claim-verification`, `content-review`, `privacy-rights-review`, `visual-ai-review`, `publication-checklist` (= file di `clau-ai-marketing/qa/`) |
+| `qa_records.gate` | `claim-verification`, `content-review`, `privacy-rights-review`, `visual-ai-review`, `publication-checklist` (= file di `clau-market/qa/`) |
 | Review independen yang dihitung untuk L2/L3 | gate `claim-verification`, `independent = true`, hasil `Pass` atau `Conditional` (pengecualian terkontrol dengan approval tertulis) |
 | Mode approval | Harus sama dengan mode draft yang disetujui |
 | Mode draft (2026-10-14, migrasi `0004`) | `SIMULASI` bila `clients.simulation`, selain itu `NYATA`; ditentukan server, tidak bisa dipilih pengirim |
@@ -105,4 +105,4 @@ Detail yang belum diatur kontrak dan ditetapkan saat implementasi (clau-ai-agent
 - ~~NEXT ACTION: buat migration awal saat backend butuh persistence.~~ Selesai 2026-10-12 (migrasi `0001`–`0003`).
 - ~~NEXT ACTION: hubungkan klaim ke fakta (`claims.fact_key` + `drafts.fact_sheet_id`).~~ Selesai 2026-10-14 (migrasi `0004`, berlaku untuk semua level, bukan hanya L2/L3).
 - ~~NEXT ACTION: endpoint kelola klien, fact sheet, dan Konfirmasi Fakta.~~ Selesai 2026-10-14 (migrasi `0005`, API 0.8.0).
-- Tabel `users`, `memberships`, `fact_confirmations`, `notifications`, `audit_log` ditambahkan 2026-10-06 agar sesuai spesifikasi UI (repo `CLAU-AI-CONTENT/design/`).
+- Tabel `users`, `memberships`, `fact_confirmations`, `notifications`, `audit_log` ditambahkan 2026-10-06 agar sesuai spesifikasi UI (repo `clau-content/design/`).

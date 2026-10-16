@@ -28,7 +28,7 @@ Jenis usaha (vertical) dan urutan perluasannya: [../verticals.md](../verticals.m
 
 | Fase | Isi | Prasyarat |
 |---|---|---|
-| 0 | Fondasi platform: VPS, database, auth, panggilan AI model | `clau-ai-agents/docs/post-vps-checklist.md` |
+| 0 | Fondasi platform: VPS, database, auth, panggilan AI model | `clau-agent/docs/post-vps-checklist.md` |
 | 1 | Marketing v2 (landing page, iklan, branding) + vertical wedding & travel | Fase 0 untuk platform; knowledge segment sudah ada (Planned) |
 | 2 | Sales: WhatsApp assistant dengan otonomi bertingkat | Amandemen otonomi Approved; integrasi WhatsApp Business Platform |
 | 3 | Admin: quotation & invoice draft, laporan | Database + izin akses data keuangan |
@@ -42,9 +42,9 @@ Scope (yang dijual) · intent & agent usulan · level otonomi per aksi · data &
 ## Checklist Aktivasi Umum (semua pilar)
 
 1. Owner approve scope pilar (TASK-034) → catat di Revision History AI-CONSTITUTION.
-2. Buat repo pilar `clau-ai-<pilar>` (struktur seperti clau-ai-marketing + submodule `core/`).
+2. Buat repo pilar `clau-ai-<pilar>` (struktur seperti clau-market + submodule `core/`).
 3. Tulis rules pilar (lebih ketat dari core, tidak boleh lebih longgar), skills, prompts, templates, QA.
 4. Tambah intent ke `orchestrator/router.md` + agent ke `registry.json` (nama, avatar, persona, eval).
 5. Ubah tabel pilar README core + `registry.json` → `pillars` (test gagal bila beda).
-6. Aktifkan layar UI sesuai `CLAU-AI-CONTENT/design/pillars.md`.
+6. Aktifkan layar UI sesuai `clau-content/design/pillars.md`.
 7. Pilot SIMULASI end-to-end, lalu 1 client pilot dengan review manusia penuh.

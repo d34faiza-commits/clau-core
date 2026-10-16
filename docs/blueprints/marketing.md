@@ -1,6 +1,6 @@
 # Blueprint — 🟣 AI Marketing (v2)
 
-> **Status: pilar Approved (v3.0.0); isi blueprint Draft (ASSUMPTION).** Perluasan Pilar 1 AI Marketing (dulu "Marketing & Content") yang sudah **Aktif** di clau-ai-marketing. Bagian yang sudah ada tetap berlaku; tabel di bawah menandai yang baru.
+> **Status: pilar Approved (v3.0.0); isi blueprint Draft (ASSUMPTION).** Perluasan Pilar 1 AI Marketing (dulu "Marketing & Content") yang sudah **Aktif** di clau-market. Bagian yang sudah ada tetap berlaku; tabel di bawah menandai yang baru.
 
 ## Scope — Yang Dijual
 
@@ -43,7 +43,7 @@ Waktu produksi per konten, rasio approval tanpa revisi, temuan QA klaim, perform
 
 ## Checklist Aktivasi
 
-1. Template & skill baru di `clau-ai-marketing` (`landing-page`, `ad-brief`, `visual-brief`, `brand-voice`) + QA.
+1. Template & skill baru di `clau-market` (`landing-page`, `ad-brief`, `visual-brief`, `brand-voice`) + QA.
 2. Rules: tambah standar iklan berbayar (atau perluas rule 05 platform).
 3. Intent → `router.md`, agent → `registry.json` (+ persona, eval, avatar).
 4. Pilot SIMULASI per layanan.

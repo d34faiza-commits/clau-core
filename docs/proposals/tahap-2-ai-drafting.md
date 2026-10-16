@@ -1,10 +1,10 @@
 # Usulan — Tahap 2: AI Menulis Draft
 
-> **Status: Usulan disetujui owner 2026-10-16 ("setuju gas"): § 4 diterapkan di AI-BOUNDARY v1.4.0; kontrak PR 4a di `shared/` (API 0.9.0, migrasi 0006).** Ditulis 2026-10-15 atas perintah owner Dea Karisna (d34faiza). Board: TASK-052 (`CLAU-AI-CONTENT/tasks/in-progress.md`). Angka biaya, akun provider, dan masa simpan data menunggu owner (§ 6).
+> **Status: Usulan disetujui owner 2026-10-16 ("setuju gas"): § 4 diterapkan di AI-BOUNDARY v1.4.0; kontrak PR 4a di `shared/` (API 0.9.0, migrasi 0006).** Ditulis 2026-10-15 atas perintah owner Dea Karisna (d34faiza). Board: TASK-052 (`clau-content/tasks/in-progress.md`). Angka biaya, akun provider, dan masa simpan data menunggu owner (§ 6).
 
 ## 1. Tujuan & Batas
 
-**Tujuan.** Agent (Tara dan teman-teman, 12 agent di `clau-ai-agents/agents/registry.json`) menulis **draft** dari request di platform: draft + daftar klaim, langsung masuk alur Tahap 1 (QA → review independen → approval tertulis klien).
+**Tujuan.** Agent (Tara dan teman-teman, 12 agent di `clau-agent/agents/registry.json`) menulis **draft** dari request di platform: draft + daftar klaim, langsung masuk alur Tahap 1 (QA → review independen → approval tertulis klien).
 
 **Batas yang tidak berubah** (AI-CONSTITUTION §4, §4a; Rule 08):
 

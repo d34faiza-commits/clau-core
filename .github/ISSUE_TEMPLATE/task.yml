@@ -1,12 +1,12 @@
 name: Task
-description: Task CLAU-AI-CONTENT (format sama dengan tasks/templates/task-template.md)
+description: Task clau-content (format sama dengan tasks/templates/task-template.md)
 title: "TASK-XXX: "
 body:
   - type: markdown
     attributes:
       value: |
-        Gunakan ID yang sama dengan board Markdown di repo arsip d34faiza-commits/CLAU-AI-CONTENT (`tasks/`). Setelah issue dibuat, tambahkan URL issue ke field `Related` task tersebut.
-        **Jangan** masukkan data client, nama tamu, harga kontrak, atau credential (lihat AI-BOUNDARY.md di clau-ai-core).
+        Gunakan ID yang sama dengan board Markdown di repo arsip d34faiza-commits/clau-content (`tasks/`). Setelah issue dibuat, tambahkan URL issue ke field `Related` task tersebut.
+        **Jangan** masukkan data client, nama tamu, harga kontrak, atau credential (lihat AI-BOUNDARY.md di clau-core).
   - type: input
     id: task_id
     attributes:

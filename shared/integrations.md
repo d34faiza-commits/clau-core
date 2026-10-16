@@ -1,6 +1,6 @@
 # Integrations
 
-Daftar integrasi eksternal, statusnya, dan batasnya. Level otomasi mengikuti `clau-ai-marketing/automations/` (saat ini **Level 1: manual**).
+Daftar integrasi eksternal, statusnya, dan batasnya. Level otomasi mengikuti `clau-market/automations/` (saat ini **Level 1: manual**).
 
 ## Status Integrasi
 

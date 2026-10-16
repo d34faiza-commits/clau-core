@@ -1,6 +1,6 @@
 # API Contracts
 
-Kontrak HTTP antara frontend dan backend clau-ai-agents, dan antara platform dengan konsumen lain. Endpoint bertanda **Implemented** sudah ada di backend; sisanya **Planned**.
+Kontrak HTTP antara frontend dan backend clau-agent, dan antara platform dengan konsumen lain. Endpoint bertanda **Implemented** sudah ada di backend; sisanya **Planned**.
 
 ## Prinsip
 
@@ -51,7 +51,7 @@ Semua endpoint workflow butuh login siap (`Me.next = ready`); `POST` juga CSRF +
 
 ### Matriks Izin Workflow (Rule 08)
 
-Sesuai `clau-ai-marketing/rules/08-APPROVAL-PUBLICATION-STANDARD.md`. Peran dan `max_level` selalu diambil dari **satu membership yang sama**: membership agency diutamakan, lalu membership scope klien itu. Database mengecek ulang bahwa `approver_role`/`reviewer_role` benar-benar peran user tersebut (`approval_role_mismatch` / `qa_role_mismatch`).
+Sesuai `clau-market/rules/08-APPROVAL-PUBLICATION-STANDARD.md`. Peran dan `max_level` selalu diambil dari **satu membership yang sama**: membership agency diutamakan, lalu membership scope klien itu. Database mengecek ulang bahwa `approver_role`/`reviewer_role` benar-benar peran user tersebut (`approval_role_mismatch` / `qa_role_mismatch`).
 
 | Peran | Baca | Buat request | Tulis draft | QA | Approval |
 |---|---|---|---|---|---|
@@ -146,7 +146,7 @@ Semua 409 dengan bentuk error kontrak. **Implemented** = ditegakkan trigger data
     "status": "active",
     "intents": ["caption"],
     "skill": "draft-caption",
-    "skill_repo": "clau-ai-marketing",
+    "skill_repo": "clau-market",
     "approval_min": "L1",
     "autonomy_max": "B",
     "persona": "agents/personas/caption-writer.md",
@@ -162,13 +162,13 @@ Semua 409 dengan bentuk error kontrak. **Implemented** = ditegakkan trigger data
     "id": 1,
     "name": {"en": "AI Marketing", "id": "AI Marketing"},
     "status": "active",
-    "repo": "clau-ai-marketing",
+    "repo": "clau-market",
     "agents": ["caption-writer", "reel-scripter"]
   }
 }
 ```
 
-Field `intent`, `pillar`, `skill`, `approval_min`, dan `autonomy_max` (kolom Otonomi) mengikuti [orchestrator/router.md](../orchestrator/router.md). Bila router berubah, `agents/registry.json` di clau-ai-agents wajib ikut diperbarui. Field `Pillar.name`, `status`, dan `repo` mengikuti tabel **5 Pilar CLAU AI** di [README](../README.md) (dicek `backend/tests/test_registry.py` di clau-ai-agents).
+Field `intent`, `pillar`, `skill`, `approval_min`, dan `autonomy_max` (kolom Otonomi) mengikuti [orchestrator/router.md](../orchestrator/router.md). Bila router berubah, `agents/registry.json` di clau-agent wajib ikut diperbarui. Field `Pillar.name`, `status`, dan `repo` mengikuti tabel **5 Pilar CLAU AI** di [README](../README.md) (dicek `backend/tests/test_registry.py` di clau-agent).
 
 `display_name` dan `avatar` (registry 0.3.0) adalah sumber tunggal nama dan avatar agent untuk UI; `figure` mendeskripsikan figur ilustrasi (`female`/`male`), bukan data orang. Isi `forbidden_actions` = `default_forbidden_actions` registry.
 

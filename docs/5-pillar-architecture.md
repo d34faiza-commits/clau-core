@@ -6,9 +6,9 @@
 
 | Lapisan | Repo | Isi |
 |---|---|---|
-| **Foundation** | clau-ai-core | Constitution, boundary, pipeline, orchestrator, kontrak data |
+| **Foundation** | clau-core | Constitution, boundary, pipeline, orchestrator, kontrak data |
 | **Pilar** | clau-ai-<pilar> (1 repo per pilar) | Rules, skills, prompts, knowledge, templates, QA khusus domain |
-| **Platform** | clau-ai-agents | UI, API, registry agent; menjalankan skill pilar, tidak menyimpan aturan |
+| **Platform** | clau-agent | UI, API, registry agent; menjalankan skill pilar, tidak menyimpan aturan |
 
 Aturan mengalir **satu arah**: core → pilar → platform. Platform membaca skill pilar; pilar tidak bergantung pada platform.
 
@@ -16,7 +16,7 @@ Aturan mengalir **satu arah**: core → pilar → platform. Platform membaca ski
 
 | # | Pilar | Masalah yang diselesaikan | Contoh output | Rule kunci | Intent & agent | Status |
 |---|---|---|---|---|---|---|
-| 1 | **AI Marketing** | Konten jujur & on-brand tanpa klaim palsu | Caption, reel script, story, listing OTA, balasan review, kalender; berikutnya landing page, iklan, branding | Klaim (rule 02), consent (04), approval (08) | 8 intent · Tara, Raka, Sekar, Bayu, Laras, Dimas, Ayu, Nara | **Aktif** (clau-ai-marketing) |
+| 1 | **AI Marketing** | Konten jujur & on-brand tanpa klaim palsu | Caption, reel script, story, listing OTA, balasan review, kalender; berikutnya landing page, iklan, branding | Klaim (rule 02), consent (04), approval (08) | 8 intent · Tara, Raka, Sekar, Bayu, Laras, Dimas, Ayu, Nara | **Aktif** (clau-market) |
 | 2 | AI Sales | Inquiry & customer service cepat, akurat, tanpa janji harga sembarangan | WhatsApp assistant, FAQ, balasan inquiry, pesan tamu, follow-up, lead/CRM, eskalasi keluhan | Harga & komitmen komersial, privacy tamu, otonomi A/B/C, keluhan serius = L3/Level C | `inquiry-reply` · Galih; `guest-message` · Sari | Planned |
 | 3 | AI Admin | Pekerjaan administrasi tanpa salah angka | Quotation, invoice (draft), data entry, laporan, financial summary, inventory, SOP | Angka bisa ditelusuri ke data sumber; dokumen = Level B | `sop` · Teguh | Planned |
 | 4 | AI Business Intelligence | Keputusan berbasis data lintas pilar | Laporan bulanan, KPI, insight, forecast stok/penjualan | Angka apa adanya, tanpa atribusi palsu, forecast = ASSUMPTION | `report` · Intan (aktif, sementara template `monthly-report` Pilar 1) | Planned |
@@ -26,11 +26,11 @@ Aturan mengalir **satu arah**: core → pilar → platform. Platform membaca ski
 
 | Data | Sumber | Ikut diperbarui |
 |---|---|---|
-| Nama, status, repo pilar | Tabel **5 Pilar CLAU AI** di [README](../README.md) | `clau-ai-agents/agents/registry.json` → `pillars` (dicek test), tabel di atas |
+| Nama, status, repo pilar | Tabel **5 Pilar CLAU AI** di [README](../README.md) | `clau-agent/agents/registry.json` → `pillars` (dicek test), tabel di atas |
 | Intent → pilar → agent | [orchestrator/router.md](../orchestrator/router.md) | `registry.json` → `agents` (dicek test) |
-| Permukaan UI per pilar | `CLAU-AI-CONTENT/design/pillars.md` | Wireframe Studio & Portal, frontend clau-ai-agents |
+| Permukaan UI per pilar | `clau-content/design/pillars.md` | Wireframe Studio & Portal, frontend clau-agent |
 | Level otonomi per intent | Kolom **Otonomi** di [router](../orchestrator/router.md) | `registry.json` → `autonomy_max` (dicek test) |
-| Rencana aktivasi | Board `CLAU-AI-CONTENT/tasks/` (TASK-035–039, TASK-041–042) | `clau-ai-agents/docs/post-vps-checklist.md` |
+| Rencana aktivasi | Board `clau-content/tasks/` (TASK-035–039, TASK-041–042) | `clau-agent/docs/post-vps-checklist.md` |
 
 ### Usulan nama repo pilar (**ASSUMPTION**)
 
@@ -41,16 +41,16 @@ Mengikuti pola `clau-ai-<pilar>`; dibuat saat pilar diaktifkan.
 | 2 | `clau-ai-sales` |
 | 3 | `clau-ai-admin` |
 | 4 | `clau-ai-intelligence` |
-| 5 | `clau-ai-automation` (atau modul di clau-ai-agents; keputusan engine = TASK-039) |
+| 5 | `clau-ai-automation` (atau modul di clau-agent; keputusan engine = TASK-039) |
 
 ## Menambah Pilar
 
 1. Owner menyetujui scope pilar (catat di Revision History [AI-CONSTITUTION](../AI-CONSTITUTION.md)).
-2. Buat repo `clau-ai-<pilar>` (private) dengan struktur seperti clau-ai-marketing: `rules/`, `prompts/`, `skills/`, `knowledge/`, `templates/`, `qa/`, workflow pilar, dan submodule `core/`.
-3. Tambah intent di [orchestrator/router.md](../orchestrator/router.md) dan agent di `clau-ai-agents/agents/registry.json`; ubah `pillars` (status `active` + `repo`) di registry yang sama.
+2. Buat repo `clau-ai-<pilar>` (private) dengan struktur seperti clau-market: `rules/`, `prompts/`, `skills/`, `knowledge/`, `templates/`, `qa/`, workflow pilar, dan submodule `core/`.
+3. Tambah intent di [orchestrator/router.md](../orchestrator/router.md) dan agent di `clau-agent/agents/registry.json`; ubah `pillars` (status `active` + `repo`) di registry yang sama.
 4. Jalankan pilot SIMULASI end-to-end sebelum dipakai untuk client.
-5. Update tabel di atas dan README core (status **Aktif** + repo) — test registry di clau-ai-agents gagal bila tidak sama.
-6. Aktifkan permukaan UI pilar sesuai `CLAU-AI-CONTENT/design/pillars.md` dan pindahkan task pilar di board ke Done.
+5. Update tabel di atas dan README core (status **Aktif** + repo) — test registry di clau-agent gagal bila tidak sama.
+6. Aktifkan permukaan UI pilar sesuai `clau-content/design/pillars.md` dan pindahkan task pilar di board ke Done.
 
 ## Ketergantungan Antar Pilar
 

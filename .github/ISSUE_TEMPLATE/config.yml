@@ -1,5 +1,5 @@
 blank_issues_enabled: true
 contact_links:
   - name: Panduan task management
-    url: https://github.com/d34faiza-commits/CLAU-AI-CONTENT/blob/main/docs/task-management.md
+    url: https://github.com/d34faiza-commits/clau-content/blob/main/docs/task-management.md
     about: Cara pakai board Backlog → In Progress → Review → Done dan setup GitHub Projects

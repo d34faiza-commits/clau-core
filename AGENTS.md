@@ -10,7 +10,7 @@ classification: "Internal"
 
 # AGENTS.md
 
-Instruksi umum untuk AI agent (Claude, Codex, ChatGPT, Grok, agent di platform clau-ai-agents) yang bekerja di **repo mana pun** dalam ekosistem CLAU AI. Instruksi khusus pilar ada di `AGENTS.md` repo pilar (mis. `clau-ai-marketing/AGENTS.md`), dan instruksi itu boleh lebih ketat.
+Instruksi umum untuk AI agent (Claude, Codex, ChatGPT, Grok, agent di platform clau-agent) yang bekerja di **repo mana pun** dalam ekosistem CLAU AI. Instruksi khusus pilar ada di `AGENTS.md` repo pilar (mis. `clau-market/AGENTS.md`), dan instruksi itu boleh lebih ketat.
 
 ## Baca Dulu
 
@@ -42,7 +42,7 @@ Sebelum mengerjakan, tentukan pilar lewat [orchestrator/decision-tree.md](./orch
 
 - Commit message: `feat:`, `fix:`, `docs:`, `refactor:`, `chore:`, `test:`.
 - Jalankan validator repo sebelum push (`python scripts/validate_core.py` di core).
-- Perubahan aturan bersama dilakukan di clau-ai-core, lalu repo konsumen meng-update submodule `core/`.
+- Perubahan aturan bersama dilakukan di clau-core, lalu repo konsumen meng-update submodule `core/`.
 - Jangan mengedit file di dalam folder `core/` milik repo lain; folder itu hanya submodule.
 - Perubahan atas dokumen berstatus Approved hanya dilakukan atas perintah **Pak Indra** atau **Dea Karisna (d34faiza)**. AI agent tidak mengubah aturan Approved atas inisiatif sendiri; usulan perbaikan boleh ditulis sebagai catatan/issue, lalu menunggu perintah.
 
@@ -50,5 +50,5 @@ Sebelum mengerjakan, tentukan pilar lewat [orchestrator/decision-tree.md](./orch
 
 | Version | Date | Status | Summary |
 |---|---|---|---|
-| 1.0.0 | 2026-10-04 | Draft | Instruksi agent lintas repo untuk split CLAU AI; instruksi konten dipindah ke clau-ai-marketing/AGENTS.md |
+| 1.0.0 | 2026-10-04 | Draft | Instruksi agent lintas repo untuk split CLAU AI; instruksi konten dipindah ke clau-market/AGENTS.md |
 | 1.0.0 | 2026-10-04 | Approved | Approved oleh owner (Dea Karisna / d34faiza); ditambah aturan otoritas perubahan untuk agent |

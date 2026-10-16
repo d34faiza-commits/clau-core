@@ -1,7 +1,7 @@
 name: Notify Downstream
 
-# Setelah push ke main, minta clau-ai-agents men-sync core sekarang (tidak menunggu jadwal harian).
-# clau-ai-marketing tidak dipicu dari sini: core di marketing selalu mengikuti pin agents/core, jadi
+# Setelah push ke main, minta clau-agent men-sync core sekarang (tidak menunggu jadwal harian).
+# clau-market tidak dipicu dari sini: core di marketing selalu mengikuti pin agents/core, jadi
 # marketing di-sync setelah agents lulus test terhadap core baru (notify-downstream di agents).
 # Butuh secret SUBMODULE_TOKEN dengan akses
 # Contents: write ke repo tujuan; tanpa secret, job dilewati (notice).
@@ -20,7 +20,7 @@ jobs:
     env:
       HAS_TOKEN: ${{ secrets.SUBMODULE_TOKEN != '' }}
       GH_TOKEN: ${{ secrets.SUBMODULE_TOKEN }}
-      TARGETS: d34faiza-commits/clau-ai-agents
+      TARGETS: d34faiza-commits/clau-agent
     steps:
       - name: Token check
         if: env.HAS_TOKEN != 'true'

@@ -41,6 +41,11 @@ Kontrak HTTP antara frontend dan backend clau-ai-agents, dan antara platform den
 | `GET /fact-sheets` · `GET /fact-sheets/{id}` | **Implemented** (0.8.0) | query `client_code?`, `approved?`, `limit?`, `offset?` | `Page<FactSheet>` (urut klien, versi terbaru dulu) · `FactSheetDetail` |
 | `POST /fact-sheets/{id}/confirmations` | **Implemented** (0.8.0) | `{fact_key, decision: "confirmed"\|"corrected", value_after?, channel_ref?}` | 201 `FactAnswer`; `value_before`, `confirmed_by`, `confirmed_by_role` diisi server. 409 `fact_not_in_sheet`, `fact_sheet_frozen`, `approval_by_author`, `approval_needs_written_evidence` |
 | `POST /fact-sheets/{id}/approve` | **Implemented** (0.8.0) | `{approval_ref?}` | 200 `FactSheetDetail`. 409 `facts_unconfirmed`, `fact_sheet_empty`, `fact_sheet_frozen`, `approval_by_author`, `approval_needs_written_evidence` |
+| `POST /requests/{id}/ai-drafts` | **Implemented** (0.9.0), staf agency | — (body kosong) | 202 `AiJob` (`queued`); agent, intent, fact sheet, dan pembuat diisi server. 409 `ai_disabled`, `ai_intent_not_enabled`, `intent_not_active`, `request_closed`, `fact_sheet_required`, `ai_provider_test_only`, `ai_budget_missing`, `ai_budget_exceeded`, `ai_job_active`; 403 `forbidden`; 404 `not_found` |
+| `GET /ai-jobs` · `GET /ai-jobs/{id}` | **Implemented** (0.9.0) | query `request_id?`, `client_code?`, `status?`, `limit?`, `offset?` | `Page<AiJob>` · `AiJob` (hanya klien yang boleh dilihat) |
+| `POST /ai-jobs/{id}/cancel` | **Implemented** (0.9.0), staf agency | — | `AiJob` (`cancelled`). 409 `ai_job_not_cancellable` (sudah berjalan/selesai) |
+| `GET /ai-usage` | **Implemented** (0.9.0), owner | query `month=YYYY-MM?` (default bulan berjalan, WITA) | `AiUsage` |
+| `PUT /ai-budgets` | **Implemented** (0.9.0), owner | `{scope: "global"\|<client_code>, month: "YYYY-MM", limit_micro_usd, alert_at_pct?}` | `AiBudget` (buat/ubah). 404 `client_not_found` |
 
 Semua endpoint workflow butuh login siap (`Me.next = ready`); `POST` juga CSRF + Origin. Body maks. 64 KB (413 `payload_too_large`); teks di-trim, teks kosong atau berisi karakter NUL = 422 `validation_error`; nilai di luar batas database = 422 `invalid_input`. Body menolak field lain (`extra = forbid`): peran, id user, mode, versi, pilar, dan prioritas **tidak pernah** diterima dari pengirim. Setiap `POST` menulis `audit_log` di transaksi yang sama (tanpa isi konten). Tidak ada endpoint publish/kirim ke platform atau tamu.
 
@@ -74,6 +79,22 @@ Koreksi wajib mengubah nilai (`fact_value_unchanged`; nilai sama = pilih `confir
 
 Paginasi: `limit` 1–100 (default 50), `offset` 0–10000 (default 0); urutan terbaru dulu. `Page<T>` = `{items: [T], total, limit, offset}`.
 
+### AI Menulis Draft (0.9.0)
+
+Alur (AI-BOUNDARY § Data ke Provider AI; usulan `docs/proposals/tahap-2-ai-drafting.md`, arahan owner 2026-10-15): staf menekan *Buat draft dengan AI* → job masuk antrean → worker (container terpisah, satu-satunya pemegang API key) mengambil job → menyusun prompt dari aturan + persona agent, **fakta fact sheet terbaru yang disetujui klien** (nilai = koreksi terakhir klien), dan teks request yang sudah disamarkan (email, nomor telepon, angka panjang) → model mengembalikan isi + klaim terstruktur → **AI fact-check** → draft versi baru (`created_by` null, `agent_id` agent) + klaim + QA otomatis → manusia review & approve.
+
+AI fact-check (deterministik, di worker; model tidak menentukan label bukti):
+
+| Klaim dari model | Disimpan sebagai | Akibat |
+|---|---|---|
+| Kategori faktual, `fact_key` ada di fact sheet yang disetujui | `DATA FINAL`, `source` = `fact-sheet <client> v<versi>`, `source_date` = tanggal jawaban klien | Bisa di-approve (aturan Tahap 1 tetap berlaku) |
+| Kategori faktual, `fact_key` tidak ada / tidak cocok kategori | `RISK`, `fact_key` = kunci itu (atau `<kategori>.tanpa-fakta`) | **Ditandai untuk reviewer**; approval terkunci `facts_unconfirmed` sampai klaim dihapus di versi berikutnya atau fakta dikonfirmasi klien |
+| Kategori `experience` / `other` | `ASSUMPTION` | Dinilai reviewer |
+
+QA otomatis: `qa_records` gate `claim-verification`, `reviewer_role` `agent`, `independent` false, hasil `Pass` bila semua klaim faktual berdasar, selain itu `Fail`. Review independen L2/L3 tetap manusia.
+
+Batas: AI hanya untuk intent di `CLAU_AI_INTENTS` (default `caption`) dari pilar aktif, klien yang punya fact sheet disetujui, dan bila `CLAU_AI_ENABLED=1`. Provider tiruan (`CLAU_AI_PROVIDER=fake`, untuk uji tanpa biaya) hanya untuk klien SIMULASI (`ai_provider_test_only`). Biaya: batas `global` bulan berjalan wajib ada (`ai_budget_missing`); job ditolak bila biaya bulan ini + perkiraan per job melewati batas global atau batas klien (`ai_budget_exceeded`). Tidak ada endpoint publish.
+
 ## Kode Aturan Approval
 
 Semua 409 dengan bentuk error kontrak. **Implemented** = ditegakkan trigger database (migrasi 0001, backend 0.4.0+) dan diteruskan backend apa adanya; **Planned** = dibuat bersama endpoint workflow (Tahap 1 PR 3).
@@ -96,6 +117,10 @@ Semua 409 dengan bentuk error kontrak. **Implemented** = ditegakkan trigger data
 | Approved oleh agency (semua level) wajib bukti tertulis klien (`channel_ref`) | `approval_needs_written_evidence` | Implemented (0.7.0) |
 | Brief/fact sheet draft milik klien request; mode draft = mode klien | `draft_client_mismatch` / `draft_mode_mismatch` | Implemented (0.7.0) |
 | Klaim, QA, approval, dan konfirmasi fakta tidak bisa diubah/dihapus; fact sheet yang sudah approved dibekukan | `draft_version_immutable` / `decision_record_append_only` | Implemented (0.7.0) |
+| Satu job AI aktif per request | `ai_job_active` | Implemented (0.9.0) |
+| Transisi status job AI sah; job selesai beku; job & catatan panggilan AI tidak dihapus/diubah | `ai_job_transition` / `ai_record_append_only` | Implemented (0.9.0) |
+| Job sukses menunjuk draft agent dari request yang sama | `ai_job_draft_mismatch` | Implemented (0.9.0) |
+| Draft agent untuk klien NYATA hanya dari job AI yang sedang berjalan | `ai_draft_without_job` | Implemented (0.9.0) |
 | Fakta hanya ditambah dan dijawab selama fact sheet belum disetujui | `fact_sheet_frozen` | Implemented (0.8.0) |
 | Jawaban hanya untuk fakta yang ada di versi fact sheet itu | `fact_not_in_sheet` | Implemented (0.8.0) |
 | Koreksi fakta wajib berisi nilai yang benar, dan berbeda dari nilai awal | `fact_value_required` (API 422 `validation_error`) / `fact_value_unchanged` | Implemented (0.8.0) |
@@ -158,6 +183,12 @@ Klien & fakta (0.8.0):
 - `FactSheetDetail` = `FactSheet` + `facts: [{fact_key, category, label, value, status: "pending"|"confirmed"|"corrected", current_value, answers: [FactAnswer]}]`. `current_value` = koreksi terakhir, atau `value`.
 - `FactAnswer` = `{id, fact_sheet_id, fact_key, decision, value_before, value_after, confirmed_by, confirmed_by_role, channel_ref, confirmed_at}`.
 
+AI (0.9.0):
+
+- `AiJob` = `{id, request_id, client_code, agent_id, intent, kind: "draft", status: "queued"|"running"|"succeeded"|"failed"|"cancelled", attempts, max_attempts, error_code, fact_sheet_id, draft_id, requested_by, created_at, finished_at}`. `error_code` dari daftar tetap (database-schema § Keputusan Implementasi), tidak pernah teks error provider.
+- `AiBudget` = `{scope, month: "YYYY-MM", limit_micro_usd, alert_at_pct, updated_by, updated_at}`. Biaya dalam mikro-USD (1 USD = 1.000.000) supaya tanpa pembulatan desimal.
+- `AiUsage` = `{month, total_micro_usd, calls, budgets: [AiBudget + {spent_micro_usd, alert}], by_client: [{client_code, cost_micro_usd, calls}], by_agent: [{agent_id, cost_micro_usd, calls}]}` (tanpa isi prompt/jawaban).
+
 `Me` = `{user: User, mfa_required, must_change_password, next: "ready"|"password_change"|"mfa_setup", active_sessions, recovery_codes_left, csrf_token}`. `User` = `{id, display_name, email, locale, timezone, salutation, memberships: [{scope, role, max_level}], mfa_enabled, disabled, last_login_at}` (tanpa hash atau secret). `GET /users` juga mengembalikan `clients` (daftar `client_code`) untuk form peran.
 
 ## Versioning
@@ -174,3 +205,4 @@ Klien & fakta (0.8.0):
 | 0.6.0 | 2026-10-13 | QR 2FA, kode cadangan, keluar semua perangkat, `Me.active_sessions` / `recovery_codes_left`; penguatan hasil audit (timing, race 2FA & owner terakhir, brute force ganti password) |
 | 0.7.0 | 2026-10-14 | Workflow request → draft → QA → approval (`/requests`, `/drafts`, `/qa-records`, `/approvals`), matriks izin Rule 08, kode aturan baru (`facts_unconfirmed`, `approval_version_mismatch`, `approval_level_too_low`, `approval_by_author`, `approval_needs_written_evidence`, `draft_client_mismatch`, `draft_mode_mismatch`, `decision_record_append_only`, `request_closed`, `approval_role_mismatch`, `qa_role_mismatch`; 422 `invalid_input`), body maks. 64 KB |
 | 0.8.0 | 2026-10-14 | Klien (`/clients`), fact sheet & Konfirmasi Fakta (`/fact-sheets`, jawaban klien, persetujuan fact sheet); kode aturan `fact_sheet_frozen`, `fact_not_in_sheet`, `fact_value_required`, `fact_value_unchanged`, `fact_sheet_superseded`, `fact_sheet_empty`, `fact_sheet_approval_flow`, `fact_sheet_version_sequence`, `client_exists` |
+| 0.9.0 | 2026-10-16 | AI menulis draft (Tahap 2): `POST /requests/{id}/ai-drafts`, `/ai-jobs`, `/ai-usage`, `PUT /ai-budgets`; antrean + worker dengan AI fact-check; kode `ai_disabled`, `ai_intent_not_enabled`, `fact_sheet_required`, `ai_provider_test_only`, `ai_budget_missing`, `ai_budget_exceeded`, `ai_job_active`, `ai_job_not_cancellable`, `ai_job_transition`, `ai_record_append_only`, `ai_job_draft_mismatch`, `ai_draft_without_job` |

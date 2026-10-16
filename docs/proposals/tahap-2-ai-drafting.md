@@ -1,6 +1,6 @@
 # Usulan — Tahap 2: AI Menulis Draft
 
-> **Status: Draft (usulan, belum diputuskan).** Ditulis 2026-10-15 atas perintah owner Dea Karisna (d34faiza) ("mulai merancang Tahap 2 — gass"). Board: TASK-052 (`CLAU-AI-CONTENT/tasks/in-progress.md`). Dokumen ini **tidak** mengubah aturan Approved. Bagian § 4 berisi teks usulan untuk AI-BOUNDARY yang baru berlaku setelah perintah owner.
+> **Status: Usulan disetujui owner 2026-10-16 ("setuju gas"): § 4 diterapkan di AI-BOUNDARY v1.4.0; kontrak PR 4a di `shared/` (API 0.9.0, migrasi 0006).** Ditulis 2026-10-15 atas perintah owner Dea Karisna (d34faiza). Board: TASK-052 (`CLAU-AI-CONTENT/tasks/in-progress.md`). Angka biaya, akun provider, dan masa simpan data menunggu owner (§ 6).
 
 ## 1. Tujuan & Batas
 

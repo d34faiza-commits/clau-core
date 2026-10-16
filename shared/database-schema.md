@@ -1,6 +1,6 @@
 # Database Schema (Design)
 
-> **Status: Draft (kontrak hidup), diimplementasikan.** PostgreSQL 16 di clau-ai-agents: migrasi `0001` (skema + Constraint Wajib), `0002` (login), `0003` (kode cadangan 2FA), dan `0004` (workflow request → draft → QA → approval). Kontrak ini tetap sumber kebenaran: tabel di database dites sama dengan daftar di bawah (`backend/tests/test_db.py`), jadi perubahan skema dimulai dari dokumen ini. Detail implementasi: `clau-ai-agents/backend/README.md` § Database.
+> **Status: Draft (kontrak hidup), diimplementasikan.** PostgreSQL 16 di clau-ai-agents: migrasi `0001` (skema + Constraint Wajib), `0002` (login), `0003` (kode cadangan 2FA), `0004` (workflow request → draft → QA → approval), `0005` (fact sheet & Konfirmasi Fakta), dan `0006` (antrean AI Tahap 2: `ai_jobs`, `ai_calls`, `ai_budgets`). Kontrak ini tetap sumber kebenaran: tabel di database dites sama dengan daftar di bawah (`backend/tests/test_db.py`), jadi perubahan skema dimulai dari dokumen ini. Detail implementasi: `clau-ai-agents/backend/README.md` § Database.
 
 ## Prinsip
 
@@ -31,6 +31,9 @@
 | `fact_confirmations` | `id`, `fact_sheet_id` (FK), `fact_key`, `value_before`, `value_after`, `decision` (`confirmed`/`corrected`), `confirmed_by` (FK users), `confirmed_by_role`, `channel_ref`, `confirmed_at` | Hasil fitur **Konfirmasi Fakta** di Portal; `confirmed` = bukti tertulis owner → klaim boleh `DATA FINAL`. `value_before` = nilai fakta saat dijawab (diisi database); `corrected` wajib `value_after`. Jawaban terakhir per fakta yang berlaku |
 | `notifications` | `id`, `user_id` (FK), `type`, `object_ref`, `channel` (`in_app`/`email`/`whatsapp`), `sent_at`, `read_at` | Tanpa isi pesan sensitif; link ke objek |
 | `audit_log` | `id`, `actor_id` (FK users, null = system/agent), `action`, `object_type`, `object_id`, `meta` (JSON), `created_at` | Append-only: approve, tandai tayang, ubah fakta, ubah akses, ubah setting |
+| `ai_jobs` | `id`, `request_id` (FK), `agent_id`, `intent`, `kind` (`draft`), `status` (`queued`/`running`/`succeeded`/`failed`/`cancelled`), `attempts`, `max_attempts`, `run_after`, `locked_at`, `locked_by`, `error_code`, `fact_sheet_id` (FK), `draft_id` (FK), `requested_by` (FK users), `created_at`, `finished_at` | Antrean kerja AI (Tahap 2, worker mengambil dengan `FOR UPDATE SKIP LOCKED`). Satu job aktif per request; `error_code` dari daftar tetap (bukan teks error provider); tanpa isi prompt |
+| `ai_calls` | `id`, `job_id` (FK), `provider`, `model`, `prompt_version`, `input_tokens`, `output_tokens`, `cache_read_tokens`, `cache_write_tokens`, `cost_micro_usd`, `stop_reason`, `provider_request_id`, `latency_ms`, `created_at` | Satu baris per panggilan model (AI-BOUNDARY § Data ke Provider AI). **Append-only**; tanpa isi prompt/jawaban (isi hasil ada di `drafts`) |
+| `ai_budgets` | `scope` (`global` / `client_code`), `month` (tanggal 1), `limit_micro_usd`, `alert_at_pct`, `updated_by` (FK users), `updated_at` | Batas biaya AI per bulan (PK `scope` + `month`). Tanpa batas `global` bulan berjalan = job AI ditolak (fail closed) |
 
 ## Relasi
 
@@ -42,6 +45,7 @@ drafts 1─n approvals ; drafts 1─n publications
 clients 1─n consent_refs
 users 1─n memberships n─1 clients ; fact_sheets 1─n fact_confirmations
 users 1─n notifications ; users 1─n sessions ; users 1─n mfa_recovery_codes ; audit_log → semua objek
+requests 1─n ai_jobs 1─n ai_calls ; ai_jobs 0─1 drafts ; ai_jobs n─1 fact_sheets ; ai_budgets (global / per client_code, per bulan)
 ```
 
 ## Constraint Wajib (saat implementasi)
@@ -69,6 +73,11 @@ users 1─n notifications ; users 1─n sessions ; users 1─n mfa_recovery_code
 | `fact_confirmations` baru: fact sheet belum disetujui (`fact_sheet_frozen`), `fact_key` ada di `facts` versi itu (`fact_not_in_sheet`), `confirmed_by_role` sesuai membership (`approval_role_mismatch`), agency wajib `channel_ref`, bukan pembuat fact sheet, `corrected` wajib `value_after` yang berbeda dari nilai awal (`fact_value_required` / `fact_value_unchanged`); `value_before` diisi database |
 | `approvals` Approved untuk draft berklaim `fact_key`: fact sheet draft punya `approved_by` (disetujui lewat alur jawaban klien, bukan data lama), setiap kunci ada di `facts` versi itu (`facts_unconfirmed`), dan tidak ada versi disetujui yang lebih baru untuk klien itu (`fact_sheet_superseded`) | Konten tidak memakai fakta yang sudah dikoreksi di versi baru | Jawaban fakta dari klien dan dapat ditelusuri |
 | `audit_log` tidak bisa di-update/delete dari aplikasi | Jejak keputusan |
+| `ai_jobs`: satu job `queued`/`running` per request → `ai_job_active`; job baru hanya untuk request `open`/`in_progress` → `request_closed` | Tidak ada draft AI ganda/balapan; request selesai tidak dikerjakan ulang |
+| `ai_jobs` transisi status hanya `queued → running → (queued untuk retry \| succeeded \| failed)` dan `queued → cancelled`; job selesai beku; tidak dihapus → `ai_job_transition` / `ai_record_append_only` | Jejak kerja AI tidak bisa ditulis ulang |
+| `ai_jobs` `succeeded` wajib `draft_id` dari request yang sama dan dibuat agent job itu (`drafts.created_by` NULL, `agent_id` sama) → `ai_job_draft_mismatch`; `failed` wajib `error_code` | Hasil job bisa ditelusuri ke draft yang benar |
+| `ai_calls` append-only (UPDATE/DELETE/TRUNCATE ditolak, hak ubah dicabut dari role aplikasi) → `ai_record_append_only` | Catatan biaya & pemakaian tidak bisa diubah |
+| Draft agent (`created_by` NULL) untuk klien NYATA hanya dari job AI yang sedang `running` untuk request itu, dengan `agent_id` job itu → `ai_draft_without_job` (draft agent SIMULASI dari seed pilot tetap boleh) | Tidak ada draft "atas nama agent" untuk klien nyata yang dibuat langsung |
 | Query Portal selalu difilter `memberships.scope = client_code` | Isolasi data antar klien |
 
 ## Keputusan Implementasi (2026-10-12)
@@ -85,6 +94,7 @@ Detail yang belum diatur kontrak dan ditetapkan saat implementasi (clau-ai-agent
 | Klien SIMULASI saat upgrade (migrasi `0004`) | Hanya daftar eksplisit klien fiktif seed (`CTHVILLA`, `CTHCAFE`, `CTHWED`, `CTHTRIP`) ditandai `simulation = true`; tidak ada tebakan dari awalan kode. Klaim faktual lama tanpa kunci diberi `fact_key = <kategori>.legacy-<id>` (tidak pernah cocok dengan fact sheet, jadi tetap fail closed) |
 | Status request (0004) | `open` → `in_progress` (draft dibuat / Revise) → `approved` / `rejected` (approval versi terbaru); `closed` disiapkan untuk penutupan manual |
 | Isi draft | Baris versi yang tersimpan tidak bisa diubah; revisi = versi baru (approval terikat versi) |
+| Antrean AI (2026-10-16, migrasi `0006`) | `ai_jobs.error_code` ∈ `provider_error`, `provider_unavailable`, `refused`, `invalid_output`, `budget_exceeded`, `request_closed`, `fact_sheet_missing`, `worker_timeout`, `ai_disabled`, `cancelled_by_user`; retry hanya untuk `provider_unavailable`/`worker_timeout` (jeda bertambah), maks 3 percobaan. QA otomatis agent = `qa_records` gate `claim-verification`, `reviewer_id` NULL, `reviewer_role` `agent`, `independent` false |
 | Enum lain | `clients.vertical` & `claims.category` = `content-brief.schema.json`; `requests.priority` = priority engine (`Low`/`Normal`/`High`/`Urgent`) |
 
 ## Open Items

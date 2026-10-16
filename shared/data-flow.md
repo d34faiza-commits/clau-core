@@ -23,7 +23,7 @@ flowchart LR
 |---|---|---|---|
 | Intake | Teks request, kode client, deadline | `requests` | Nama/kontak tamu, credential |
 | Route | Intent | `requests.pillar`, `priority` | — |
-| Produce | Brief, fact sheet (**DATA FINAL** saja), Voice Card | `drafts`, `claims` | Data tamu mentah ke AI model; aset client ke repo |
+| Produce | Brief, fact sheet (**DATA FINAL** saja), Voice Card; antrean `ai_jobs`, AI fact-check, catatan `ai_calls` (tanpa isi) | `drafts`, `claims`, `qa_records` (agent), `ai_jobs`, `ai_calls` | Data tamu mentah ke AI model; aset client ke repo; publish otomatis |
 | Verify | Draft, consent_ref | `qa_records` | Menyalin isi consent register |
 | Approve | Paket approval | `approvals` (+ arsip di workspace client) | Approval lisan tanpa jejak |
 | Release | Konten approved | Platform pihak ketiga (oleh manusia) | Publish otomatis oleh AI |

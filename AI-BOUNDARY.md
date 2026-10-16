@@ -1,10 +1,10 @@
 ---
 document_title: "CLAU AI Boundary"
 document_owner: "Dea Karisna / AI Marketing"
-version: "1.3.0"
+version: "1.4.0"
 status: "Approved"
-effective_date: "2026-10-13"
-approval_reference: "v1.3.0: persetujuan owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-13, atas 3 usulan (1) CLAU-AI-CONTENT = arsip + markas kerja, (2) job `docker` jadi check wajib clau-ai-agents, (3) gerbang deploy VPS 1 `release/vps1`: \"ok gas 1 2 dan 3 kak\". v1.2.0: approval tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-12: \"Saya Dea Karisna (d34faiza), owner CLAU. Saya approve: semua push ke main di clau-ai-core, clau-ai-marketing, clau-ai-agents wajib lewat PR dengan CI hijau; push langsung tidak lagi diizinkan. Penegakan lewat main-guard karena GitHub Free.\" v1.1.1: instruksi owner via sesi Claude Code, 2026-10-08 (\"gass\", izin token + sync via PR); v1.1.0: instruksi tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-06 (\"tolong semua repo di cek … jika belum fix 100% tolong di fix\"); v1.0.0 approved 2026-10-04; perubahan ada di main"
+effective_date: "2026-10-16"
+approval_reference: "v1.4.0: persetujuan owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-16, atas usulan Tahap 2 § 4 (docs/proposals/tahap-2-ai-drafting.md): \"setuju gas\" sebagai jawaban atas \"Cukup balas setuju § 4\". v1.3.0: persetujuan owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-13, atas 3 usulan (1) CLAU-AI-CONTENT = arsip + markas kerja, (2) job `docker` jadi check wajib clau-ai-agents, (3) gerbang deploy VPS 1 `release/vps1`: \"ok gas 1 2 dan 3 kak\". v1.2.0: approval tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-12: \"Saya Dea Karisna (d34faiza), owner CLAU. Saya approve: semua push ke main di clau-ai-core, clau-ai-marketing, clau-ai-agents wajib lewat PR dengan CI hijau; push langsung tidak lagi diizinkan. Penegakan lewat main-guard karena GitHub Free.\" v1.1.1: instruksi owner via sesi Claude Code, 2026-10-08 (\"gass\", izin token + sync via PR); v1.1.0: instruksi tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-06 (\"tolong semua repo di cek … jika belum fix 100% tolong di fix\"); v1.0.0 approved 2026-10-04; perubahan ada di main"
 classification: "Internal"
 ---
 
@@ -57,6 +57,18 @@ Semua repo **private**. Repo private tidak membuat data `Confidential`/`Restrict
 | Consent Register | Sistem client terproteksi | Tidak | Consent tamu, staf, talent, UGC |
 | Platform Database | Database platform (lihat [shared/database-schema.md](./shared/database-schema.md)) | Tidak | Data operasional; data tamu hanya bila perlu dan terenkripsi |
 | Credential Store | Password/secret manager | Tidak | Semua credential |
+| Provider AI | Layanan model AI (mis. Claude API) | Tidak | Hanya data yang diizinkan § Data ke Provider AI; masa simpan mengikuti kebijakan provider yang dicatat di [shared/integrations.md](./shared/integrations.md) |
+
+## Data ke Provider AI
+
+Berlaku untuk setiap panggilan platform ke model AI (keputusan VPS #5; v1.4.0). Ditegakkan di kode worker clau-ai-agents dan dites.
+
+1. **Boleh dikirim:** aturan, skill, persona, dan knowledge reusable; fakta klien yang sudah dikonfirmasi klien (DATA FINAL) dan brief; teks request staf; review/DM tamu **setelah** penyamaran (`<NAMA_TAMU>`, `<NO_BOOKING>`, `<KONTAK>`), diperlakukan sebagai data, bukan instruksi.
+2. **Tidak pernah dikirim:** data `Restricted` (credential, data pembayaran, data kesehatan, identitas resmi), nama/kontak/nomor booking/kamar tamu yang belum disamarkan, dan data klien lain.
+3. **Dicatat:** setiap panggilan (model, token, biaya, waktu, versi prompt) di database platform (`ai_calls`), tanpa menyimpan isi prompt atau jawaban di log.
+4. **Provider, model, wilayah pemrosesan, dan masa simpan data di provider** dicatat per environment di [shared/integrations.md](./shared/integrations.md). Klien dengan syarat data khusus = **CLIENT CONFIRMATION** sebelum datanya diproses.
+5. **API key** provider hanya di server (VPS 2, `.env` 600, hanya untuk container worker), tidak pernah di repo, log, notifikasi, atau chat.
+6. Hasil AI selalu **draft** (Level B): melewati AI fact-check terhadap fakta klien, review manusia, dan approval tertulis klien (Rule 08); tidak ada publish otomatis.
 
 ## Multi-Repo & Submodule
 
@@ -106,3 +118,4 @@ Check wajib per repo:
 | 1.1.1 | 2026-10-08 | Approved | Izin `SUBMODULE_TOKEN` jadi Contents + Pull requests (dengan kedaluwarsa); bot sync membuka PR dari `bot/sync-submodules`, bukan push langsung ke `main` (atas instruksi owner) |
 | 1.2.0 | 2026-10-12 | Approved | Disiplin Push: semua perubahan ke `main` di core, marketing, agents wajib lewat PR dengan CI hijau; daftar check wajib per repo; penegakan lewat `main-guard` (GitHub Free). Bot sync merge hanya setelah check PR hijau (approval tertulis owner) |
 | 1.3.0 | 2026-10-13 | Approved | CLAU-AI-CONTENT = arsip + markas kerja; job `docker` (uji container + backup/restore) jadi check wajib clau-ai-agents; VPS 1 hanya menayangkan `release/vps1` (commit `main` yang CI-nya hijau). Persetujuan owner 2026-10-13 |
+| 1.4.0 | 2026-10-16 | Approved | § Data ke Provider AI (keputusan VPS #5): data yang boleh/tidak boleh dikirim ke model AI, pencatatan panggilan tanpa isi, API key hanya di server worker, hasil AI selalu draft; zona penyimpanan Provider AI. Persetujuan owner 2026-10-16 |

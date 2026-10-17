@@ -42,7 +42,7 @@ Default untuk semua pilar tetap **Level B**. Level A harus diaktifkan eksplisit 
 
 | Repo | Perubahan saat amandemen berlaku |
 |---|---|
-| clau-ai-core | AI-CONSTITUTION versi baru; kolom **Otonomi** di `orchestrator/router.md`; `shared/api-contracts.md` (`autonomy_level` di respons `/route`) |
-| clau-ai-agents | `registry.json` field `autonomy_max` per agent; `default_forbidden_actions` `send_external` menjadi kondisional (hanya Level A); test baru |
-| clau-ai-marketing | Tidak berubah (semua aksi Marketing tetap Level B) |
-| CLAU-AI-CONTENT/design | Badge level otonomi A/B/C di Studio; pengaturan template Level A di Portal Klien |
+| clau-core | AI-CONSTITUTION versi baru; kolom **Otonomi** di `orchestrator/router.md`; `shared/api-contracts.md` (`autonomy_level` di respons `/route`) |
+| clau-agent | `registry.json` field `autonomy_max` per agent; `default_forbidden_actions` `send_external` menjadi kondisional (hanya Level A); test baru |
+| clau-market | Tidak berubah (semua aksi Marketing tetap Level B) |
+| clau-content/design | Badge level otonomi A/B/C di Studio; pengaturan template Level A di Portal Klien |

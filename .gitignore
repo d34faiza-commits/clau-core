@@ -5,7 +5,7 @@
 *.pem
 *.key
 
-# Client data stays in the client workspace (see AI-BOUNDARY.md di clau-ai-core)
+# Client data stays in the client workspace (see AI-BOUNDARY.md di clau-core)
 clients/
 client-workspace/
 exports/

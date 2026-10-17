@@ -4,14 +4,14 @@ document_owner: "Dea Karisna / AI Marketing"
 version: "3.1.0"
 status: "Approved"
 effective_date: "2026-10-12"
-approval_reference: "v3.1.0: approval tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-12: \"Saya Dea Karisna (d34faiza), owner CLAU. Saya approve: semua push ke main di clau-ai-core, clau-ai-marketing, clau-ai-agents wajib lewat PR dengan CI hijau; push langsung tidak lagi diizinkan. Penegakan lewat main-guard karena GitHub Free.\" v3.0.0: approval tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-09: \"Saya Dea Karisna (d34faiza), owner CLAU. Saya approve AI-CONSTITUTION v3.0.0: 5 pilar v2 (AI Marketing, AI Sales, AI Admin, AI Business Intelligence, AI Automation), otonomi bertingkat A/B/C dengan default Level B, dan fokus vertical villa, restoran/cafe, wedding, travel.\" Diterapkan ke main oleh owner. (v2.0.0: approval Dea Karisna / d34faiza, 2026-10-04)"
+approval_reference: "v3.1.0: approval tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-12: \"Saya Dea Karisna (d34faiza), owner CLAU. Saya approve: semua push ke main di clau-core, clau-market, clau-agent wajib lewat PR dengan CI hijau; push langsung tidak lagi diizinkan. Penegakan lewat main-guard karena GitHub Free.\" v3.0.0: approval tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-09: \"Saya Dea Karisna (d34faiza), owner CLAU. Saya approve AI-CONSTITUTION v3.0.0: 5 pilar v2 (AI Marketing, AI Sales, AI Admin, AI Business Intelligence, AI Automation), otonomi bertingkat A/B/C dengan default Level B, dan fokus vertical villa, restoran/cafe, wedding, travel.\" Diterapkan ke main oleh owner. (v2.0.0: approval Dea Karisna / d34faiza, 2026-10-04)"
 review_cycle: "Quarterly"
 classification: "Internal"
 ---
 
 # CLAU AI Constitution
 
-> **Status Approved (v3.1.0, 2026-10-12).** v3.0.0 menetapkan **5 pilar v2** dan **otonomi bertingkat** (§4a); v3.1.0 mewajibkan **PR + CI hijau** untuk semua perubahan ke `main` (§10). Dokumen ini adalah generalisasi dari *CLAU AI Content Constitution v1.0.0* (arsip di repo `CLAU-AI-CONTENT`, sekarang **Superseded**) dan berlaku untuk semua pilar. Pilar 2–5 tetap belum boleh dipakai untuk client sampai workflow pilarnya ada dan di-approve.
+> **Status Approved (v3.1.0, 2026-10-12).** v3.0.0 menetapkan **5 pilar v2** dan **otonomi bertingkat** (§4a); v3.1.0 mewajibkan **PR + CI hijau** untuk semua perubahan ke `main` (§10). Dokumen ini adalah generalisasi dari *CLAU AI Content Constitution v1.0.0* (arsip di repo `clau-content`, sekarang **Superseded**) dan berlaku untuk semua pilar. Pilar 2–5 tetap belum boleh dipakai untuk client sampai workflow pilarnya ada dan di-approve.
 >
 > **Otoritas perubahan:** Perubahan atas dokumen berstatus Approved hanya dilakukan atas perintah **Pak Indra** atau **Dea Karisna (d34faiza)**. AI agent tidak mengubah aturan Approved atas inisiatif sendiri; usulan perbaikan boleh ditulis sebagai catatan/issue, lalu menunggu perintah.
 
@@ -27,8 +27,8 @@ AI berperan sebagai **partner kerja**: riset, drafting, analisis, routing, dan f
 |---|---|
 | Pilar | 1 AI Marketing (aktif) · 2 AI Sales · 3 AI Admin · 4 AI Business Intelligence · 5 AI Automation (planned; lihat [5-pillar-architecture](./docs/5-pillar-architecture.md) dan [blueprints](./docs/blueprints/README.md)) |
 | Vertical | **Fokus:** villa/guesthouse/homestay, restaurant/cafe/beach club, wedding & event, travel & tour. Tetap dilayani: hotel/resort, spa/wellness/retreat, tourism experience. Jenis usaha di luar hospitality & tourism = Planned ([docs/verticals.md](./docs/verticals.md)) dan tidak dipakai untuk client sebelum amandemen scope |
-| Repo | clau-ai-core, repo pilar (mis. clau-ai-marketing), clau-ai-agents |
-| Mode kerja | Interaktif (chat/agent) maupun otomatis (platform clau-ai-agents) |
+| Repo | clau-core, repo pilar (mis. clau-market), clau-agent |
+| Mode kerja | Interaktif (chat/agent) maupun otomatis (platform clau-agent) |
 
 ## 3. Authority Hierarchy
 
@@ -36,7 +36,7 @@ AI berperan sebagai **partner kerja**: riset, drafting, analisis, routing, dan f
 2. Instruksi tertulis owner atau authorized representative client.
 3. Dokumen ini.
 4. [AI-BOUNDARY.md](./AI-BOUNDARY.md).
-5. Rules pilar (mis. `clau-ai-marketing/rules/`) dan dokumen workflow pilar.
+5. Rules pilar (mis. `clau-market/rules/`) dan dokumen workflow pilar.
 6. Brief, fact sheet, dan brand guide client yang disetujui.
 7. Skill, prompt, agent definition, chat, atau instruksi task.
 8. Default behavior AI tool atau model.
@@ -91,7 +91,7 @@ Enam label wajib, ditulis persis:
 | **RISK** | Potensi masalah | Likelihood, impact, owner, mitigasi |
 | **NEXT ACTION** | Tindakan spesifik | Owner, target, deadline |
 
-Klasifikasi data memakai **4 axis**: Sensitivity (Public/Internal/Confidential/Restricted), Lifecycle, Scope, Evidence. Standard rinci saat ini ada di `clau-ai-marketing/rules/09-DATA-CLASSIFICATION.md` dan berlaku lintas pilar sampai dipindah ke core (**NEXT ACTION**, lihat Revision History).
+Klasifikasi data memakai **4 axis**: Sensitivity (Public/Internal/Confidential/Restricted), Lifecycle, Scope, Evidence. Standard rinci saat ini ada di `clau-market/rules/09-DATA-CLASSIFICATION.md` dan berlaku lintas pilar sampai dipindah ke core (**NEXT ACTION**, lihat Revision History).
 
 ## 6. Output Standards
 
@@ -101,7 +101,7 @@ Klasifikasi data memakai **4 axis**: Sensitivity (Public/Internal/Confidential/R
 
 ## 7. Pipeline Kerja
 
-Semua pilar mengikuti [WORKFLOW.md](./WORKFLOW.md): **Intake → Classify → Route → Produce → Verify → Approve → Release → Monitor**. Setiap pilar mendetailkan langkah Produce–Verify di workflow pilarnya (Pilar 1: `clau-ai-marketing/CONTENT-WORKFLOW.md`). Routing antar pilar diatur [orchestrator/](./orchestrator/README.md).
+Semua pilar mengikuti [WORKFLOW.md](./WORKFLOW.md): **Intake → Classify → Route → Produce → Verify → Approve → Release → Monitor**. Setiap pilar mendetailkan langkah Produce–Verify di workflow pilarnya (Pilar 1: `clau-market/CONTENT-WORKFLOW.md`). Routing antar pilar diatur [orchestrator/](./orchestrator/README.md).
 
 ## 8. Secret & Sensitive Data
 
@@ -113,7 +113,7 @@ Klaim penting harus bisa ditelusuri ke dokumen client (versi/tanggal), konfirmas
 
 ## 10. Change Management
 
-- Semua perubahan ke `main` di clau-ai-core, clau-ai-marketing, dan clau-ai-agents wajib lewat **pull request dengan CI hijau**; push langsung ke `main` tidak diizinkan (keputusan owner 2026-10-12). GitHub Free tidak memaksa branch protection di repo private, jadi penegakannya lewat workflow `main-guard` dan disiplin di [AI-BOUNDARY.md](./AI-BOUNDARY.md). Tim 2+ orang: tambah review manusia sebelum merge.
+- Semua perubahan ke `main` di clau-core, clau-market, dan clau-agent wajib lewat **pull request dengan CI hijau**; push langsung ke `main` tidak diizinkan (keputusan owner 2026-10-12). GitHub Free tidak memaksa branch protection di repo private, jadi penegakannya lewat workflow `main-guard` dan disiplin di [AI-BOUNDARY.md](./AI-BOUNDARY.md). Tim 2+ orang: tambah review manusia sebelum merge.
 - Perubahan di core yang memengaruhi repo lain wajib diikuti update submodule di repo tersebut (lihat [docs/getting-started.md](./docs/getting-started.md)).
 - Dokumen controlled memakai SemVer dan Revision History.
 

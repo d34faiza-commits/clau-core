@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Repository validator for clau-ai-core (stdlib only).
+"""Repository validator for clau-core (stdlib only).
 
 Checks:
   - required files exist
@@ -175,7 +175,7 @@ def main() -> int:
         for f in failures:
             print(f"  - {f}")
         return 1
-    print("PASS — clau-ai-core validated, no issues found.")
+    print("PASS — clau-core validated, no issues found.")
     return 0
 
 

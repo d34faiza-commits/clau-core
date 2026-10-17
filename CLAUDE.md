@@ -1,16 +1,16 @@
-# CLAUDE.md — clau-ai-core
+# CLAUDE.md — clau-core
 
 > Peta repo untuk AI agent. Baca file ini dulu sebelum menjelajah repo. Last updated: 2026-10-13
 
-> 🔔 **Sesi baru: baca [status & handoff CLAU AI](https://github.com/d34faiza-commits/CLAU-AI-CONTENT/blob/main/docs/status.md) dulu** (otoritas, keputusan yang sudah diambil, status, pekerjaan terbuka). Repo Jerco milik Pak Indra: jangan disentuh tanpa persetujuan beliau.
+> 🔔 **Sesi baru: baca [status & handoff CLAU AI](https://github.com/d34faiza-commits/clau-content/blob/main/docs/status.md) dulu** (otoritas, keputusan yang sudah diambil, status, pekerjaan terbuka). Repo Jerco milik Pak Indra: jangan disentuh tanpa persetujuan beliau.
 
 ## 1. Identitas
 
 | Item | Nilai |
 |---|---|
-| Repo | `d34faiza-commits/clau-ai-core` (private) |
+| Repo | `d34faiza-commits/clau-core` (public, hanya untuk dilihat; LICENSE) |
 | Peran | Fondasi CLAU AI: constitution, boundary, workflow lintas pilar, orchestrator, kontrak data |
-| Dipakai oleh | `clau-ai-marketing` (`core/`), `clau-ai-agents` (`core/`), dan `clau-ai-marketing/agents/core/` |
+| Dipakai oleh | `clau-market` (`core/`), `clau-agent` (`core/`), dan `clau-market/agents/core/` |
 | Default branch | `main` (wajib PR + CI hijau, tanpa push langsung; dijaga `main-guard`; lihat AI-BOUNDARY) |
 
 ## 2. Peta File
@@ -22,8 +22,8 @@
 | `AGENTS.md` · `WORKFLOW.md` | Instruksi agent lintas repo · pipeline 8 langkah |
 | `orchestrator/` | `router.md` (12 intent), `decision-tree.md`, `priority-engine.md` |
 | `shared/` | `database-schema.md`, `api-contracts.md`, `data-flow.md`, `integrations.md` |
-| `docs/` | `getting-started.md` (alur sync antar repo), `5-pillar-architecture.md`, `verticals.md`, `blueprints/` (5 pilar), `proposals/` (jejak usulan) |
-| `.github/ISSUE_TEMPLATE/` | Issue → board task di CLAU-AI-CONTENT |
+| `docs/` | `getting-started.md` (alur sync antar repo), `5-pillar-architecture.md`, `verticals.md`, `blueprints/` (5 pilar), `proposals/` (jejak usulan; `tahap-2-ai-drafting.md` = rancangan AI menulis draft, Draft) |
+| `.github/ISSUE_TEMPLATE/` | Issue → board task di clau-content |
 | `scripts/validate_core.py` | Validator (file wajib, versi governance, link, JSON, secret) |
 | `.github/workflows/` | `validate.yml`, `main-guard.yml` (cek push ke `main`), `notify-downstream.yml` (memicu sync di agents; marketing menyusul lewat agents) |
 | `.github/dependabot.yml` | Update GitHub Actions mingguan (tanpa versi mayor); Actions dipin ke commit SHA |
@@ -34,7 +34,7 @@
 python scripts/validate_core.py
 ```
 
-Mengubah intent di `orchestrator/router.md` → `agents/registry.json` di clau-ai-agents juga harus diubah (ada test konsistensi).
+Mengubah intent di `orchestrator/router.md` → `agents/registry.json` di clau-agent juga harus diubah (ada test konsistensi).
 
 ## Aturan Kerja untuk Agent
 

@@ -28,7 +28,7 @@ Alur kerja belakang layar yang berjalan sendiri; owner bekerja seperti biasa.
 |---|---|---|
 | Trigger | Pesan masuk, form, jadwal, webhook | |
 | Konektor | WhatsApp Business Platform, Instagram, Google Sheets, email, CRM, akuntansi | Read/write minimum per alur |
-| Runner | Engine alur (bangun sendiri di clau-ai-agents, atau n8n self-hosted di VPS) | Keputusan teknis = TASK-039 |
+| Runner | Engine alur (bangun sendiri di clau-agent, atau n8n self-hosted di VPS) | Keputusan teknis = TASK-039 |
 | Approval queue | Langkah Level B/C masuk antrean "Menunggu manusia" di Studio | Sudah ada di desain Studio |
 
 ## Intent & Agent

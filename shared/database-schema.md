@@ -1,6 +1,6 @@
 # Database Schema (Design)
 
-> **Status: Draft (kontrak hidup), diimplementasikan.** PostgreSQL 16 di clau-ai-agents: migrasi `0001` (skema + Constraint Wajib), `0002` (login), `0003` (kode cadangan 2FA), dan `0004` (workflow request → draft → QA → approval). Kontrak ini tetap sumber kebenaran: tabel di database dites sama dengan daftar di bawah (`backend/tests/test_db.py`), jadi perubahan skema dimulai dari dokumen ini. Detail implementasi: `clau-ai-agents/backend/README.md` § Database.
+> **Status: Draft (kontrak hidup), diimplementasikan.** PostgreSQL 16 di clau-agent: migrasi `0001` (skema + Constraint Wajib), `0002` (login), `0003` (kode cadangan 2FA), `0004` (workflow request → draft → QA → approval), `0005` (fact sheet & Konfirmasi Fakta), dan `0006` (antrean AI Tahap 2: `ai_jobs`, `ai_calls`, `ai_budgets`). Kontrak ini tetap sumber kebenaran: tabel di database dites sama dengan daftar di bawah (`backend/tests/test_db.py`), jadi perubahan skema dimulai dari dokumen ini. Detail implementasi: `clau-agent/backend/README.md` § Database.
 
 ## Prinsip
 
@@ -16,7 +16,7 @@
 | `clients` | `client_code` (PK), `vertical`, `business_type`, `location_area`, `approver_role`, `simulation` (bool, default false), `created_at` | Tanpa kontak pribadi; kontak approver di workspace client. `simulation = true` = klien fiktif (pilot/SIMULASI): semua draft-nya otomatis mode `SIMULASI` |
 | `fact_sheets` | `id`, `client_code` (FK), `version`, `document_ref`, `created_by` (FK users), `created_at`, `approved_at`, `approved_by` (FK users), `approved_by_role`, `approval_ref` | Isi mengikuti template fact sheet Pilar 1; `document_ref` opaque (`https://`/`mailto:`/`workspace://`). Versi = max + 1 per klien; disetujui sekali setelah semua fakta dijawab klien, lalu beku (perubahan = versi baru) |
 | `facts` | `id`, `fact_sheet_id` (FK), `fact_key`, `category`, `label`, `value`, `created_at` | Daftar fakta satu versi fact sheet (kategori faktual; `fact_key` = `<kategori>.<nama>`, unik per versi). Append-only: koreksi = jawaban klien di `fact_confirmations`, bukan edit |
-| `briefs` | `brief_id` (PK), `client_code` (FK), `schema_version`, `payload` (JSON), `status` | `payload` divalidasi terhadap `clau-ai-marketing/schemas/content-brief.schema.json` |
+| `briefs` | `brief_id` (PK), `client_code` (FK), `schema_version`, `payload` (JSON), `status` | `payload` divalidasi terhadap `clau-market/schemas/content-brief.schema.json` |
 | `requests` | `id`, `client_code`, `intent`, `pillar`, `approval_min` (`L1`–`L3`), `text`, `deadline`, `impact` (0–3), `risk` (0–3), `priority`, `status` (`open`/`in_progress`/`approved`/`rejected`/`closed`), `requested_by` (FK users, null = sistem/seed), `requested_by_role`, `created_at` | Hasil orchestrator: `pillar` & `approval_min` dari router (registry), `priority` dari priority engine. `text` = permintaan kerja, tanpa data pribadi tamu |
 | `drafts` | `id`, `request_id` (FK), `brief_id` (FK), `fact_sheet_id` (FK, nullable), `skill`, `version`, `content` (text), `mode` (`NYATA`/`SIMULASI`), `created_by` (FK users, nullable bila dibuat agent), `agent_id` | Satu baris per versi (versi = max + 1 per request, dihitung server); tanpa data pribadi tamu. `mode` = dari `clients.simulation` |
 | `claims` | `id`, `draft_id` (FK), `text`, `category`, `evidence_label`, `source`, `source_date`, `implied` (bool), `fact_key` (nullable) | Termasuk klaim tersirat. `fact_key` = kunci fakta di fact sheet klien (format `^[a-z0-9]+([._-][a-z0-9]+)*$`, ≤ 64), wajib untuk kategori faktual |
@@ -31,6 +31,9 @@
 | `fact_confirmations` | `id`, `fact_sheet_id` (FK), `fact_key`, `value_before`, `value_after`, `decision` (`confirmed`/`corrected`), `confirmed_by` (FK users), `confirmed_by_role`, `channel_ref`, `confirmed_at` | Hasil fitur **Konfirmasi Fakta** di Portal; `confirmed` = bukti tertulis owner → klaim boleh `DATA FINAL`. `value_before` = nilai fakta saat dijawab (diisi database); `corrected` wajib `value_after`. Jawaban terakhir per fakta yang berlaku |
 | `notifications` | `id`, `user_id` (FK), `type`, `object_ref`, `channel` (`in_app`/`email`/`whatsapp`), `sent_at`, `read_at` | Tanpa isi pesan sensitif; link ke objek |
 | `audit_log` | `id`, `actor_id` (FK users, null = system/agent), `action`, `object_type`, `object_id`, `meta` (JSON), `created_at` | Append-only: approve, tandai tayang, ubah fakta, ubah akses, ubah setting |
+| `ai_jobs` | `id`, `request_id` (FK), `agent_id`, `intent`, `kind` (`draft`), `status` (`queued`/`running`/`succeeded`/`failed`/`cancelled`), `attempts`, `max_attempts`, `run_after`, `locked_at`, `locked_by`, `error_code`, `fact_sheet_id` (FK), `draft_id` (FK), `requested_by` (FK users), `created_at`, `finished_at` | Antrean kerja AI (Tahap 2, worker mengambil dengan `FOR UPDATE SKIP LOCKED`). Satu job aktif per request; `error_code` dari daftar tetap (bukan teks error provider); tanpa isi prompt |
+| `ai_calls` | `id`, `job_id` (FK), `provider`, `model`, `prompt_version`, `input_tokens`, `output_tokens`, `cache_read_tokens`, `cache_write_tokens`, `cost_micro_usd`, `stop_reason`, `provider_request_id`, `latency_ms`, `created_at` | Satu baris per panggilan model (AI-BOUNDARY § Data ke Provider AI). **Append-only**; tanpa isi prompt/jawaban (isi hasil ada di `drafts`) |
+| `ai_budgets` | `scope` (`global` / `client_code`), `month` (tanggal 1), `limit_micro_usd`, `alert_at_pct`, `updated_by` (FK users), `updated_at` | Batas biaya AI per bulan (PK `scope` + `month`). Tanpa batas `global` bulan berjalan = job AI ditolak (fail closed) |
 
 ## Relasi
 
@@ -42,6 +45,7 @@ drafts 1─n approvals ; drafts 1─n publications
 clients 1─n consent_refs
 users 1─n memberships n─1 clients ; fact_sheets 1─n fact_confirmations
 users 1─n notifications ; users 1─n sessions ; users 1─n mfa_recovery_codes ; audit_log → semua objek
+requests 1─n ai_jobs 1─n ai_calls ; ai_jobs 0─1 drafts ; ai_jobs n─1 fact_sheets ; ai_budgets (global / per client_code, per bulan)
 ```
 
 ## Constraint Wajib (saat implementasi)
@@ -55,7 +59,7 @@ users 1─n notifications ; users 1─n sessions ; users 1─n mfa_recovery_code
 | Reviewer `independent = true` ≠ `drafts.created_by` (dan bukan agent) | Pembuat tidak boleh me-review drafnya sendiri (rule 08) |
 | `approvals` Approved (semua level) ditolak bila draft punya klaim ber-`fact_key` yang belum dikonfirmasi: `drafts.fact_sheet_id` kosong, fact sheet belum `approved_at`, atau tidak ada `fact_confirmations` (`confirmed`/`corrected`) untuk `fact_key` itu di fact sheet tersebut → `facts_unconfirmed` | Tombol *Setujui* terkunci di UI juga ditegakkan di server |
 | `approvals` Approved hanya untuk versi draft tertinggi di request yang sama (request dikunci saat cek) → `approval_version_mismatch` | Approval terikat versi terbaru; tidak ada race dengan draft baru |
-| `approvals.level` (semua keputusan) ≥ level minimum draft: `requests.approval_min` (`risk = 3` → L3 saat request dibuat), naik ke L2 bila draft punya klaim ber-`fact_key` → `approval_level_too_low` | Konten L2 tidak bisa diputuskan sebagai L1 untuk melewati review independen |
+| `approvals.level` (semua keputusan) ≥ level minimum draft: `requests.approval_min` (`risk = 3` → L3 saat request dibuat), naik ke L2 bila draft punya klaim ber-`fact_key` atau draft agent untuk klien NYATA → `approval_level_too_low` | Konten L2 tidak bisa diputuskan sebagai L1 untuk melewati review independen |
 | `approvals` (semua keputusan) oleh pembuat draft (`drafts.created_by`) ditolak → `approval_by_author` | Tidak ada self-approve (AI-CONSTITUTION §4, rule 08) |
 | Approved oleh peran agency (`owner`/`content_lead`), semua level, wajib `channel_ref` → `approval_needs_written_evidence` | Rule 08: persetujuan dari klien; agency hanya mencatat persetujuan tertulis klien |
 | `approvals.approver_role` / `qa_records.reviewer_role` harus ada di `memberships` user itu (klien request atau agency) → `approval_role_mismatch` / `qa_role_mismatch`; `qa_records.independent` hanya owner/content_lead → `independent_review_not_allowed` | Database tidak percaya peran yang dikirim aplikasi |
@@ -69,22 +73,30 @@ users 1─n notifications ; users 1─n sessions ; users 1─n mfa_recovery_code
 | `fact_confirmations` baru: fact sheet belum disetujui (`fact_sheet_frozen`), `fact_key` ada di `facts` versi itu (`fact_not_in_sheet`), `confirmed_by_role` sesuai membership (`approval_role_mismatch`), agency wajib `channel_ref`, bukan pembuat fact sheet, `corrected` wajib `value_after` yang berbeda dari nilai awal (`fact_value_required` / `fact_value_unchanged`); `value_before` diisi database |
 | `approvals` Approved untuk draft berklaim `fact_key`: fact sheet draft punya `approved_by` (disetujui lewat alur jawaban klien, bukan data lama), setiap kunci ada di `facts` versi itu (`facts_unconfirmed`), dan tidak ada versi disetujui yang lebih baru untuk klien itu (`fact_sheet_superseded`) | Konten tidak memakai fakta yang sudah dikoreksi di versi baru | Jawaban fakta dari klien dan dapat ditelusuri |
 | `audit_log` tidak bisa di-update/delete dari aplikasi | Jejak keputusan |
+| `ai_jobs`: satu job `queued`/`running` per request → `ai_job_active`; job baru hanya untuk request `open`/`in_progress` → `request_closed` | Tidak ada draft AI ganda/balapan; request selesai tidak dikerjakan ulang |
+| `ai_jobs` transisi status hanya `queued → running → (queued untuk retry \| succeeded \| failed)` dan `queued → cancelled`; job selesai beku; tidak dihapus → `ai_job_transition` / `ai_record_append_only` | Jejak kerja AI tidak bisa ditulis ulang |
+| `ai_jobs` `succeeded` wajib `draft_id` dari request yang sama dan dibuat agent job itu (`drafts.created_by` NULL, `agent_id` sama) → `ai_job_draft_mismatch`; `failed` wajib `error_code` | Hasil job bisa ditelusuri ke draft yang benar |
+| `ai_calls` append-only (UPDATE/DELETE/TRUNCATE ditolak, hak ubah dicabut dari role aplikasi) → `ai_record_append_only` | Catatan biaya & pemakaian tidak bisa diubah |
+| Draft agent (`created_by` NULL) untuk klien NYATA hanya dari job AI yang sedang `running` untuk request itu, dengan `agent_id` job itu → `ai_draft_without_job` (draft agent SIMULASI dari seed pilot tetap boleh) | Tidak ada draft "atas nama agent" untuk klien nyata yang dibuat langsung |
+| Draft agent hasil job AI: `ai_jobs.requested_by` dianggap pembuat → tidak boleh QA independen (`qa_reviewer_is_author`) atau memutuskan approval (`approval_by_author`) | Rule 08: peminta draft AI tidak menyetujui hasilnya sendiri |
+| Level minimum draft agent (`created_by` NULL) untuk klien NYATA minimal L2 (`approval_level_too_low`), walau tanpa klaim ber-`fact_key` | Isi draft AI selalu dibaca reviewer independen manusia, bukan hanya klaim yang dilaporkan model |
 | Query Portal selalu difilter `memberships.scope = client_code` | Isolasi data antar klien |
 
 ## Keputusan Implementasi (2026-10-12)
 
-Detail yang belum diatur kontrak dan ditetapkan saat implementasi (clau-ai-agents migrasi `0001`):
+Detail yang belum diatur kontrak dan ditetapkan saat implementasi (clau-agent migrasi `0001`):
 
 | Item | Nilai |
 |---|---|
 | `approvals.decision` | `Approved` / `Revise` / `Rejected` |
-| `qa_records.gate` | `claim-verification`, `content-review`, `privacy-rights-review`, `visual-ai-review`, `publication-checklist` (= file di `clau-ai-marketing/qa/`) |
+| `qa_records.gate` | `claim-verification`, `content-review`, `privacy-rights-review`, `visual-ai-review`, `publication-checklist` (= file di `clau-market/qa/`) |
 | Review independen yang dihitung untuk L2/L3 | gate `claim-verification`, `independent = true`, hasil `Pass` atau `Conditional` (pengecualian terkontrol dengan approval tertulis) |
 | Mode approval | Harus sama dengan mode draft yang disetujui |
 | Mode draft (2026-10-14, migrasi `0004`) | `SIMULASI` bila `clients.simulation`, selain itu `NYATA`; ditentukan server, tidak bisa dipilih pengirim |
 | Klien SIMULASI saat upgrade (migrasi `0004`) | Hanya daftar eksplisit klien fiktif seed (`CTHVILLA`, `CTHCAFE`, `CTHWED`, `CTHTRIP`) ditandai `simulation = true`; tidak ada tebakan dari awalan kode. Klaim faktual lama tanpa kunci diberi `fact_key = <kategori>.legacy-<id>` (tidak pernah cocok dengan fact sheet, jadi tetap fail closed) |
 | Status request (0004) | `open` → `in_progress` (draft dibuat / Revise) → `approved` / `rejected` (approval versi terbaru); `closed` disiapkan untuk penutupan manual |
 | Isi draft | Baris versi yang tersimpan tidak bisa diubah; revisi = versi baru (approval terikat versi) |
+| Antrean AI (2026-10-16, migrasi `0006`) | `ai_jobs.error_code` ∈ `provider_error`, `provider_unavailable`, `refused`, `invalid_output`, `budget_exceeded`, `request_closed`, `fact_sheet_missing`, `worker_timeout`, `ai_disabled`, `cancelled_by_user`; retry hanya untuk `provider_unavailable`/`worker_timeout` (jeda bertambah), maks 3 percobaan. QA otomatis agent = `qa_records` gate `claim-verification`, `reviewer_id` NULL, `reviewer_role` `agent`, `independent` false |
 | Enum lain | `clients.vertical` & `claims.category` = `content-brief.schema.json`; `requests.priority` = priority engine (`Low`/`Normal`/`High`/`Urgent`) |
 
 ## Open Items
@@ -93,4 +105,4 @@ Detail yang belum diatur kontrak dan ditetapkan saat implementasi (clau-ai-agent
 - ~~NEXT ACTION: buat migration awal saat backend butuh persistence.~~ Selesai 2026-10-12 (migrasi `0001`–`0003`).
 - ~~NEXT ACTION: hubungkan klaim ke fakta (`claims.fact_key` + `drafts.fact_sheet_id`).~~ Selesai 2026-10-14 (migrasi `0004`, berlaku untuk semua level, bukan hanya L2/L3).
 - ~~NEXT ACTION: endpoint kelola klien, fact sheet, dan Konfirmasi Fakta.~~ Selesai 2026-10-14 (migrasi `0005`, API 0.8.0).
-- Tabel `users`, `memberships`, `fact_confirmations`, `notifications`, `audit_log` ditambahkan 2026-10-06 agar sesuai spesifikasi UI (repo `CLAU-AI-CONTENT/design/`).
+- Tabel `users`, `memberships`, `fact_confirmations`, `notifications`, `audit_log` ditambahkan 2026-10-06 agar sesuai spesifikasi UI (repo `clau-content/design/`).

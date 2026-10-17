@@ -4,7 +4,7 @@
 
 ## Daftar Vertical
 
-| Vertical | Kelompok | Status | Knowledge segment (clau-ai-marketing) | Gelombang |
+| Vertical | Kelompok | Status | Knowledge segment (clau-market) | Gelombang |
 |---|---|---|---|---|
 | Villa / guesthouse / homestay | Hospitality | **Fokus — Aktif** | `knowledge/segments/villa.md` · fact sheet `templates/property-fact-sheet.md` · pilot `examples/pilot-villa-contoh-ubud`, `pilot-2` | — |
 | Restaurant / cafe / beach club | Hospitality | **Fokus — Aktif** | `knowledge/segments/restaurant.md` · fact sheet `templates/fnb-fact-sheet.md` · pilot `examples/pilot-kafe-contoh-canggu` | — |

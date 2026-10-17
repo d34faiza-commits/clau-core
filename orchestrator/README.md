@@ -1,6 +1,6 @@
 # Orchestrator
 
-Orchestrator menentukan **ke mana** sebuah request dikirim (pilar & skill) dan **kapan** dikerjakan (prioritas). Dokumen di folder ini adalah spesifikasi; implementasinya ada di [clau-ai-agents](https://github.com/d34faiza-commits/clau-ai-agents) (backend `router`), dan agent manusia/AI yang bekerja manual memakai dokumen yang sama.
+Orchestrator menentukan **ke mana** sebuah request dikirim (pilar & skill) dan **kapan** dikerjakan (prioritas). Dokumen di folder ini adalah spesifikasi; implementasinya ada di [clau-agent](https://github.com/d34faiza-commits/clau-agent) (backend `router`), dan agent manusia/AI yang bekerja manual memakai dokumen yang sama.
 
 | Dokumen | Isi |
 |---|---|
@@ -21,4 +21,4 @@ Orchestrator menentukan **ke mana** sebuah request dikirim (pilar & skill) dan *
 | Komponen | Status |
 |---|---|
 | Spesifikasi routing (dokumen ini) | Draft |
-| Implementasi di clau-ai-agents | Implemented (statis): endpoint `POST /route` memakai tabel di [router.md](./router.md) |
+| Implementasi di clau-agent | Implemented (statis): endpoint `POST /route` memakai tabel di [router.md](./router.md) |

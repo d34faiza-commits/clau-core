@@ -1,10 +1,10 @@
 ---
 document_title: "CLAU AI Boundary"
 document_owner: "Dea Karisna / AI Marketing"
-version: "1.5.0"
+version: "1.6.0"
 status: "Approved"
-effective_date: "2026-10-16"
-approval_reference: "v1.5.0: perintah owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-16: keempat repo di-rename (clau-core, clau-agent, clau-market, clau-content) dan dijadikan public oleh owner; atas pilihan A (kembali private) atau B (tetap public, LICENSE disesuaikan) owner menjawab \"Gass B kak\". v1.4.0: persetujuan owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-16, atas usulan Tahap 2 § 4 (docs/proposals/tahap-2-ai-drafting.md): \"setuju gas\" sebagai jawaban atas \"Cukup balas setuju § 4\". v1.3.0: persetujuan owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-13, atas 3 usulan (1) clau-content = arsip + markas kerja, (2) job `docker` jadi check wajib clau-agent, (3) gerbang deploy VPS 1 `release/vps1`: \"ok gas 1 2 dan 3 kak\". v1.2.0: approval tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-12: \"Saya Dea Karisna (d34faiza), owner CLAU. Saya approve: semua push ke main di clau-core, clau-market, clau-agent wajib lewat PR dengan CI hijau; push langsung tidak lagi diizinkan. Penegakan lewat main-guard karena GitHub Free.\" v1.1.1: instruksi owner via sesi Claude Code, 2026-10-08 (\"gass\", izin token + sync via PR); v1.1.0: instruksi tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-06 (\"tolong semua repo di cek … jika belum fix 100% tolong di fix\"); v1.0.0 approved 2026-10-04; perubahan ada di main"
+effective_date: "2026-10-22"
+approval_reference: "v1.6.0: perintah owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-22: atas tawaran menulis versi CLAU dari pola Jerco (definisi PR selesai; versi live hanya maju), owner menjawab \"gass semuanya kak\"; disahkan dengan merge PR oleh owner. v1.5.0: perintah owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-16: keempat repo di-rename (clau-core, clau-agent, clau-market, clau-content) dan dijadikan public oleh owner; atas pilihan A (kembali private) atau B (tetap public, LICENSE disesuaikan) owner menjawab \"Gass B kak\". v1.4.0: persetujuan owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-16, atas usulan Tahap 2 § 4 (docs/proposals/tahap-2-ai-drafting.md): \"setuju gas\" sebagai jawaban atas \"Cukup balas setuju § 4\". v1.3.0: persetujuan owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-13, atas 3 usulan (1) clau-content = arsip + markas kerja, (2) job `docker` jadi check wajib clau-agent, (3) gerbang deploy VPS 1 `release/vps1`: \"ok gas 1 2 dan 3 kak\". v1.2.0: approval tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-12: \"Saya Dea Karisna (d34faiza), owner CLAU. Saya approve: semua push ke main di clau-core, clau-market, clau-agent wajib lewat PR dengan CI hijau; push langsung tidak lagi diizinkan. Penegakan lewat main-guard karena GitHub Free.\" v1.1.1: instruksi owner via sesi Claude Code, 2026-10-08 (\"gass\", izin token + sync via PR); v1.1.0: instruksi tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-06 (\"tolong semua repo di cek … jika belum fix 100% tolong di fix\"); v1.0.0 approved 2026-10-04; perubahan ada di main"
 classification: "Internal"
 ---
 
@@ -105,6 +105,34 @@ Check wajib per repo:
 
 **RISK:** sampai ruleset `main` diaktifkan, push langsung **secara teknis tetap bisa**. Sejak repo public (2026-10-16), GitHub Free memaksa ruleset/branch protection di server. **NEXT ACTION (owner):** aktifkan ruleset `main` (wajib PR + check wajib di atas) di tiap repo, dan di Settings → Actions set *Require approval for all external contributors* agar workflow dari fork pihak luar tidak jalan tanpa persetujuan. Sampai itu, penegakan = deteksi: workflow `main-guard.yml` di tiap repo membuat check merah + email bila commit masuk `main` tanpa PR yang di-merge, di-force push, atau PR di-merge sebelum check wajib hijau. Pelanggaran: laporkan ke owner, perbaiki lewat PR baru (jangan force push). Direview bila plan di-upgrade (proteksi server bisa dipaksa) atau tim bertambah.
 
+### Kapan PR Boleh Disebut Selesai
+
+Berlaku untuk manusia dan AI di semua repo CLAU, termasuk saat melapor di chat, di `docs/status.md`, atau memindahkan kartu di board ClickUp.
+
+1. PR hanya boleh dilaporkan **selesai** atau **siap merge** bila statusnya dicek **langsung di GitHub tepat sebelum melapor** dan hasilnya salah satu dari: (a) PR sudah **merged**; atau (b) PR **tidak konflik** dengan `main` **dan** semua check wajib (tabel Check wajib per repo di atas) **hijau pada commit terakhir PR**. Hasil cek ini = **DATA FINAL**; status dari ingatan sesi, chat lama, atau clone lokal = **ASSUMPTION**.
+2. Kondisi lain dilaporkan apa adanya, bukan "selesai":
+
+   | Kondisi di GitHub | Laporan |
+   |---|---|
+   | Check masih antre / berjalan | Menunggu CI |
+   | Ada check wajib merah | CI merah: belum siap merge (sebut check-nya) |
+   | Konflik dengan `main` | **BLOCKED (konflik)** |
+   | Branch tertinggal dari `main` dan perlu diperbarui | Perlu update branch |
+   | Status tidak terbaca | Belum diketahui: cek ulang sebelum melapor |
+
+3. Konflik diselesaikan dengan **menggabungkan `main` ke branch PR** (merge commit), lalu validator lokal, push, dan cek ulang sampai poin 1 terpenuhi. Tidak ada force push dan tidak menulis ulang riwayat branch orang lain.
+4. Sebelum melapor PR baru selesai, cek juga PR lain yang masih terbuka di repo yang sama: bila PR baru membuat PR lain konflik, sebutkan dalam laporan.
+5. Kartu ClickUp dipindah ke **Closed** hanya setelah PR-nya **merged** dan CI di `main` hijau (`tasks/README.md` § Board ClickUp di clau-content).
+
+### Versi Live Hanya Maju
+
+Berlaku untuk server CLAU (VPS 1 `release/vps1`, VPS 2) dan untuk pekerjaan yang sudah berstatus selesai.
+
+1. Versi yang sudah **live tidak dikembalikan** ke commit/rilis lebih lama (rollback, revert deploy, menulis ulang `release/vps1` ke commit lama) **tanpa perintah eksplisit owner** yang menyebut **target** (commit, rilis, atau PR) dan kata **rollback/revert**.
+2. Masalah di versi live diperbaiki **maju**: PR perbaikan baru lewat alur biasa (PR → CI hijau → merge → rilis).
+3. Fitur yang sudah tayang tidak "diperbaiki" dengan mengembalikan file/konfigurasi versi lama; pekerjaan **Closed/Done** tidak dibuka ulang tanpa owner menyebut ID task-nya.
+4. Yang **tetap boleh tanpa menunggu**: rollback **otomatis** yang sudah tertulis di panduan deploy saat health check rilis baru gagal (rilis baru belum pernah sehat di server); cek read-only terhadap server live; dan saat insiden, langkah pengaman yang tidak memundurkan versi: mematikan AI (`CLAU_AI_ENABLED=0`) atau menghentikan layanan sementara, lalu lapor owner.
+
 ## Enforcement
 
 - CI tiap repo menjalankan validator (termasuk pola secret sederhana).
@@ -124,3 +152,4 @@ Check wajib per repo:
 | 1.3.0 | 2026-10-13 | Approved | clau-content = arsip + markas kerja; job `docker` (uji container + backup/restore) jadi check wajib clau-agent; VPS 1 hanya menayangkan `release/vps1` (commit `main` yang CI-nya hijau). Persetujuan owner 2026-10-13 |
 | 1.4.0 | 2026-10-16 | Approved | § Data ke Provider AI (keputusan VPS #5): data yang boleh/tidak boleh dikirim ke model AI, pencatatan panggilan tanpa isi, API key hanya di server worker, hasil AI selalu draft; zona penyimpanan Provider AI. Persetujuan owner 2026-10-16 |
 | 1.5.0 | 2026-10-16 | Approved | Repo di-rename (clau-core, clau-agent, clau-market, clau-content) dan public, hanya untuk dilihat: lisensi source-available, semua yang di-commit (termasuk riwayat) dianggap publik, tanpa IP/host server; ruleset `main` kini bisa dipaksa (NEXT ACTION owner). Perintah owner 2026-10-16 |
+| 1.6.0 | 2026-10-22 | Approved | Disiplin Push: § Kapan PR Boleh Disebut Selesai (cek langsung di GitHub, tidak konflik + check wajib hijau atau sudah merged; laporan apa adanya; konflik diselesaikan dengan merge `main`; kartu ClickUp Closed setelah merged) dan § Versi Live Hanya Maju (rollback hanya atas perintah eksplisit owner dengan target; perbaikan maju; rollback otomatis health check dan tombol mati AI tetap boleh). Pola diadopsi dari Jerco (lihat ACKNOWLEDGMENT). Perintah owner 2026-10-22 |

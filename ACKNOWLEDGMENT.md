@@ -10,6 +10,7 @@ Kerangka governance repository ini terinspirasi dari ekosistem **AI-assisted eng
 - klasifikasi data empat axis (sensitivity, lifecycle, scope, evidence);
 - format standard domain yang seragam (Purpose → References);
 - pola prompt library, skill contract (`SKILL.md` + `agents/openai.yaml`), QA gate, dan validator CI.
+- disiplin status PR: PR baru disebut selesai bila sudah merged, atau tidak konflik dan check wajib hijau saat dicek langsung; versi live hanya maju tanpa perintah rollback eksplisit owner (AI-BOUNDARY v1.6.0, ditulis ulang untuk CLAU).
 
 Terima kasih kepada CV Jerco Digital Solusi atas kerangka berpikir yang menjadi dasar struktur repository ini.
 

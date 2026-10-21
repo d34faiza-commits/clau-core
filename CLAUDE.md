@@ -1,6 +1,6 @@
 # CLAUDE.md — clau-core
 
-> Peta repo untuk AI agent. Baca file ini dulu sebelum menjelajah repo. Last updated: 2026-10-13
+> Peta repo untuk AI agent. Baca file ini dulu sebelum menjelajah repo. Last updated: 2026-10-22
 
 > 🔔 **Sesi baru: baca [status & handoff CLAU AI](https://github.com/d34faiza-commits/clau-content/blob/main/docs/status.md) dulu** (otoritas, keputusan yang sudah diambil, status, pekerjaan terbuka). Repo Jerco milik Pak Indra: jangan disentuh tanpa persetujuan beliau.
 
@@ -18,7 +18,7 @@
 | Path | Fungsi |
 |---|---|
 | `AI-CONSTITUTION.md` | Aturan induk semua pilar (v3.1.0 Approved: 5 pilar v2, otonomi A/B/C default B, 4 vertical fokus, `main` wajib lewat PR + CI hijau) |
-| `AI-BOUNDARY.md` | Peran repo, storage zones, aturan submodule & push |
+| `AI-BOUNDARY.md` | Peran repo, storage zones, aturan submodule & push, kapan PR boleh disebut selesai, versi live hanya maju (v1.6.0) |
 | `AGENTS.md` · `WORKFLOW.md` | Instruksi agent lintas repo · pipeline 8 langkah |
 | `orchestrator/` | `router.md` (12 intent), `decision-tree.md`, `priority-engine.md` |
 | `shared/` | `database-schema.md`, `api-contracts.md`, `data-flow.md`, `integrations.md` |

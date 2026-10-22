@@ -196,7 +196,7 @@ Sumber penanda (`DraftFlag.source`): `author` (dikirim saat `POST /drafts`; staf
 - `price_promo`: `Rp`/`IDR` diikuti angka, angka diikuti `%`, kata `harga`, `diskon`, `promo`, `discount`, `price`, `rate`, `paket`/`package` yang diikuti angka.
 - `negative_review`: request `review-reply` dengan `review_rating` ≤ 3.
 - `ota_listing`: intent `ota-listing`.
-- `religion_culture`: kata `pura`, `masjid`, `gereja`, `vihara`, `klenteng`, `nyepi`, `galungan`, `kuningan`, `ramadan`, `lebaran`, `idul`, `natal`, `imlek`, `waisak`, `upacara`, `ngaben`, `melasti`, `ogoh-ogoh`, `sakral`.
+- `religion_culture`: kata `pura`, `masjid`, `gereja`, `vihara`, `klenteng`, `nyepi`, `galungan`, `kuningan`, `ramadan`, `lebaran`, `idul`, `natal`, `imlek`, `waisak`, `ngaben`, `melasti`, `ogoh-ogoh`. Kata umum di konten wedding (`upacara`, `sakral`) sengaja tidak dipakai (terlalu sering salah tangkap untuk vertical fokus wedding); topik agama/adat lain ditandai manusia.
 
 Penanda hanya bertambah lewat API kecuali dihapus owner/content lead dengan alasan (audit log). Penanda `server` tidak bisa dihapus; bila salah, buat draft versi baru dengan isi yang diperbaiki. **Versi draft baru mewarisi** penanda aktif non-server versi sebelumnya (sumber & penambah sama; juga draft dari worker AI), jadi level tidak bisa turun diam-diam lewat versi baru.
 

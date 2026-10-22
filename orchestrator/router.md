@@ -10,10 +10,10 @@ Tabel routing request → pilar → skill → level otonomi (AI-CONSTITUTION §4
 | `reel-script` | "Script reels 20 detik pagi di villa" | 1 AI Marketing | `draft-reel-script` | clau-market | L2 | B |
 | `stories` | "Story 3 frame menu hari ini" | 1 AI Marketing | prompt `stories-sequence` | clau-market | L1–L2 | B |
 | `ota-listing` | "Update deskripsi Booking.com" | 1 AI Marketing | `write-ota-listing` | clau-market | L2 | B |
-| `review-reply` | "Balas review Google bintang 2" | 1 AI Marketing* | `reply-guest-review` | clau-market | L1 (positif) / L3 (negatif; rating ≤ 3 otomatis L3 sejak API 0.10.0) | B |
+| `review-reply` | "Balas review Google bintang 2" | 1 AI Marketing* | `reply-guest-review` | clau-market | L1 (positif) / L3 (negatif; rating ≤ 3 otomatis L3, API 0.10.0) | B |
 | `content-calendar` | "Kalender konten bulan depan" | 1 AI Marketing | `build-content-calendar` | clau-market | L1 | B |
 | `seasonal-campaign` | "Promo Ramadan & Lebaran" | 1 AI Marketing | `plan-seasonal-campaign` | clau-market | L2–L3 | B |
-| `localize` | "Terjemahkan caption ke EN" | 1 AI Marketing | `localize-content` | clau-market | Mengikuti konten asal (draft asal wajib dirujuk sejak API 0.10.0) | B |
+| `localize` | "Terjemahkan caption ke EN" | 1 AI Marketing | `localize-content` | clau-market | Mengikuti konten asal (draft asal wajib dirujuk, API 0.10.0) | B |
 | `inquiry-reply` | "Balas DM tanya harga & tanggal" | 2 AI Sales | — | — | **Planned → eskalasi** | B |
 | `guest-message` | "Pesan pre-arrival ke tamu" | 2 AI Sales | — | — | **Planned → eskalasi** | B |
 | `sop` | "SOP housekeeping" | 3 AI Admin | — | — | **Planned → eskalasi** | B |

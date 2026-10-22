@@ -56,6 +56,6 @@ Jam kerja admin yang dihemat, error rate data entry (dari sampel), waktu dari or
 ## Checklist Aktivasi
 
 1. Scope Approved (TASK-034); database + auth + audit log tersedia (Fase 0).
-2. Repo `clau-ai-admin` (usulan konsep v2; menggantikan usulan `clau-ai-operations` di 5-pillar-architecture): rules angka & dokumen, template quotation/invoice/laporan.
+2. Repo `clau-admin` (usulan): rules angka & dokumen, template quotation/invoice/laporan.
 3. Intent → router + registry; agent + persona + eval.
 4. Pilot SIMULASI dengan data fiktif (≥ 500 transaksi contoh), lalu 1 client.

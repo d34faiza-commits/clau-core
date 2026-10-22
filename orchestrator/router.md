@@ -27,7 +27,7 @@ Pilar 5 AI Automation tidak punya intent konten sendiri; alurnya memanggil inten
 
 - Intent tidak dikenal → tanyakan klarifikasi ke requester; jangan menebak pilar.
 - Request yang mengandung beberapa intent (mis. "caption + balas DM harga") dipecah per intent.
-- Intent di pilar *Planned* tidak dikerjakan; buat task di board dengan label pilar dan eskalasi ke owner.
+- Intent di pilar *Planned* tidak dikerjakan; buat kartu di board ClickUp (list pilar itu) dan eskalasi ke owner.
 - Level approval di tabel adalah **minimum**; rules pilar bisa menaikkannya (mis. ada harga/promo → minimal L2).
 - Kolom **Otonomi** = level maksimum yang boleh dipakai intent itu (AI-CONSTITUTION §4a). Default semua intent **B**. Mengubah ke **A** butuh perintah owner, template Level A yang disetujui per client, audit log, dan tombol berhenti; level ini juga dicerminkan di `clau-agent/agents/registry.json` → `autonomy_max`.
 - Apa pun levelnya, situasi Level C (komplain serius, refund, hukum, kesehatan, keselamatan, data sensitif) selalu eskalasi ke owner.

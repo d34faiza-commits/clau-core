@@ -18,7 +18,7 @@
 | Path | Fungsi |
 |---|---|
 | `AI-CONSTITUTION.md` | Aturan induk semua pilar (v3.1.0 Approved: 5 pilar v2, otonomi A/B/C default B, 4 vertical fokus, `main` wajib lewat PR + CI hijau) |
-| `AI-BOUNDARY.md` | Peran repo, storage zones, aturan submodule & push, kapan PR boleh disebut selesai, versi live hanya maju (v1.6.0) |
+| `AI-BOUNDARY.md` | Peran repo, storage zones, aturan submodule & push, kapan PR boleh disebut selesai, versi live hanya maju (v1.6.1) |
 | `AGENTS.md` · `WORKFLOW.md` | Instruksi agent lintas repo · pipeline 8 langkah |
 | `orchestrator/` | `router.md` (12 intent), `decision-tree.md`, `priority-engine.md` |
 | `shared/` | `database-schema.md`, `api-contracts.md`, `data-flow.md`, `integrations.md` |

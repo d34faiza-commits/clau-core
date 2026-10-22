@@ -44,6 +44,6 @@ Laporan terkirim tepat waktu, insight yang ditindaklanjuti client, akurasi forec
 ## Checklist Aktivasi
 
 1. Scope Approved (TASK-034); Sales/Admin menghasilkan data ≥ 1–3 bulan.
-2. Repo `clau-ai-analytics` (usulan): rules angka, template laporan per pilar (TASK-038), definisi KPI.
+2. Repo `clau-insight` (usulan): rules angka, template laporan per pilar (TASK-038), definisi KPI.
 3. Intent → router + registry; eval Intan diperluas.
 4. Pilot dengan data SIMULASI, lalu 1 client.

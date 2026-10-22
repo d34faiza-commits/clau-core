@@ -8,19 +8,21 @@ flowchart TD
     B -- Ya --> X1["STOP: minta disamarkan / hapus; lapor owner"]
     B -- Tidak --> C{"Client & objective jelas?"}
     C -- Tidak --> X2["Tanya requester"]
-    C -- Ya --> D{"Output akan dilihat pihak luar?<br/>(publik, tamu, OTA)"}
+    C -- Ya --> AU{"Minta alur otomatis yang menyambungkan<br/>beberapa langkah/sistem? (WA → CRM → Sheets → invoice)"}
+    AU -- Ya --> P5["Pilar 5 AI Automation (Planned → eskalasi);<br/>tiap langkah tetap dirutekan ke pilarnya"]
+    AU -- Tidak --> D{"Output akan dilihat pihak luar?<br/>(publik, tamu, OTA)"}
     D -- Tidak --> E["Internal: dokumen/analisis → pilar sesuai topik"]
     D -- Ya --> F{"Ke audiens luas atau satu orang?"}
     F -- "Audiens luas (post, listing, ads)" --> P1["Pilar 1 AI Marketing"]
     F -- "Satu tamu/calon tamu" --> G{"Tentang harga, ketersediaan, booking?"}
-    G -- Ya --> P2["Pilar 2 AI Sales (Planned → eskalasi)"]
+    G -- Ya --> P2["Pilar 2 AI Sales: inquiry (Planned → eskalasi)"]
     G -- Tidak --> H{"Review publik?"}
     H -- Ya --> P1R["Pilar 1: reply-guest-review<br/>(sementara)"]
-    H -- Tidak --> P3["Pilar 2 AI Sales: pesan tamu & customer service (Planned → eskalasi)"]
+    H -- Tidak --> P2G["Pilar 2 AI Sales: pesan tamu & customer service (Planned → eskalasi)"]
     E --> I{"SOP, invoice, quotation, data entry?"}
-    I -- Ya --> P4["Pilar 3 AI Admin (Planned → eskalasi)"]
+    I -- Ya --> P3["Pilar 3 AI Admin (Planned → eskalasi)"]
     I -- Tidak --> J{"Angka/performa/report?"}
-    J -- Ya --> P5["Pilar 4 AI Business Intelligence (sementara: template monthly-report Pilar 1)"]
+    J -- Ya --> P4["Pilar 4 AI Business Intelligence (sementara: template monthly-report Pilar 1)"]
     J -- Tidak --> X3["Tanya requester / eskalasi owner"]
 ```
 

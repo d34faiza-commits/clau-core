@@ -6,7 +6,7 @@ Daftar integrasi eksternal, statusnya, dan batasnya. Level otomasi mengikuti `cl
 
 | Sistem | Kegunaan | Arah | Status | Batas |
 |---|---|---|---|---|
-| AI model provider (Claude API, Anthropic) | Drafting, klasifikasi, first-pass QA | Platform (worker VPS 2) → provider | Antrean + worker + provider tiruan (backend 0.9.0); provider Claude menyusul (Tahap 2 PR 4c). Belum ada panggilan ke provider nyata | AI-BOUNDARY § Data ke Provider AI. Per environment dicatat di bawah |
+| AI model provider (Claude API, Anthropic) | Drafting, klasifikasi, first-pass QA | Platform (worker VPS 2; server dimatikan owner 2026-10-22, dibuat lagi saat ada dana) → provider | Antrean + worker + provider tiruan (backend 0.9.0); provider Claude menyusul (Tahap 2 PR 4c). Belum ada panggilan ke provider nyata | AI-BOUNDARY § Data ke Provider AI. Per environment dicatat di bawah |
 | GitHub (repo CLAU) | Sumber rules/skills/knowledge | Platform ← repo | Planned (baca registry & skill) | Read-only |
 | Instagram / Facebook (Meta) | Insight, jadwal post | — | Tidak diintegrasikan | Level 1: manusia publish lewat tools resmi platform |
 | TikTok | Insight, post | — | Tidak diintegrasikan | Sama seperti di atas |

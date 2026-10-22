@@ -42,7 +42,7 @@ Scope (yang dijual) · intent & agent usulan · level otonomi per aksi · data &
 ## Checklist Aktivasi Umum (semua pilar)
 
 1. Owner approve scope pilar (TASK-034) → catat di Revision History AI-CONSTITUTION.
-2. Buat repo pilar `clau-ai-<pilar>` (struktur seperti clau-market + submodule `core/`).
+2. Buat repo pilar `clau-<pilar>` (nama usulan di [5-pillar-architecture](../5-pillar-architecture.md); struktur seperti clau-market + submodule `core/`).
 3. Tulis rules pilar (lebih ketat dari core, tidak boleh lebih longgar), skills, prompts, templates, QA.
 4. Tambah intent ke `orchestrator/router.md` + agent ke `registry.json` (nama, avatar, persona, eval).
 5. Ubah tabel pilar README core + `registry.json` → `pillars` (test gagal bila beda).

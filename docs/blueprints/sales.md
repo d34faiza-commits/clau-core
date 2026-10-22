@@ -57,7 +57,7 @@ Waktu respon pertama, % chat terjawab Level A tanpa koreksi, lead tercatat, konv
 ## Checklist Aktivasi
 
 1. Amandemen otonomi Approved + scope pilar (TASK-034).
-2. Repo `clau-ai-sales` (usulan): rules harga & komitmen, FAQ template, eskalasi, opt-in.
+2. Repo `clau-sales` (usulan): rules harga & komitmen, FAQ template, eskalasi, opt-in.
 3. Integrasi WhatsApp Business Platform di platform (credential di secret manager, bukan repo).
 4. Intent baru → router + registry; aktifkan Galih & Sari (eval lulus).
 5. Pilot SIMULASI + 1 client dengan semua jawaban Level A di-review manusia selama 2 minggu pertama.

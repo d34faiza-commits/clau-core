@@ -17,7 +17,7 @@
 | Intent usulan | Fungsi | Approval min | Agent |
 |---|---|---|---|
 | `landing-page` | Copy landing page / website per section | L2 | Baru (nama ditentukan owner) |
-| `ad-brief` | Konsep iklan + 3 varian copy + target audiens | L2 | Baru |
+| `ad-brief` | Konsep iklan + 3 varian copy + target audiens | L3 (Rule 08: ads berbayar) | Baru |
 | `visual-brief` | Shot list foto/video produk | L1 | Baru |
 | `brand-voice` | Voice guide & tagline | L3 | Baru |
 

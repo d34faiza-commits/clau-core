@@ -8,7 +8,7 @@ Kontrak HTTP antara frontend dan backend clau-agent, dan antara platform dengan 
 - Tidak ada endpoint yang **publish** ke platform sosial/OTA atau **mengirim** pesan ke tamu. Release dilakukan manusia (Constitution §4.7).
 - Tidak ada endpoint yang menerima credential platform client.
 - Error: `{"error": {"code": "<snake_case>", "message": "<teks>"}}` untuk semua error, termasuk validasi request (422 `validation_error`).
-- **Autentikasi** (0.5.0): sesi cookie dari `POST /auth/login`. Setiap request yang mengubah data (POST/PUT/PATCH/DELETE) wajib header `X-CSRF-Token` (dari `Me.csrf_token`) dan Origin aplikasi. Selama `Me.next` ≠ `ready` (ganti password sementara / aktifkan 2FA wajib owner), hanya endpoint `/auth/*` yang bisa dipakai (403 `password_change_required` / `mfa_setup_required`). Tidak ada pendaftaran publik: owner pertama dibuat lewat CLI server. Browser tidak memanggil backend langsung; frontend meneruskan `/api/*` ke backend (keputusan VPS #1).
+- **Autentikasi** (0.5.0): sesi cookie dari `POST /auth/login`. Setiap request yang mengubah data (POST/PUT/PATCH/DELETE) wajib header `X-CSRF-Token` (dari `Me.csrf_token`) dan Origin aplikasi. Selama `Me.next` ≠ `ready` (ganti password sementara / aktifkan 2FA wajib untuk `owner` dan `content_lead` agency, sejak 0.9.1; juga berlaku untuk sesi yang dibuat sebelum peran itu wajib 2FA), hanya endpoint `/auth/*` yang bisa dipakai (403 `password_change_required` / `mfa_setup_required`). Tidak ada pendaftaran publik: owner pertama dibuat lewat CLI server. Browser tidak memanggil backend langsung; frontend meneruskan `/api/*` ke backend (keputusan VPS #1).
 - Pelanggaran aturan database (Constraint Wajib) = 409 dengan kode aturan, mis. `approval_needs_independent_review`, tanpa detail SQL. Daftar lengkap: § Kode Aturan Approval (sumber tunggal; UI & desain merujuk ke sini).
 
 ## Endpoint
@@ -28,9 +28,11 @@ Kontrak HTTP antara frontend dan backend clau-agent, dan antara platform dengan 
 | `POST /auth/mfa/recovery-codes` | **Implemented** (0.6.0) | `{password}` | `{recovery_codes}`: 10 kode baru, yang lama batal. Password salah dihitung gagal login |
 | `GET /users` · `POST /users` | **Implemented** (0.5.0), owner | — · `{display_name, email, temporary_password, locale?, timezone?, memberships[]}` | `{users: [User]}` · `User` (wajib ganti password saat login pertama) |
 | `PUT /users/{id}/memberships` · `POST /users/{id}/disable` · `POST /users/{id}/enable` | **Implemented** (0.5.0), owner | `[{scope, role, max_level}]` · — · — | `User`; sesi user target dicabut. 409 `last_owner` / `cannot_disable_self` |
-| `POST /requests` | **Implemented** (0.7.0) | `{client_code, intent, text, deadline?, impact?, risk?}` | 201 `Request`; `pillar`/`approval_min` dari registry (`risk = 3` → `L3`, rule 08), `priority` dari priority engine. 422 `unknown_intent`, 404 `client_not_found`, 403 `forbidden` |
+| `POST /requests` | **Implemented** (0.7.0; `review_rating`/`source_draft_id` 0.10.0) | `{client_code, intent, text, deadline?, impact?, risk?, review_rating?, source_draft_id?}` | 201 `Request`; `pillar`/`approval_min` dari registry (`risk = 3` → `L3`, rule 08), `priority` dari priority engine. 422 `unknown_intent`, `review_rating_required` (`review-reply` tanpa rating 1–5), `source_draft_required` (`localize` tanpa draft asal); 409 `source_draft_invalid` (draft asal tidak ada atau klien lain); 404 `client_not_found`, 403 `forbidden` |
 | `GET /requests` · `GET /requests/{id}` | **Implemented** (0.7.0) | query `client_code?`, `status?`, `limit?`, `offset?` | `Page<Request>` · `Request`. 403 `forbidden` (client_code di luar akses), 404 `not_found` |
-| `POST /drafts` | **Implemented** (0.7.0) | `{request_id, brief_id?, fact_sheet_id?, content, claims: [ClaimIn]}` | 201 `Draft` (+ `claims`); `version`, `skill`, `mode`, `created_by` diisi server. 409 `intent_not_active` (pilar/agent planned), `draft_client_mismatch`, `request_closed`, 422 `claim_fact_key_required` / `claim_source_required` |
+| `POST /drafts` | **Implemented** (0.7.0; `content_flags` 0.10.0) | `{request_id, brief_id?, fact_sheet_id?, content, claims: [ClaimIn], content_flags: [Flag]}` | 201 `Draft` (+ `claims`, `content_flags`, `min_level`); `version`, `skill`, `mode`, `created_by` diisi server; penanda otomatis server ditambahkan (§ Penanda Isi Konten). 422 `content_flags_required` (field tidak dikirim; daftar kosong = pembuat menyatakan tidak ada penanda). 409 `intent_not_active` (pilar/agent planned), `draft_client_mismatch`, `request_closed`, 422 `claim_fact_key_required` / `claim_source_required` |
+| `POST /drafts/{id}/flags` | **Implemented** (0.10.0), staf agency | `{flag}` | 201 `DraftFlag` (sumber `staff`, atau `qa` bila pengirim punya QA di draft itu). 409 `flag_exists`, `request_closed`; 403 `forbidden` |
+| `POST /drafts/{id}/flags/{flag}/remove` | **Implemented** (0.10.0), owner/content lead | `{reason}` (10–500 karakter) | `DraftFlag` (dengan `removed_*`). 409 `flag_not_removable` (sumber `server`), `flag_not_active`, `request_closed`; 403 `forbidden` |
 | `GET /drafts` · `GET /drafts/{id}` | **Implemented** (0.7.0) | query `request_id?`, `client_code?`, `limit?`, `offset?` | `Page<DraftSummary>` · `Draft` (+ `claims`, `latest`) |
 | `POST /qa-records` | **Implemented** (0.7.0) | `{draft_id, gate, result, independent}` | 201 `QARecord`; `reviewer_id`/`reviewer_role` dari sesi. 403 `independent_review_not_allowed`, 409 `qa_reviewer_is_author` |
 | `GET /qa-records` · `GET /qa-records/{id}` | **Implemented** (0.7.0) | query `draft_id?`, `limit?`, `offset?` | `Page<QARecord>` · `QARecord` |
@@ -118,6 +120,8 @@ Semua 409 dengan bentuk error kontrak. **Implemented** = ditegakkan trigger data
 | Review independen hanya owner/content lead | `independent_review_not_allowed` | Implemented (0.7.0; API 403, database 409) |
 | Approved hanya untuk versi draft tertinggi di request | `approval_version_mismatch` | Implemented (0.7.0) |
 | Level keputusan ≥ level minimum draft (`approval_min`; risk 3 = L3; klaim fakta = min. L2) | `approval_level_too_low` | Implemented (0.7.0) |
+| Level minimum draft juga ≥ level penanda aktif tertinggi, dan untuk `localize` ≥ level minimum draft asal (§ Penanda Isi Konten) | `approval_level_too_low` | Implemented (0.10.0) |
+| Penanda: sumber `server` tidak bisa dihapus; penanda dihapus hanya sekali, oleh owner/content lead, dengan alasan; tidak ada perubahan lain; versi baru mewarisi penanda manusia | `flag_not_removable` / `decision_record_append_only` | Implemented (0.10.0) |
 | Pembuat draft tidak boleh memutuskan (Approved/Revise/Rejected) drafnya sendiri | `approval_by_author` | Implemented (0.7.0) |
 | Approved oleh agency (semua level) wajib bukti tertulis klien (`channel_ref`) | `approval_needs_written_evidence` | Implemented (0.7.0) |
 | Brief/fact sheet draft milik klien request; mode draft = mode klien | `draft_client_mismatch` / `draft_mode_mismatch` | Implemented (0.7.0) |
@@ -172,11 +176,38 @@ Field `intent`, `pillar`, `skill`, `approval_min`, dan `autonomy_max` (kolom Oto
 
 `display_name` dan `avatar` (registry 0.3.0) adalah sumber tunggal nama dan avatar agent untuk UI; `figure` mendeskripsikan figur ilustrasi (`female`/`male`), bukan data orang. Isi `forbidden_actions` = `default_forbidden_actions` registry.
 
+### Penanda Isi Konten (0.10.0; TASK-032)
+
+Rule 08 menetapkan level approval dari **isi** konten. Setiap draft membawa penanda; level minimum draft dihitung database (fungsi `clau_draft_min_level` / `clau_draft_level_reasons`, dipakai trigger approval dan API) dan ditegakkan database (keputusan owner K1–K6, `clau-content/docs/review-packet-task-032.md`).
+
+| `Flag` | Arti | Level minimum |
+|---|---|---|
+| `price_promo` | Harga, diskon, promo, paket, atau komitmen komersial | L2 |
+| `people` | Orang yang bisa dikenali (foto/video/nama tamu, staf, pengantin) | L2 |
+| `ota_listing` | Teks listing OTA | L2 |
+| `negative_review` | Membalas review/keluhan negatif | L3 |
+| `paid_ads` | Iklan berbayar atau konten di-boost | L3 |
+| `influencer` | Kolaborasi influencer, endorse, barter menginap | L3 |
+| `religion_culture` | Agama, adat, tempat suci, upacara | L3 |
+| `crisis` | Krisis, bencana, insiden, isu hukum/kesehatan/keselamatan | L3 (+ eskalasi Level C) |
+
+Sumber penanda (`DraftFlag.source`): `author` (dikirim saat `POST /drafts`; staf atau worker AI), `server` (jaring pengaman), `staff` / `qa` (ditambah kemudian). Jaring pengaman server (daftar kata dikelola di kode backend + test; dicocokkan tanpa beda huruf besar/kecil, per kata utuh):
+
+- `price_promo`: `Rp`/`IDR` diikuti angka, angka diikuti `%`, kata `harga`, `diskon`, `promo`, `discount`, `price`, `rate`, `paket`/`package` yang diikuti angka.
+- `negative_review`: request `review-reply` dengan `review_rating` ≤ 3.
+- `ota_listing`: intent `ota-listing`.
+- `religion_culture`: kata `pura`, `masjid`, `gereja`, `vihara`, `klenteng`, `nyepi`, `galungan`, `kuningan`, `ramadan`, `lebaran`, `idul`, `natal`, `imlek`, `waisak`, `ngaben`, `melasti`, `ogoh-ogoh`. Kata umum di konten wedding (`upacara`, `sakral`) sengaja tidak dipakai (terlalu sering salah tangkap untuk vertical fokus wedding); topik agama/adat lain ditandai manusia.
+
+Penanda hanya bertambah lewat API kecuali dihapus owner/content lead dengan alasan (audit log). Penanda `server` tidak bisa dihapus; bila salah, buat draft versi baru dengan isi yang diperbaiki. **Versi draft baru mewarisi** penanda aktif non-server versi sebelumnya (sumber & penambah sama; juga draft dari worker AI), jadi level tidak bisa turun diam-diam lewat versi baru.
+
+`level minimum draft` = tertinggi dari: `requests.approval_min` (`risk = 3` → L3); L2 bila ada klaim ber-`fact_key`; L2 untuk draft agent klien NYATA (0.9.0); level penanda aktif tertinggi; untuk `localize`: level minimum draft asal (`requests.source_draft_id`). `Draft.min_level_reasons` menjelaskan setiap kenaikan (mis. `{"rule": "flag:negative_review", "level": "L3"}`).
+
 Workflow (0.7.0):
 
-- `Request` = `{id, client_code, intent, pillar, agent, approval_min, text, deadline, impact, risk, priority, priority_score, status, requested_by, requested_by_role, created_at}`. `priority_score` = urgensi (dari `deadline`) + `impact` + `risk` (default 1 dan 1) sesuai `orchestrator/priority-engine.md`.
+- `Request` = `{id, client_code, intent, pillar, agent, approval_min, text, deadline, impact, risk, priority, priority_score, status, requested_by, requested_by_role, created_at}` (+ `review_rating`, `source_draft_id` sejak 0.10.0). `priority_score` = urgensi (dari `deadline`) + `impact` + `risk` (default 1 dan 1) sesuai `orchestrator/priority-engine.md`.
 - `ClaimIn` = `{text, category, evidence_label, source?, source_date?, implied?, fact_key?}` (maks. 30 klaim per draft); `Claim` = `ClaimIn` + `id`.
-- `DraftSummary` = `{id, request_id, client_code, brief_id, fact_sheet_id, skill, version, mode, created_by, agent_id, created_at, latest}`; `Draft` = `DraftSummary` + `content`, `claims: [Claim]`.
+- `DraftSummary` = `{id, request_id, client_code, brief_id, fact_sheet_id, skill, version, mode, created_by, agent_id, created_at, latest}`; `Draft` = `DraftSummary` + `content`, `claims: [Claim]`; sejak 0.10.0 juga `content_flags: [DraftFlag]` (aktif), `min_level`, `min_level_reasons: [{rule, level}]`.
+- `DraftFlag` = `{flag, source, added_by, added_at, removed_by, removed_at, removed_reason}` (0.10.0).
 - `QARecord` = `{id, draft_id, gate, result, reviewer_id, reviewer_role, independent, created_at}`.
 - `Approval` = `{id, draft_id, level, decision, approver_id, approver_role, channel_ref, mode, decided_at}`.
 
@@ -211,3 +242,5 @@ AI (0.9.0):
 | 0.7.0 | 2026-10-14 | Workflow request → draft → QA → approval (`/requests`, `/drafts`, `/qa-records`, `/approvals`), matriks izin Rule 08, kode aturan baru (`facts_unconfirmed`, `approval_version_mismatch`, `approval_level_too_low`, `approval_by_author`, `approval_needs_written_evidence`, `draft_client_mismatch`, `draft_mode_mismatch`, `decision_record_append_only`, `request_closed`, `approval_role_mismatch`, `qa_role_mismatch`; 422 `invalid_input`), body maks. 64 KB |
 | 0.8.0 | 2026-10-14 | Klien (`/clients`), fact sheet & Konfirmasi Fakta (`/fact-sheets`, jawaban klien, persetujuan fact sheet); kode aturan `fact_sheet_frozen`, `fact_not_in_sheet`, `fact_value_required`, `fact_value_unchanged`, `fact_sheet_superseded`, `fact_sheet_empty`, `fact_sheet_approval_flow`, `fact_sheet_version_sequence`, `client_exists` |
 | 0.9.0 | 2026-10-16 | AI menulis draft (Tahap 2): `POST /requests/{id}/ai-drafts`, `/ai-jobs`, `/ai-usage`, `PUT /ai-budgets`; antrean + worker dengan AI fact-check; kode `ai_disabled`, `ai_intent_not_enabled`, `fact_sheet_required`, `ai_provider_test_only`, `ai_budget_missing`, `ai_budget_exceeded`, `ai_job_active`, `ai_job_not_cancellable`, `ai_job_transition`, `ai_record_append_only`, `ai_job_draft_mismatch`, `ai_draft_without_job` |
+| 0.9.1 | 2026-10-22 | Keamanan sebelum klien login (TASK-054): 2FA wajib juga untuk `content_lead` agency (`Me.mfa_required`, `Me.next = mfa_setup`, 403 `mfa_setup_required`); tanpa endpoint baru |
+| 0.10.0 | 2026-10-22 | (TASK-032, keputusan owner K1–K6; implementasi clau-agent migrasi 0007): penanda isi konten di draft (`content_flags`, `POST /drafts/{id}/flags`, `/remove`), jaring pengaman server, `review_rating` untuk `review-reply`, `source_draft_id` untuk `localize`, level minimum draft = tertinggi dari aturan lama + penanda + draft asal; kode `content_flags_required`, `review_rating_required`, `source_draft_required`, `source_draft_invalid`, `flag_exists`, `flag_not_removable`, `flag_not_active` |

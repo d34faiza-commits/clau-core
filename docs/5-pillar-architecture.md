@@ -7,7 +7,7 @@
 | Lapisan | Repo | Isi |
 |---|---|---|
 | **Foundation** | clau-core | Constitution, boundary, pipeline, orchestrator, kontrak data |
-| **Pilar** | clau-ai-<pilar> (1 repo per pilar) | Rules, skills, prompts, knowledge, templates, QA khusus domain |
+| **Pilar** | `clau-<pilar>` (1 repo per pilar; contoh aktif: clau-market) | Rules, skills, prompts, knowledge, templates, QA khusus domain |
 | **Platform** | clau-agent | UI, API, registry agent; menjalankan skill pilar, tidak menyimpan aturan |
 
 Aturan mengalir **satu arah**: core → pilar → platform. Platform membaca skill pilar; pilar tidak bergantung pada platform.
@@ -30,18 +30,18 @@ Aturan mengalir **satu arah**: core → pilar → platform. Platform membaca ski
 | Intent → pilar → agent | [orchestrator/router.md](../orchestrator/router.md) | `registry.json` → `agents` (dicek test) |
 | Permukaan UI per pilar | `clau-content/design/pillars.md` | Wireframe Studio & Portal, frontend clau-agent |
 | Level otonomi per intent | Kolom **Otonomi** di [router](../orchestrator/router.md) | `registry.json` → `autonomy_max` (dicek test) |
-| Rencana aktivasi | Board `clau-content/tasks/` (TASK-035–039, TASK-041–042) | `clau-agent/docs/post-vps-checklist.md` |
+| Rencana aktivasi | Board ClickUp Space **Clau AI** (list Pilar 2–5; TASK-035–039, TASK-041–042) | `clau-agent/docs/post-vps-checklist.md` |
 
 ### Usulan nama repo pilar (**ASSUMPTION**)
 
-Mengikuti pola `clau-ai-<pilar>`; dibuat saat pilar diaktifkan.
+Mengikuti pola nama repo sejak rename 2026-10-16 (`clau-core`, `clau-market`, `clau-agent`): `clau-<pilar>`. Dibuat saat pilar diaktifkan; nama final = keputusan owner saat aktivasi.
 
 | # | Usulan repo |
 |---|---|
-| 2 | `clau-ai-sales` |
-| 3 | `clau-ai-admin` |
-| 4 | `clau-ai-intelligence` |
-| 5 | `clau-ai-automation` (atau modul di clau-agent; keputusan engine = TASK-039) |
+| 2 | `clau-sales` |
+| 3 | `clau-admin` |
+| 4 | `clau-insight` |
+| 5 | `clau-automation` (atau modul di clau-agent; keputusan engine = TASK-039) |
 
 ## Menambah Pilar
 
@@ -50,7 +50,7 @@ Mengikuti pola `clau-ai-<pilar>`; dibuat saat pilar diaktifkan.
 3. Tambah intent di [orchestrator/router.md](../orchestrator/router.md) dan agent di `clau-agent/agents/registry.json`; ubah `pillars` (status `active` + `repo`) di registry yang sama.
 4. Jalankan pilot SIMULASI end-to-end sebelum dipakai untuk client.
 5. Update tabel di atas dan README core (status **Aktif** + repo) — test registry di clau-agent gagal bila tidak sama.
-6. Aktifkan permukaan UI pilar sesuai `clau-content/design/pillars.md` dan pindahkan task pilar di board ke Done.
+6. Aktifkan permukaan UI pilar sesuai `clau-content/design/pillars.md` dan pindahkan kartu pilar di board ClickUp ke Closed (setelah PR merged + CI hijau, AI-BOUNDARY § Kapan PR Boleh Disebut Selesai).
 
 ## Ketergantungan Antar Pilar
 

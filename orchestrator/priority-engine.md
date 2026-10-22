@@ -1,6 +1,6 @@
 # Priority Engine
 
-Cara menghitung prioritas antrian kerja lintas pilar. Hasilnya dipetakan ke field `Priority` di task board (Low / Normal / High / Urgent).
+Cara menghitung prioritas antrian kerja lintas pilar. Hasilnya dipetakan ke field `Priority` di kartu board ClickUp (Low / Normal / High / Urgent) dan ke `requests.priority` di platform.
 
 ## Skor
 

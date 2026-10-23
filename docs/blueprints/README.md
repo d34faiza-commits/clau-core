@@ -35,6 +35,23 @@ Jenis usaha (vertical) dan urutan perluasannya: [../verticals.md](../verticals.m
 | 4 | Business Intelligence | Data Sales & Admin terkumpul ≥ 1–3 bulan |
 | 2→ | Automation sebagai lapisan sejak Fase 2 | Konektor per integrasi + audit log |
 
+## Gerbang Umum Pilar 2–5 (keputusan owner 2026-10-22/23)
+
+Pilar 2–5 **ditunda**: fokus sekarang Pilar 1 hospitality sampai berjalan. Blueprint di folder ini adalah rencana jangka panjang; tidak ada pekerjaan aktivasi sebelum **semua** syarat ini terpenuhi (kecuali owner memutuskan lain):
+
+| # | Syarat | Cara cek |
+|---|---|---|
+| G1 | ≥ 3 klien Pilar 1 nyata aktif ≥ 3 bulan, tanpa insiden publikasi berat | Log publikasi & insiden (clau-market `commercial/delivery-sop.md` § 7) |
+| G2 | Independent score rata-rata ≥ 85 pada sampling bulanan | clau-market `qa/independent-review-worksheet.md` |
+| G3 | Legal & UU PDP selesai untuk Pilar 1 (TASK-053); kontrak + DPA dipakai | Kartu TASK-053 Closed |
+| G4 | Platform hidup: VPS 2 (TASK-065), provider AI nyata (TASK-052), domain + HTTPS (TASK-047) | `clau-agent/CLAUDE.md` status |
+| G5 | ≥ 2 reviewer manusia (owner tidak lagi satu-satunya), SOP tim (TASK-059) | Kartu TASK-059 |
+| G6 | Minimal 1 klien Pilar 1 meminta layanan pilar itu (permintaan nyata, bukan asumsi) | Catatan discovery/klien |
+
+Urutan bila gerbang terbuka: **Sales (2) → BI (4, dari laporan Pilar 1) → Admin (3) → Automation (5)**. Alasannya: Sales dan BI paling dekat dengan data & klien Pilar 1; Admin butuh data keuangan (risiko lebih tinggi); Automation hanya menyambung pilar yang sudah aktif.
+
+Model jual jangka panjang: **upsell ke klien Pilar 1**, bukan cari klien baru per pilar. Klien yang sudah percaya pada konten & review → ditawari balasan inquiry (Sales) → laporan & insight (BI) → dokumen (Admin) → alur otomatis (Automation).
+
 ## Format Setiap Blueprint
 
 Scope (yang dijual) · intent & agent usulan · level otonomi per aksi · data & privacy · integrasi · risiko · KPI · checklist aktivasi. Intent di blueprint **belum** masuk `router.md`; saat aktivasi, salin ke router + registry (test konsistensi menjaga keduanya).

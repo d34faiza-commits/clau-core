@@ -8,7 +8,7 @@ Tabel routing request → pilar → skill → level otonomi (AI-CONSTITUTION §4
 |---|---|---|---|---|---|---|
 | `caption` | "Bikin caption IG untuk room tour" | 1 AI Marketing | `draft-caption` | clau-market | L1–L2 | B |
 | `reel-script` | "Script reels 20 detik pagi di villa" | 1 AI Marketing | `draft-reel-script` | clau-market | L2 | B |
-| `stories` | "Story 3 frame menu hari ini" | 1 AI Marketing | prompt `stories-sequence` | clau-market | L1–L2 | B |
+| `stories` | "Story 3 frame menu hari ini" | 1 AI Marketing | `draft-stories` (+ prompt `stories-sequence`) | clau-market | L1–L2 | B |
 | `ota-listing` | "Update deskripsi Booking.com" | 1 AI Marketing | `write-ota-listing` | clau-market | L2 | B |
 | `review-reply` | "Balas review Google bintang 2" | 1 AI Marketing* | `reply-guest-review` | clau-market | L1 (positif) / L3 (negatif; rating ≤ 3 otomatis L3, API 0.10.0) | B |
 | `content-calendar` | "Kalender konten bulan depan" | 1 AI Marketing | `build-content-calendar` | clau-market | L1 | B |
@@ -17,7 +17,7 @@ Tabel routing request → pilar → skill → level otonomi (AI-CONSTITUTION §4
 | `inquiry-reply` | "Balas DM tanya harga & tanggal" | 2 AI Sales | — | — | **Planned → eskalasi** | B |
 | `guest-message` | "Pesan pre-arrival ke tamu" | 2 AI Sales | — | — | **Planned → eskalasi** | B |
 | `sop` | "SOP housekeeping" | 3 AI Admin | — | — | **Planned → eskalasi** | B |
-| `report` | "Report performa bulanan" | 4 AI Business Intelligence | template `monthly-report` (Pilar 1) | clau-market | L1 | B |
+| `report` | "Report performa bulanan" | 4 AI Business Intelligence | `build-monthly-report` (+ template `monthly-report`, Pilar 1) | clau-market | L1 | B |
 
 \* `review-reply` sementara di Pilar 1. Saat Pilar 2 AI Sales aktif (customer service & reputasi), intent ini dipindah (**NEXT ACTION** saat aktivasi Pilar 2).
 

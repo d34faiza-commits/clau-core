@@ -51,6 +51,33 @@ Automation tidak punya intent konten sendiri. Intent usulan: `workflow-run` (men
 | Integrasi pihak ketiga berubah/putus | Monitoring + notifikasi error; alur berhenti aman |
 | Mengubah sistem client tanpa izin | `workflow-design` = L3; setiap alur baru di-approve owner client |
 
+## Use Case Hospitality per Vertical
+
+| Vertical | Alur yang paling berharga | Langkah yang tetap manusia |
+|---|---|---|
+| Villa / akomodasi | Review baru (Google/OTA) → draft balasan → notifikasi approver → catat di log | Approval & posting balasan |
+| Restoran / cafe | Reservasi via form → catat di Sheets → pengingat H-1 dari template disetujui | Konfirmasi meja & perubahan |
+| Wedding & event | Inquiry form → kualifikasi → draft quotation → antrean approval | Mengirim quotation, negosiasi |
+| Travel & tour | Pendaftaran trip → manifest (tanpa ID) → info keberangkatan dari template | Keputusan batal karena cuaca |
+
+## Produk Pertama yang Dijual
+
+**"Alur Review Otomatis"**: review baru masuk antrean → AI menulis draft (skill `reply-guest-review`) → approver dapat notifikasi → manusia memposting. Memakai skill Pilar 1 yang sudah berjalan; langkah posting tetap manusia (Level B).
+
+## Gerbang Khusus Pilar Ini
+
+Selain gerbang umum: minimal satu pilar lain (Sales atau BI) aktif; keputusan engine (TASK-039); audit log, tombol berhenti, dan dry run tersedia; akses API resmi platform (bukan scraping).
+
+## Keputusan Owner Saat Aktivasi
+
+| Keputusan | Siapa |
+|---|---|
+| Engine alur (bangun sendiri vs n8n self-hosted) | Owner (TASK-039) |
+| Konektor pertama & akun API resmi | Owner |
+| Harga & paket | Owner (price sheet privat, bukan repo) |
+| Nama agent baru, avatar, persona | Owner |
+| Level A per intent per klien | Owner + klien, tertulis (AI-CONSTITUTION §4a) |
+
 ## Checklist Aktivasi
 
 1. Amandemen otonomi Approved; Sales/Admin minimal 1 intent aktif.

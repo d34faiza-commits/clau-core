@@ -53,6 +53,33 @@ Google Sheets / Excel, export POS, akuntansi (mis. Jurnal, Accurate — **CLIENT
 
 Jam kerja admin yang dihemat, error rate data entry (dari sampel), waktu dari order ke quotation.
 
+## Use Case Hospitality per Vertical
+
+| Vertical | Dokumen/pekerjaan admin yang paling makan waktu | Yang AI siapkan (draft) | Tidak dikerjakan AI |
+|---|---|---|---|
+| Villa / akomodasi | Konfirmasi booking & invoice DP, rekap okupansi, SOP housekeeping & check-in | Draft invoice dari booking yang disetujui, SOP (`sop`), rekap bulanan | Penagihan otomatis, setoran pajak, PHR/PB1 resmi |
+| Restoran / cafe | Quotation acara privat, rekap penjualan harian dari POS, stok bahan | Quotation dari menu & harga DATA FINAL, rekap, peringatan stok | Laporan pajak resmi, pembayaran supplier |
+| Wedding & event | Quotation paket + add-on, rundown, kontrak vendor | Quotation, rundown dari template, checklist vendor | Menandatangani atau mengubah kontrak |
+| Travel & tour | Manifest peserta, invoice trip, itinerary | Itinerary & invoice dari paket DATA FINAL; manifest **tanpa** nomor identitas di sistem AI | Data paspor/KTP (Restricted), asuransi |
+
+## Produk Pertama yang Dijual
+
+**"Quotation & Invoice Draft"**: dari katalog & harga yang dikonfirmasi klien (sudah ada di fact sheet Pilar 1), AI menyusun draft quotation/invoice; staf klien memeriksa, memberi nomor dari sistem mereka, dan mengirim. Tanpa akses ke rekening, POS, atau akuntansi di tahap awal.
+
+## Gerbang Khusus Pilar Ini
+
+Selain gerbang umum: klasifikasi data keuangan **Confidential** sudah diterapkan di platform (enkripsi, audit log ekspor); konsultan pajak mengonfirmasi batas "draft vs dokumen pajak resmi".
+
+## Keputusan Owner Saat Aktivasi
+
+| Keputusan | Siapa |
+|---|---|
+| Produk pertama & batas data keuangan yang boleh diproses | Owner |
+| Repo `clau-admin` | Owner |
+| Harga & paket | Owner (price sheet privat, bukan repo) |
+| Nama agent baru, avatar, persona | Owner |
+| Level A per intent per klien | Owner + klien, tertulis (AI-CONSTITUTION §4a) |
+
 ## Checklist Aktivasi
 
 1. Scope Approved (TASK-034); database + auth + audit log tersedia (Fase 0).

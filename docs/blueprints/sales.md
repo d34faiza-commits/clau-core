@@ -54,6 +54,33 @@ WhatsApp Business Platform (API resmi, bukan unofficial), Instagram DM, form web
 
 Waktu respon pertama, % chat terjawab Level A tanpa koreksi, lead tercatat, konversi inquiry → booking (bila ada data), jumlah eskalasi.
 
+## Use Case Hospitality per Vertical
+
+| Vertical | Pertanyaan tamu yang paling sering | Yang AI siapkan (draft) | Selalu eskalasi |
+|---|---|---|---|
+| Villa / akomodasi | Harga per malam tanggal X, kapasitas, extra bed, check-in, antar-jemput | Balasan dari rate card DATA FINAL + "kami cek ketersediaannya dulu" | Diskon khusus, group booking, refund, keluhan saat menginap |
+| Restoran / cafe / beach club | Reservasi meja, menu & harga, halal, acara privat, minimum spend | Info menu/jam dari fact sheet, langkah reservasi | Alergi & klaim halal tanpa sertifikat, keracunan, event besar |
+| Wedding & event | Paket & harga, kapasitas per layout, tanggal kosong, vendor luar | Ringkasan paket + daftar pertanyaan kualifikasi | Negosiasi paket, legal WNA, perubahan kontrak |
+| Travel & tour | Jadwal open trip, kuota, harga, syarat fisik, cuaca/batal | Jadwal & syarat dari fact sheet, kebijakan batal | Keselamatan, cuaca ekstrem, refund, kecelakaan |
+
+## Produk Pertama yang Dijual
+
+**"Asisten Balas Inquiry"** untuk klien Pilar 1: staf menempel pesan tamu, AI menulis draft dari fakta yang dikonfirmasi, approver pesan klien mengirim sendiri dari WhatsApp Business (Level B, tanpa integrasi API). Rancangan lengkap & keputusan: [clau-content `docs/review-packet-task-066.md`](https://github.com/d34faiza-commits/clau-content/blob/main/docs/review-packet-task-066.md) (TASK-066, ditunda).
+
+## Gerbang Khusus Pilar Ini
+
+Selain gerbang umum ([README](./README.md#gerbang-umum-pilar-25-keputusan-owner-2026-102223)): fact sheet harga klien punya **masa berlaku** dan dikonfirmasi tiap bulan di Pilar 1; review UU PDP mencakup penyimpanan pesan tamu (retensi).
+
+## Keputusan Owner Saat Aktivasi
+
+| Keputusan | Siapa |
+|---|---|
+| K1–K9 paket TASK-066 | Owner |
+| Repo `clau-sales` dibuat + `SUBMODULE_TOKEN` diperluas | Owner |
+| Harga & paket | Owner (price sheet privat, bukan repo) |
+| Nama agent baru, avatar, persona | Owner |
+| Level A per intent per klien | Owner + klien, tertulis (AI-CONSTITUTION §4a) |
+
 ## Checklist Aktivasi
 
 1. Amandemen otonomi Approved + scope pilar (TASK-034).

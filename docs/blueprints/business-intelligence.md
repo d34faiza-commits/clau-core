@@ -41,6 +41,33 @@ Data dari pilar Sales (lead, konversi), Admin (transaksi, stok), Marketing (insi
 
 Laporan terkirim tepat waktu, insight yang ditindaklanjuti client, akurasi forecast (selisih vs aktual).
 
+## Use Case Hospitality per Vertical
+
+| Vertical | Pertanyaan owner yang ingin dijawab | Data yang dibutuhkan | Syarat |
+|---|---|---|---|
+| Villa / akomodasi | Bulan apa okupansi turun? Kanal booking mana yang paling banyak (direct vs OTA)? Review membahas apa? | Data booking per kanal, kalender, review | Data booking dari klien (CLIENT CONFIRMATION); tema review = ringkasan, bukan skor sentimen palsu |
+| Restoran / cafe | Menu apa yang naik/turun? Jam ramai? Promo mana yang berpengaruh? | Export POS per item & jam, kalender promo | Atribusi promo hanya bila ada kode/voucher |
+| Wedding & event | Dari mana inquiry datang? Berapa yang jadi booking? | Log inquiry + sumber | Butuh Sales/catatan klien |
+| Travel & tour | Trip mana yang penuh/batal? Musim mana yang laku? | Data peserta per trip (agregat) | Tanpa data pribadi peserta |
+
+## Produk Pertama yang Dijual
+
+**"Laporan Bulanan Plus"**: laporan konten Pilar 1 (skill `build-monthly-report`, sudah aktif) ditambah satu halaman insight dari data yang klien sudah punya (export OTA/POS/booking). Tidak butuh integrasi; klien mengirim export, angka tetap apa adanya.
+
+## Gerbang Khusus Pilar Ini
+
+Selain gerbang umum: minimal 3 bulan laporan Pilar 1 tersimpan per klien (untuk pembanding), dan definisi metrik disepakati tertulis dengan klien.
+
+## Keputusan Owner Saat Aktivasi
+
+| Keputusan | Siapa |
+|---|---|
+| Isi "Laporan Bulanan Plus" & apakah jadi add-on Pilar 1 atau paket sendiri | Owner |
+| Repo `clau-insight` atau tetap template di clau-market | Owner |
+| Harga & paket | Owner (price sheet privat, bukan repo) |
+| Nama agent baru, avatar, persona | Owner |
+| Level A per intent per klien | Owner + klien, tertulis (AI-CONSTITUTION §4a) |
+
 ## Checklist Aktivasi
 
 1. Scope Approved (TASK-034); Sales/Admin menghasilkan data ≥ 1–3 bulan.

@@ -1,10 +1,10 @@
 ---
 document_title: "AGENTS.md — Instruksi Umum AI Agent CLAU"
 document_owner: "Dea Karisna / AI Marketing"
-version: "1.0.0"
+version: "1.1.0"
 status: "Approved"
-effective_date: "2026-10-04"
-approval_reference: "Approval tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-04 (\"Approve AI-CONSTITUTION v2.0.0\"; \"untuk saat ini semua approve dulu\"); perubahan ada di main"
+effective_date: "2026-10-27"
+approval_reference: "Perintah Pak Indra via ChatGPT/Codex, 2026-10-27: pastikan OpenAI/ChatGPT otomatis merge seperti Claude; otorisasi untuk merge PR dalam scope pekerjaan yang sudah diizinkan setelah CI hijau. Berlaku setelah perubahan ini masuk main."
 classification: "Internal"
 ---
 
@@ -46,9 +46,34 @@ Sebelum mengerjakan, tentukan pilar lewat [orchestrator/decision-tree.md](./orch
 - Jangan mengedit file di dalam folder `core/` milik repo lain; folder itu hanya submodule.
 - Perubahan atas dokumen berstatus Approved hanya dilakukan atas perintah **Pak Indra** atau **Dea Karisna (d34faiza)**. AI agent tidak mengubah aturan Approved atas inisiatif sendiri; usulan perbaikan boleh ditulis sebagai catatan/issue, lalu menunggu perintah.
 
+## Merge Otomatis Setelah CI Hijau
+
+Berlaku sama untuk **ChatGPT/OpenAI Codex, Claude Code, dan AI coding agent lain**.
+Perintah Pak Indra 2026-10-27 memberi otorisasi tetap untuk menyelesaikan PR dalam
+scope pekerjaan yang sudah diizinkan, termasuk merge; jangan berhenti hanya untuk
+meminta owner menekan merge lagi. Rincian gate: [AI-BOUNDARY](./AI-BOUNDARY.md)
+§ Merge oleh AI Coding Agent.
+
+1. Feature branch → local validation + self-review → PR.
+2. Baca langsung head SHA, diff, mergeability dan seluruh check wajib GitHub Actions
+   pada head terbaru (push **dan** pull_request). Semua wajib completed/success.
+3. Setelah gate lulus, merge melalui GitHub dengan expected head SHA. Jika head
+   berubah, baca ulang diff/CI; jangan force merge atau bypass ruleset/review.
+4. Cek hasil merge dan CI `main`, lalu sync core → agent → market sampai pin konsisten.
+   Atasi konflik/CI failure dalam scope lewat branch/PR, tanpa direct push main.
+5. Perbarui status/handoff dengan link PR/commit dan bukti checks. Jangan menyebut
+   downstream selesai sebelum diperiksa. Bila check berjalan, terus pantau selama
+   sesi aktif; bila sesi harus berakhir, catat status pending tanpa mengklaim merge.
+
+Izin ini untuk **merge kode/dokumentasi repo**, bukan approval konten client,
+publish/send, perubahan harga, rollback versi live, atau perluasan scope. Human
+review hospitality dan larangan AI self-approve konten tetap berlaku. PR di luar
+scope (termasuk dependency upgrade terpisah) tidak ikut di-merge hanya karena hijau.
+
 ## Revision History
 
 | Version | Date | Status | Summary |
 |---|---|---|---|
 | 1.0.0 | 2026-10-04 | Draft | Instruksi agent lintas repo untuk split CLAU AI; instruksi konten dipindah ke clau-market/AGENTS.md |
 | 1.0.0 | 2026-10-04 | Approved | Approved oleh owner (Dea Karisna / d34faiza); ditambah aturan otoritas perubahan untuk agent |
+| 1.1.0 | 2026-10-27 | Approved | Perintah Pak Indra: ChatGPT/Codex dan Claude menyelesaikan PR yang diizinkan sampai merge setelah CI hijau, exact-head guard, verifikasi main dan sync downstream |

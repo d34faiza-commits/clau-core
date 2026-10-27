@@ -1,5 +1,7 @@
 # API Contracts
 
+> **Extension For Review:** [Hospitality Runtime H1 v1.0.0](./runtime/README.md) mendefinisikan kontrak internal baru dan migration gate. Belum mengubah endpoint, tabel, atau enum aktif di dokumen ini.
+
 Kontrak HTTP antara frontend dan backend clau-agent, dan antara platform dengan konsumen lain. Endpoint bertanda **Implemented** sudah ada di backend; sisanya **Planned**.
 
 ## Prinsip

@@ -86,10 +86,19 @@ Validator mengecek tabel ini cocok dengan frontmatter dan Revision History tiap 
 3. Untuk kerja konten, buka repo pilar [clau-market](https://github.com/d34faiza-commits/clau-market).
 4. Untuk menambah pilar baru, ikuti [docs/5-pillar-architecture.md](./docs/5-pillar-architecture.md) §Menambah pilar.
 
+## Hospitality Runtime (H1)
+
+[Core contracts v1.0.0](./shared/runtime/README.md) — **For Review**, untuk Golden Path Tara.
+Schema executable, synthetic fixtures, error registry dan conformance tests; belum terhubung
+ke runtime production. API/database aktif tetap mengikuti kontrak existing.
+
 ## Validation
 
 ```text
 python scripts/validate_core.py
+python -m pip install -r scripts/requirements-contracts.txt
+python scripts/runtime_contracts.py
+python -m unittest discover -s tests -v
 ```
 
 ## Lisensi

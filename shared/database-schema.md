@@ -1,5 +1,7 @@
 # Database Schema (Design)
 
+> **Extension For Review:** [Hospitality Runtime H1 v1.0.0](./runtime/README.md) mendefinisikan kontrak internal baru dan migration gate. Belum mengubah endpoint, tabel, atau enum aktif di dokumen ini.
+
 > **Status: Draft (kontrak hidup), diimplementasikan.** PostgreSQL 16 di clau-agent: migrasi `0001` (skema + Constraint Wajib), `0002` (login), `0003` (kode cadangan 2FA), `0004` (workflow request → draft → QA → approval), `0005` (fact sheet & Konfirmasi Fakta), dan `0006` (antrean AI Tahap 2: `ai_jobs`, `ai_calls`, `ai_budgets`). `0007` (penanda isi konten `draft_flags`, `requests.review_rating` / `source_draft_id`; API 0.10.0, TASK-032). Kontrak ini tetap sumber kebenaran: tabel di database dites sama dengan daftar di bawah (`backend/tests/test_db.py`), jadi perubahan skema dimulai dari dokumen ini. Detail implementasi: `clau-agent/backend/README.md` § Database.
 
 ## Prinsip

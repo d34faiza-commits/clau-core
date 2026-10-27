@@ -1,0 +1,374 @@
+{
+  "PromptBundle": {
+    "contract_version": "1.0.0",
+    "bundle_id": "hospitality.caption",
+    "bundle_version": "1.0.0",
+    "runtime_contract_major": 1,
+    "agent_id": "caption-writer",
+    "intent": "caption",
+    "autonomy_max": "B",
+    "supported_verticals": [
+      "accommodation",
+      "food-beverage",
+      "spa-wellness",
+      "experience",
+      "wedding-event",
+      "travel-tour"
+    ],
+    "supported_business_types": [
+      "villa",
+      "guesthouse",
+      "homestay",
+      "hotel",
+      "resort",
+      "restaurant",
+      "cafe",
+      "beach-club",
+      "spa",
+      "wellness",
+      "retreat",
+      "wedding-event",
+      "travel-tour",
+      "tourism-experience"
+    ],
+    "supported_channels": [
+      "instagram",
+      "facebook",
+      "tiktok",
+      "google-business-profile"
+    ],
+    "required_context": [
+      "approved_facts",
+      "voice_card",
+      "brief",
+      "platform",
+      "format",
+      "objective",
+      "audience",
+      "language",
+      "assets"
+    ],
+    "components": [
+      {
+        "kind": "constitution",
+        "path": "fixture/constitution.txt",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      {
+        "kind": "boundary",
+        "path": "fixture/boundary.txt",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      {
+        "kind": "rule",
+        "path": "fixture/rule.txt",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      {
+        "kind": "skill",
+        "path": "fixture/skill.txt",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      {
+        "kind": "persona",
+        "path": "fixture/persona.txt",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      {
+        "kind": "voice_guide",
+        "path": "fixture/voice_guide.txt",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      {
+        "kind": "humanize_guide",
+        "path": "fixture/humanize_guide.txt",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      {
+        "kind": "vertical",
+        "path": "fixture/vertical.txt",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      {
+        "kind": "platform",
+        "path": "fixture/platform.txt",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      {
+        "kind": "prompt_template",
+        "path": "fixture/prompt_template.txt",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      {
+        "kind": "output_schema",
+        "path": "fixture/output_schema.txt",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      {
+        "kind": "validator_config",
+        "path": "fixture/validator_config.txt",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      {
+        "kind": "tool_contract",
+        "path": "fixture/tool_contract.txt",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      {
+        "kind": "escalation_rules",
+        "path": "fixture/escalation_rules.txt",
+        "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    ],
+    "tools": [
+      {
+        "id": "fact_lookup",
+        "version": "1.0.0"
+      }
+    ],
+    "validators": [
+      {
+        "id": "structured_output",
+        "version": "1.0.0"
+      },
+      {
+        "id": "claim_coverage",
+        "version": "1.0.0"
+      },
+      {
+        "id": "privacy_consent",
+        "version": "1.0.0"
+      },
+      {
+        "id": "platform_rules",
+        "version": "1.0.0"
+      },
+      {
+        "id": "brand_voice",
+        "version": "1.0.0"
+      },
+      {
+        "id": "duplicate_copy",
+        "version": "1.0.0"
+      }
+    ],
+    "model_settings": {
+      "provider": "fake",
+      "model": "fake-0",
+      "temperature_milli": 0,
+      "effort": "default",
+      "max_output_tokens": 4096,
+      "structured_output": true
+    }
+  },
+  "Provenance": {
+    "client_code": "CTHVILLA",
+    "source_type": "fact_sheet",
+    "source_id": "simulation-fact-sheet-1",
+    "source_version": 1,
+    "content_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "retrieved_at": "2026-10-27T08:00:00Z",
+    "sensitivity": "Internal"
+  },
+  "MemoryRecord": {
+    "contract_version": "1.0.0",
+    "memory_id": "simulation-memory-1",
+    "client_code": "CTHVILLA",
+    "memory_type": "approved_fact",
+    "value": "Villa Contoh — fiktif, hanya SIMULASI",
+    "status": "approved",
+    "source": {
+      "client_code": "CTHVILLA",
+      "source_type": "fact_sheet",
+      "source_id": "simulation-fact-sheet-1",
+      "source_version": 1,
+      "content_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "retrieved_at": "2026-10-27T08:00:00Z",
+      "sensitivity": "Internal"
+    },
+    "evidence_label": "DATA FINAL",
+    "approved_by": "simulation-reviewer",
+    "approved_at": "2026-10-27T07:00:00Z",
+    "valid_from": "2026-10-27T07:00:00Z",
+    "valid_until": "2026-11-01T00:00:00Z",
+    "version": 1,
+    "superseded_by": null,
+    "sensitivity": "Internal"
+  },
+  "TaraGeneration": {
+    "contract_version": "1.0.0",
+    "status": "draft",
+    "clarification_questions": [],
+    "variants": [
+      {
+        "style": "storytelling",
+        "hook": "Waktunya merencanakan jeda.",
+        "body": "Apa rencana liburanmu berikutnya?",
+        "cta": "Simpan ide ini.",
+        "hashtags": [],
+        "alt_texts": [],
+        "language": "id"
+      },
+      {
+        "style": "informative",
+        "hook": "Waktunya merencanakan jeda.",
+        "body": "Apa rencana liburanmu berikutnya?",
+        "cta": "Simpan ide ini.",
+        "hashtags": [],
+        "alt_texts": [],
+        "language": "id"
+      },
+      {
+        "style": "conversational",
+        "hook": "Waktunya merencanakan jeda.",
+        "body": "Apa rencana liburanmu berikutnya?",
+        "cta": "Simpan ide ini.",
+        "hashtags": [],
+        "alt_texts": [],
+        "language": "id"
+      }
+    ],
+    "claims": [],
+    "missing_information": [],
+    "suggested_content_flags": [],
+    "model_notes_for_reviewer": [
+      "SIMULASI: fixture struktur, bukan golden copy atau bukti evaluasi kualitas."
+    ]
+  },
+  "ToolContract": {
+    "contract_version": "1.0.0",
+    "name": "fact_lookup",
+    "version": "1.0.0",
+    "allowed_agents": [
+      "caption-writer"
+    ],
+    "allowed_intents": [
+      "caption"
+    ],
+    "input_schema_component": "tools/fact-input.json",
+    "output_schema_component": "tools/fact-output.json",
+    "timeout_ms": 1000,
+    "max_result_bytes": 16384,
+    "client_scope": "server_bound",
+    "side_effects": "read_only",
+    "sensitivity_max": "Confidential",
+    "audit": "metadata_only",
+    "error_codes": [
+      "tool_timeout",
+      "tool_invalid_output",
+      "tenant_scope_violation"
+    ]
+  },
+  "WorkPlan": {
+    "contract_version": "1.0.0",
+    "decision": "draft",
+    "vertical": "accommodation",
+    "channel": "instagram",
+    "format": "feed",
+    "objective": "SIMULASI awareness",
+    "audience": "SIMULASI wisatawan",
+    "required_fact_keys": [],
+    "available_fact_keys": [],
+    "missing_fact_keys": [],
+    "risk_flags": [],
+    "selected_angle": "Ajakan merencanakan liburan tanpa klaim properti",
+    "selected_tools": [
+      "fact_lookup"
+    ],
+    "expected_sections": [
+      "hook",
+      "body",
+      "cta"
+    ]
+  },
+  "ValidationResult": {
+    "contract_version": "1.0.0",
+    "result": "pass",
+    "errors": [],
+    "warnings": [],
+    "actions": [],
+    "claim_coverage": 1,
+    "required_approval_level": "L2",
+    "validator_versions": [
+      {
+        "id": "structured_output",
+        "version": "1.0.0"
+      },
+      {
+        "id": "claim_coverage",
+        "version": "1.0.0"
+      },
+      {
+        "id": "privacy_consent",
+        "version": "1.0.0"
+      },
+      {
+        "id": "platform_rules",
+        "version": "1.0.0"
+      },
+      {
+        "id": "brand_voice",
+        "version": "1.0.0"
+      },
+      {
+        "id": "duplicate_copy",
+        "version": "1.0.0"
+      }
+    ],
+    "reviewer_summary": "SIMULASI structural fixture; bukan independent review.",
+    "review_kind": "self-review",
+    "ready_for_human_review": true
+  },
+  "Usage": {
+    "provider": "fake",
+    "model": "fake-0",
+    "provider_request_id": "simulation-call-1",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cache_read_tokens": 0,
+    "cache_write_tokens": 0,
+    "cost_micro_usd": 0,
+    "latency_ms": 1,
+    "stop_reason": "completed",
+    "billing_status": "known"
+  },
+  "RuntimeError": {
+    "code": "provider_unavailable",
+    "retryable": true,
+    "stage": "generate",
+    "usage": null
+  },
+  "AgentRun": {
+    "contract_version": "1.0.0",
+    "run_id": "simulation-run-1",
+    "job_id": 1,
+    "request_id": 1,
+    "client_code": "CTHVILLA",
+    "agent_id": "caption-writer",
+    "intent": "caption",
+    "attempt": 1,
+    "status": "draft_ready",
+    "stage": "persist",
+    "started_at": "2026-10-27T08:00:00Z",
+    "finished_at": "2026-10-27T08:00:01Z",
+    "bundle_id": "hospitality.caption",
+    "bundle_version": "1.0.0",
+    "prompt_version": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "context_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "context_sources": [
+      {
+        "client_code": "CTHVILLA",
+        "source_type": "fact_sheet",
+        "source_id": "simulation-fact-sheet-1",
+        "source_version": 1,
+        "content_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "retrieved_at": "2026-10-27T08:00:00Z",
+        "sensitivity": "Internal"
+      }
+    ],
+    "draft_id": 1,
+    "draft_content_sha256": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "validation_ref": "simulation-validation-1",
+    "error_code": null
+  }
+}

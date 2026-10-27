@@ -1,0 +1,97 @@
+{
+  "contract_version": "1.0.0",
+  "errors": {
+    "provider_error": {
+      "retryable": false,
+      "legacy_job_code": "provider_error"
+    },
+    "provider_unavailable": {
+      "retryable": true,
+      "legacy_job_code": "provider_unavailable"
+    },
+    "refused": {
+      "retryable": false,
+      "legacy_job_code": "refused"
+    },
+    "invalid_output": {
+      "retryable": false,
+      "legacy_job_code": "invalid_output"
+    },
+    "budget_exceeded": {
+      "retryable": false,
+      "legacy_job_code": "budget_exceeded"
+    },
+    "request_closed": {
+      "retryable": false,
+      "legacy_job_code": "request_closed"
+    },
+    "fact_sheet_missing": {
+      "retryable": false,
+      "legacy_job_code": "fact_sheet_missing"
+    },
+    "worker_timeout": {
+      "retryable": true,
+      "legacy_job_code": "worker_timeout"
+    },
+    "ai_disabled": {
+      "retryable": false,
+      "legacy_job_code": "ai_disabled"
+    },
+    "cancelled_by_user": {
+      "retryable": false,
+      "legacy_job_code": "cancelled_by_user"
+    },
+    "bundle_missing": {
+      "retryable": false,
+      "legacy_job_code": null
+    },
+    "bundle_invalid": {
+      "retryable": false,
+      "legacy_job_code": null
+    },
+    "bundle_incompatible": {
+      "retryable": false,
+      "legacy_job_code": null
+    },
+    "context_missing": {
+      "retryable": false,
+      "legacy_job_code": null
+    },
+    "stale_context": {
+      "retryable": false,
+      "legacy_job_code": null
+    },
+    "tenant_scope_violation": {
+      "retryable": false,
+      "legacy_job_code": null
+    },
+    "restricted_data": {
+      "retryable": false,
+      "legacy_job_code": null
+    },
+    "asset_rights_missing": {
+      "retryable": false,
+      "legacy_job_code": null
+    },
+    "tool_not_allowed": {
+      "retryable": false,
+      "legacy_job_code": null
+    },
+    "tool_timeout": {
+      "retryable": true,
+      "legacy_job_code": null
+    },
+    "tool_invalid_output": {
+      "retryable": false,
+      "legacy_job_code": null
+    },
+    "validation_failed": {
+      "retryable": false,
+      "legacy_job_code": null
+    },
+    "lease_lost": {
+      "retryable": false,
+      "legacy_job_code": null
+    }
+  }
+}

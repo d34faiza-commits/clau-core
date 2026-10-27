@@ -71,9 +71,9 @@ clau-core/
 | Dokumen | Versi | Status |
 |---|---|---|
 | [AI-CONSTITUTION.md](./AI-CONSTITUTION.md) | 3.1.0 | Approved |
-| [AI-BOUNDARY.md](./AI-BOUNDARY.md) | 1.6.1 | Approved |
+| [AI-BOUNDARY.md](./AI-BOUNDARY.md) | 1.7.0 | Approved |
 | [WORKFLOW.md](./WORKFLOW.md) | 1.0.1 | Approved |
-| [AGENTS.md](./AGENTS.md) | 1.0.0 | Approved |
+| [AGENTS.md](./AGENTS.md) | 1.1.0 | Approved |
 
 > **Otoritas perubahan:** Perubahan atas dokumen berstatus Approved hanya dilakukan atas perintah **Pak Indra** atau **Dea Karisna (d34faiza)**. AI agent tidak mengubah aturan Approved atas inisiatif sendiri; usulan perbaikan boleh ditulis sebagai catatan/issue, lalu menunggu perintah.
 

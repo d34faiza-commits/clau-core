@@ -1,10 +1,10 @@
 ---
 document_title: "CLAU AI Boundary"
 document_owner: "Dea Karisna / AI Marketing"
-version: "1.6.1"
+version: "1.7.0"
 status: "Approved"
-effective_date: "2026-10-22"
-approval_reference: "v1.6.1: PATCH (wording) atas perintah owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-22: \"pastikan clau core sudah sempurna untuk ke 5 pilar\"; menyelaraskan rujukan board ke keputusan 2026-10-21. v1.6.0: perintah owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-22: atas tawaran menulis versi CLAU dari pola Jerco (definisi PR selesai; versi live hanya maju), owner menjawab \"gass semuanya kak\"; disahkan dengan merge PR oleh owner. v1.5.0: perintah owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-16: keempat repo di-rename (clau-core, clau-agent, clau-market, clau-content) dan dijadikan public oleh owner; atas pilihan A (kembali private) atau B (tetap public, LICENSE disesuaikan) owner menjawab \"Gass B kak\". v1.4.0: persetujuan owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-16, atas usulan Tahap 2 § 4 (docs/proposals/tahap-2-ai-drafting.md): \"setuju gas\" sebagai jawaban atas \"Cukup balas setuju § 4\". v1.3.0: persetujuan owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-13, atas 3 usulan (1) clau-content = arsip + markas kerja, (2) job `docker` jadi check wajib clau-agent, (3) gerbang deploy VPS 1 `release/vps1`: \"ok gas 1 2 dan 3 kak\". v1.2.0: approval tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-12: \"Saya Dea Karisna (d34faiza), owner CLAU. Saya approve: semua push ke main di clau-core, clau-market, clau-agent wajib lewat PR dengan CI hijau; push langsung tidak lagi diizinkan. Penegakan lewat main-guard karena GitHub Free.\" v1.1.1: instruksi owner via sesi Claude Code, 2026-10-08 (\"gass\", izin token + sync via PR); v1.1.0: instruksi tertulis owner (Dea Karisna / d34faiza) via sesi Claude Code, 2026-10-06 (\"tolong semua repo di cek … jika belum fix 100% tolong di fix\"); v1.0.0 approved 2026-10-04; perubahan ada di main"
+effective_date: "2026-10-27"
+approval_reference: "Perintah Pak Indra via ChatGPT/Codex, 2026-10-27: pastikan OpenAI/ChatGPT otomatis merge seperti Claude; otorisasi untuk merge PR dalam scope pekerjaan yang sudah diizinkan setelah CI hijau. Berlaku setelah perubahan ini masuk main. Riwayat approval versi sebelumnya tetap tercatat di Revision History dan git."
 classification: "Internal"
 ---
 
@@ -105,6 +105,45 @@ Check wajib per repo:
 
 **RISK:** sampai ruleset `main` diaktifkan, push langsung **secara teknis tetap bisa**. Sejak repo public (2026-10-16), GitHub Free memaksa ruleset/branch protection di server. **NEXT ACTION (owner):** aktifkan ruleset `main` (wajib PR + check wajib di atas) di tiap repo, dan di Settings → Actions set *Require approval for all external contributors* agar workflow dari fork pihak luar tidak jalan tanpa persetujuan. Sampai itu, penegakan = deteksi: workflow `main-guard.yml` di tiap repo membuat check merah + email bila commit masuk `main` tanpa PR yang di-merge, di-force push, atau PR di-merge sebelum check wajib hijau. Pelanggaran: laporkan ke owner, perbaiki lewat PR baru (jangan force push). Direview bila plan di-upgrade (proteksi server bisa dipaksa) atau tim bertambah.
 
+### Merge oleh AI Coding Agent
+
+Perintah Pak Indra 2026-10-27: **ChatGPT/OpenAI Codex otomatis merge seperti Claude**.
+Otorisasi ini berlaku untuk PR implementasi/dokumentasi dalam scope task yang telah
+owner izinkan di `clau-core`, `clau-agent`, `clau-market`, dan handoff `clau-content`.
+Agent menyelesaikan alur branch → validasi lokal → self-review → PR → CI hijau →
+merge → cek CI main → sync downstream, tanpa meminta izin merge berulang.
+Instruksi lama "owner yang merge" untuk workflow repo ini digantikan ketentuan ini.
+
+Gate sebelum merge:
+
+- PR bukan draft, base `main`, tidak konflik, diff tetap sesuai task yang diizinkan.
+- Check wajib pada **head SHA terbaru** lengkap dan completed/success. Baca seluruh
+  halaman check-runs; hitung hanya GitHub Actions. Semua run bernama check wajib
+  (push dan pull_request) harus hijau, bukan hanya salah satunya. `skipped`, pending,
+  cancelled, failure atau hasil tidak diketahui tidak dianggap sukses.
+- Required review/ruleset GitHub tetap dipenuhi; jangan bypass, menghapus review
+  blocker atau melemahkan CI demi merge. Self-review AI tidak disamarkan sebagai
+  review manusia.
+- Kirim `expected_head_sha` / `--match-head-commit` saat merge. Head berubah → cek
+  ulang diff dan semua checks. Jangan menulis langsung atau force-push `main`.
+- Check wajib `clau-content` = `validate` (termasuk validasi token desain dalam job).
+  Check repo lain tetap mengikuti tabel di atas.
+
+Sesudah merge, cek langsung merged commit, CI main termasuk main-guard bila ada,
+dan sync core → agent → market. Merge bot sync boleh mengikuti otorisasi ini setelah
+pemeriksaan diff gitlink dan checks wajib. Jangan otomatis merge PR unrelated hanya
+karena masih terbuka. CI merah diperbaiki maju; status pending/gagal dilaporkan jujur.
+
+Ini **otorisasi eksekusi oleh agent saat sesi berjalan**. Fitur GitHub native
+`auto-merge` adalah mekanisme terpisah: hanya boleh dijadwalkan jika pengaturan repo
+mengaktifkannya dan protection/check requirements setara gate di atas sudah diverifikasi.
+Jika tidak tersedia, agent menunggu CI dan memanggil merge dengan expected head SHA.
+Jangan menjanjikan agent terus berjalan di background setelah sesi berakhir.
+
+Otorisasi merge tidak mengubah Rule 08 approval konten, batas provider/data, izin
+publish/send, atau syarat rollback versi live. Perubahan scope dan keputusan bisnis
+baru tetap mengikuti otoritas owner yang sudah berlaku.
+
 ### Kapan PR Boleh Disebut Selesai
 
 Berlaku untuk manusia dan AI di semua repo CLAU, termasuk saat melapor di chat, di `docs/status.md`, atau memindahkan kartu di board ClickUp.
@@ -154,3 +193,4 @@ Berlaku untuk server CLAU (VPS 1 `release/vps1`, VPS 2) dan untuk pekerjaan yang
 | 1.5.0 | 2026-10-16 | Approved | Repo di-rename (clau-core, clau-agent, clau-market, clau-content) dan public, hanya untuk dilihat: lisensi source-available, semua yang di-commit (termasuk riwayat) dianggap publik, tanpa IP/host server; ruleset `main` kini bisa dipaksa (NEXT ACTION owner). Perintah owner 2026-10-16 |
 | 1.6.0 | 2026-10-22 | Approved | Disiplin Push: § Kapan PR Boleh Disebut Selesai (cek langsung di GitHub, tidak konflik + check wajib hijau atau sudah merged; laporan apa adanya; konflik diselesaikan dengan merge `main`; kartu ClickUp Closed setelah merged) dan § Versi Live Hanya Maju (rollback hanya atas perintah eksplisit owner dengan target; perbaikan maju; rollback otomatis health check dan tombol mati AI tetap boleh). Pola diadopsi dari Jerco (lihat ACKNOWLEDGMENT). Perintah owner 2026-10-22 |
 | 1.6.1 | 2026-10-22 | Approved | PATCH (wording): peran clau-content menyebut board task Markdown `tasks/` sebagai riwayat dan board kerja di ClickUp (keputusan 2026-10-21). Perintah owner 2026-10-22 |
+| 1.7.0 | 2026-10-27 | Approved | Perintah Pak Indra: otorisasi merge oleh ChatGPT/Codex/Claude untuk task yang diizinkan setelah CI hijau pada head terbaru; verifikasi main/downstream, tanpa bypass dan tanpa mengubah human approval konten |

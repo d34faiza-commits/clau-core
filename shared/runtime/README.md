@@ -223,7 +223,7 @@ Tidak menambah tabel ke daftar Entitas aktif, tidak mengubah CHECK/enum secara i
 | QA Conditional kini bisa diterima | Gate validation baru wajib unresolved=0; migration/test jangan mengendurkan existing independent review |
 | Approval belum memakai content hash eksplisit | Ikat validation/approval ke exact persisted bytes + latest version; DB transaction/race tests |
 
-Upgrade berurutan: owner merge H1 → CI main core → bot pin core di agent → bot pin
+Upgrade berurutan: merge H1 sesuai otorisasi coding agent → CI main core → bot pin core di agent → bot pin
 agent/core di market. H2 bundle content dan H3 runtime di feature branch masing-masing;
 jangan mengubah submodule sebelum commit sumber tersedia. Tidak perlu paid provider
 untuk menguji H1. Provider real baru H5 setelah konfigurasi secret secara aman, budget,
@@ -237,7 +237,7 @@ rollback otomatis versi live. Rehearsal rollback dilakukan di staging/SIMULASI.
 
 | Tahap | Deliverable / bukti |
 |---|---|
-| H1 (PR ini) | Contracts + synthetic fixtures + conformance tests + migration map; owner review |
+| H1 (PR ini) | Contracts + synthetic fixtures + conformance tests + migration map; review sesuai otorisasi coding agent |
 | H2 | Bundle hospitality/Tara lengkap, schemas tool, platform references, eval matrix 50–60 cases dengan dimension coverage |
 | H3 | Loader packaged immutable, scoped assembler, brief/Voice Card/facts/assets, provenance; migration & isolation tests |
 | H4 | Validator pipeline + persisted evidence + reviewer UI + approval DB gates |
